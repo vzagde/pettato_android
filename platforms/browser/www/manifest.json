@@ -1,12 +1,18 @@
 {
   "background_color": "#FFF",
   "display": "standalone",
-  "name": "Pettato",
-  "short_name": "Pettato",
+  "name": "Pettato Beta",
+  "short_name": "Pettato Beta",
   "version": "com.kreaserv.pettato",
   "description": "Social and Business Connectivity platform for pet owners and Pet Businesses",
   "author": "Kreaserv Team",
-  "icons": [],
+  "icons": [
+    {
+      "src": "app_icon.png",
+      "type": "image/png",
+      "sizes": "undefinedxundefined"
+    }
+  ],
   "start_url": "index.html",
   "theme_color": "#2196f3"
 }

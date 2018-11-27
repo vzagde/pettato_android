@@ -32,6 +32,7 @@ var new_chat_time = null;
 var feed_details_fetch_id = 0;
 var account_default_id = 0;
 var account_id = 0;
+var profile_list_type = 0;
 
 openFB.init('2106128496268926', '', window.localStorage);
 
@@ -163,6 +164,7 @@ myApp.onPageInit('become_parent_create', function(page) {
 
 // profile settings
 myApp.onPageInit('settings', function(page) {
+    $("#username_disp_dyn").html(token.username);
 });
 
 // add account type selection
@@ -196,4 +198,9 @@ myApp.onPageInit('ambulance', function(page) {
 // lost and found listing page
 myApp.onPageInit('lost_and_found', function(page) {
     loadLostFoundContent(account_default_id);
+});
+
+// lost and found listing page
+myApp.onPageInit('profiles', function(page) {
+    loadProfilesList(account_default_id, profile_list_type);
 });

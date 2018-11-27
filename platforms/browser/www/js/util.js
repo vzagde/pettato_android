@@ -1529,7 +1529,7 @@ function add_to_find_parent() {
         myApp.hideIndicator();
         if (res.status == 'Success') {
             mainView.router.load({
-                url: 'become_parent_list1.html',
+                url: 'become_parent_list.html',
                 ignoreCache: false,
             });
         } else {
@@ -1693,9 +1693,76 @@ function loadLostFoundContent(user_id) {
     });
 }
 
+function goto_profile_list(account_type) {
+    profile_list_type = account_type;
+    mainView.router.load({
+        url: 'profiles.html',
+        ignoreCache: false,
+    });
+}
 
+function loadProfilesList(account_default_id, profile_list_type) {
+    myApp.showIndicator();
 
+    $.ajax({
+        url: base_url+'list_profiles',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            user_id: account_default_id,
+            account_type: profile_list_type,
+        }
+    }).done(function(res){
+        if (res.status == 'Success') {
+            myApp.hideIndicator();
+            var html = '';
 
+            $.each(res.response, function(index, value){
+
+                var onclick_html = '';
+
+                if (value.user_type == 'Pet') {
+                    onclick_html = 'onclick="goto_profile_shopper_pet('+value.id+')"';
+                } else {
+                    onclick_html = 'onclick="goto_business_page('+value.id+')"';
+                }
+
+                html += '<li class="swipeout item-content read_active">'+
+                            '<div class="swipeout-content item-content">'+
+                                '<div class="item-media pad0">'+
+                                    '<img src="'+image_url+value.profile_image+'" width="75" height="75">'+
+                                '</div>'+
+                                '<div class="item-inner">'+
+                                    '<div class="item-title-row">'+
+                                        '<div class="item-title">'+value.first_name+'</div>'+
+                                    '</div>'+
+                                    '<div class="item-subtitle">'+value.username+'</div>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="swipeout-actions-right">'+
+                                '<a href="#" class="action1" '+onclick_html+'>Edit</a>'+
+                                '<a href="#" class="action2" '+onclick_html+'>View</a>'+
+                            '</div>'+
+                        '</li>';
+
+            })
+
+            console.log(html);
+
+            $("#list_profiles_dynamic").html(html);
+        } else {
+            myApp.hideIndicator();
+            var html = '<p style="text-align: center;">'+res.api_msg+'</p>';
+            $("#list_profiles_dynamic").html(html);
+        }
+    }).error(function(err){
+        myApp.hideIndicator();
+        console.log("error: " + j2s(err));
+    }).always(function(){
+        console.log("complete");
+    });
+}
 
 
 
