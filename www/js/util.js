@@ -1529,7 +1529,7 @@ function add_to_find_parent() {
         myApp.hideIndicator();
         if (res.status == 'Success') {
             mainView.router.load({
-                url: 'become_parent_list1.html',
+                url: 'become_parent_list.html',
                 ignoreCache: false,
             });
         } else {

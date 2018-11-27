@@ -104,6 +104,7 @@ myApp.onPageInit('feeds', function(page) {
 
 // create feed
 myApp.onPageInit('create_feed', function(page) {
+    load_city('#create_feed-location');
 });
 
 // feed detail page
