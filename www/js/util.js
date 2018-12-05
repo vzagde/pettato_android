@@ -97,8 +97,7 @@ function load_city(selecter) {
         } else {}
     }).fail(function(err) {
         myApp.hideIndicator();
-        myApp.alert('some error');
-        console.log('error: ' + err);
+        myApp.alert('Somthing went wrong, Please try again later!');
     }).always();
 }
 
@@ -125,8 +124,7 @@ function load_category(selector, afterCallback) {
     })
     .fail(function(err) {
         myApp.hideIndicator();
-        myApp.alert('Some error occurred');
-        console.log('error: ' + j2s(err));
+        myApp.alert('Somthing went wrong, Please try again later!');
     }).always();
 }
 
@@ -212,10 +210,10 @@ function initialize() {
                         if (results[0]) {
                             $("#business_register-address, #business_register_add-address").val(results[0].formatted_address);
                         } else {
-                            console.log('No results found');
+                            myApp.alert('No results found');
                         }
                     } else {
-                        console.log('Geocoder failed due to: ' + status);
+                        myApp.alert('Geocoder failed due to: ' + status);
                     }
                 });
             });
@@ -233,10 +231,10 @@ function initialize() {
                 if (results[0]) {
                     $("#business_register-address, #business_register_add-address").val(results[0].formatted_address);
                 } else {
-                    console.log('No results found');
+                    myApp.alert('No results found');
                 }
             } else {
-                console.log('Geocoder failed due to: ' + status);
+                myApp.alert('Geocoder failed due to: ' + status);
             }
         });
         initialize();
@@ -344,7 +342,6 @@ function shopper_register_onSuccess(fileURL) {
 
 // image selection Fail function
 function shopper_register_onFail(message) {
-    console.log('Failed because: ' + message);
     myApp.alert('Failed because: ' + message);
 }
 
@@ -515,7 +512,6 @@ function login() {
     .fail(function(err) {
         myApp.hideIndicator();
         myApp.alert('Some error occured while processing your request, Please try again later.');
-        console.log('fail: ' + j2s(err));
     })
     .always(function() {});
 }
@@ -603,7 +599,6 @@ function register_shopper() {
     }).fail(function(err) {
         myApp.hideIndicator();
         myApp.alert('Some error occured while processing your request, Please try again later.');
-        console.log("error: " + j2s(err));
     }).always(function() {
         console.log("complete");
     });
@@ -720,7 +715,6 @@ function register_business() {
     }).fail(function(err) {
         myApp.hideIndicator();
         myApp.alert('Some error occured while processing your request, Please try again later.');
-        console.log("error: " + j2s(err));
     }).always(function() {
         console.log("complete");
     });
@@ -901,7 +895,6 @@ function upload_business() {
     }).fail(function(err) {
         myApp.hideIndicator();
         myApp.alert('Some error occured while processing your request, Please try again later.');
-        console.log("error: " + j2s(err));
     }).always(function() {
         console.log("complete");
     });
@@ -920,6 +913,7 @@ function loadFeeds() {
         },
     }).done(function(res){
         var html = '';
+        var feed_type = 'Feeds';
 
         if (res.status == 'Success') {
             $.each(res.response, function(index, value){
@@ -929,7 +923,7 @@ function loadFeeds() {
                         '<div class="ks-facebook-avatar pro_pic">'+
                         '<img src="'+image_url+value.profile_image+'" width="34" height="34">'+
                         '</div>'+
-                        '<div class="ks-facebook-name pro_name">'+value.first_name+' '+value.last_name+'</div>'+
+                        '<div class="ks-facebook-name pro_name">'+value.first_name+'</div>'+
                         '<div class="ks-facebook-date pro_tag">'+value.feeds_content.substring(0, 50)+'</div>'+
                         '<div class="ks-facebook-date pro_tag">0 Comments 0 Likes</div>'+
                         '</a>'+
@@ -939,10 +933,16 @@ function loadFeeds() {
                         '<div class="card-footer no-border like_share">'+
                         '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i class="material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>'+
                         '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>'+
-                        '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" style=""><i class="material-icons white_heart white_heart_bubble bg_grren3" style="font-size:20px !important;">save</i></a>'+
-                        '<a href="javascript:void(0);" class="add_clk" style="z-index: 999"><i class="material-icons white_heart">add_circle</i></a>'+
-                        '<a href="javascript:void(0);" data-liked="0" class=""><i class="material-icons white_heart white_heart_active">favorite</i></a>'+
-                        '</div>'+
+                        '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" style="" onclick="chngSaveStatus('+value.feed_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren3" style="font-size:20px !important;">save</i></a>'+
+                        '<a href="javascript:void(0);" class="add_clk" style="z-index: 999"><i class="material-icons white_heart">add_circle</i></a>';
+
+                if (token.id == value.user_id && value.like_status == 1) {
+                    html += '<a href="javascript:void(0);" data-liked="0" onclick="chngLikeStatus('+value.feed_id+');" class="like_block_chng_active'+value.feed_id+'"><i class="material-icons white_heart white_heart_active">favorite</i></a>';
+                } else {
+                    html += '<a href="javascript:void(0);" data-liked="0" onclick="chngLikeStatus('+value.feed_id+');" class="like_block_chng_active'+value.feed_id+'"><i class="material-icons white_heart white_heart_active">favorite_border</i></a>';
+                }
+
+                html += '</div>'+
                         '</div>';
             });
 
@@ -984,18 +984,80 @@ function loadFeeds() {
     })
 }
 
+function chngLikeStatus(feed_id) {
+    $.ajax({
+        url: base_url+'like_feeds',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: token.id,
+            feed_id: feed_id,
+            feed_type: "Feed",
+        },
+    }).done(function(res) {
+        if (res.status == 'Success') {
+            if (res.response.like_status == 0) {
+                $(".feedDetailsLike, .like_block_chng_active"+res.response.category_id).html('<i class="material-icons white_heart white_heart_active">favorite_border</i>');
+            } else {
+                $(".feedDetailsLike, .like_block_chng_active"+res.response.category_id).html('<i class="material-icons white_heart white_heart_active">favorite</i>');
+            }
+        } else {
+            myApp.alert(res.api_msg);
+        }
+    }).error(function(res) {
+        myApp.alert("Some error occured, please try again later!");
+    }).always(function(res) {
+    })
+}
+
+function chngSaveStatus(feed_id) {
+    $.ajax({
+        url: base_url+'save_feeds',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: token.id,
+            feed_id: feed_id,
+            feed_type: "Feed",
+        },
+    }).done(function(res) {
+        if (res.status == 'Success') {
+            myApp.alert("Feed Added to your list!");
+        } else {
+            myApp.alert(res.api_msg);
+        }
+    }).error(function(res) {
+        myApp.alert("Some error occured, please try again later!");
+    }).always(function(res) {
+    })
+}
+
 function load_feed_page(feed_id) {
     feed_details_fetch_id = feed_id;
-    console.log('load_feed_page()');
-    console.log(feed_details_fetch_id);
     mainView.router.load({
         url: 'feed.html',
         ignoreCache: false,
     });
 }
 
+function feedLikeStatusChng() {
+    var feed_id = $('.feedDetailsLike').data('feed_id');
+    chngLikeStatus(feed_id);
+}
+
+function feedShareStatusChng() {
+    var title = $('.feedDetailsShare').data('title');
+    var share_image_link = $('.feedDetailsShare').data('image_link');
+    var share_link = 'http://pettato.com';
+    window.plugins.socialsharing.share(title, title, share_image_link, share_link);
+}
+
+function feedSaveStatusChng() {
+    var feed_id = $('.feedDetailsSave').data('feed_id');
+    chngSaveStatus(feed_id);
+}
+
 function loadFeedsDetails() {
-    console.log('Entered Function');
     $(".feed_image").attr("src", image_url+'cover_pic.jpg');
     $(".inner_pro_pic").attr("src", image_url+'profile_dummy.jpg');
     $(".feed_creator").html('');
@@ -1010,25 +1072,80 @@ function loadFeedsDetails() {
         crossDomain: true,
         data: {
             feed_id: feed_details_fetch_id,
+            user_id: token.id,
         },
     }).done(function(res) {
-        console.log(res);
         if (res.status == 'Success') {
             $(".feed_image").attr("src", image_url+res.response.image);
             $(".inner_pro_pic").attr("src", image_url+res.response.profile_image);
             $(".feed_creator").html(res.response.first_name);
             $(".feed_comment_like").html('9 Comments 5 Likes');
             $(".feed_desc").html(res.response.feeds_content);
-            $(".feed_comments_container").html('');
+            // $("#feedDetailsMessagesContainer").html('');
+
+            var comments = '';
+
+            $.each(res.comments_response, function(index, value){
+                comments += '<div class="message message-with-avatar message-received"> '+
+                                '<div class="message-name">'+value.first_name+'</div>'+
+                                '<div class="message-text-new">'+value.comment+'</div>'+
+                            '</div>';
+            })
+
+            $("#feedDetailsMessagesContainer").html(comments);
+
+            $(".feedDetailsLike").attr('data-feed_id', res.response.feed_id);
+            $(".feedDetailsShare").attr('data-feed_id', res.response.feed_id);
+            $(".feedDetailsShare").attr('data-title', res.response.feed_id);
+            $(".feedDetailsShare").attr('data-image_link', image_url+res.response.image);
+            $(".feedDetailsSave").attr('data-feed_id', res.response.feed_id);
+
+            if (res.like_save_response.like_status == 1) {
+                $(".feedDetailsLike").html('<i class="material-icons white_heart white_heart_active">favorite</i>');
+            } else {
+                $(".feedDetailsLike").html('<i class="material-icons white_heart white_heart_active">favorite_border</i>');
+            }
         } else {
             myApp.alert('Please provide all the details!');
         }
     }).fail(function(err) {
         myApp.hideIndicator();
-        console.log("error: " + j2s(err));
+        myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
         console.log("complete");
     });
+}
+
+function add_comment_feed() {
+    if (!$("#feed_comment").val()) {
+        myApp.alert("Please enter the comment!");
+        return false;
+    }
+
+    $.ajax({
+        url: base_url+'add_comment_feed',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: token.id,
+            feed_id: $(".feedDetailsLike").data('feed_id'),
+            comment: $("#feed_comment").val(),
+        }
+    }).done(function(res){
+        if (res.status == 'Success') {
+            var comments = '<div class="message message-with-avatar message-received"> '+
+                            '<div class="message-name">'+token.first_name+'</div>'+
+                            '<div class="message-text-new">'+$("#feed_comment").val()+'</div>'+
+                        '</div>';
+
+            $("#feedDetailsMessagesContainer").prepend(comments);
+        } else {
+            myApp.alert("Unbale to upload comment, Please try again later!");
+        }
+    }).error(function(res){
+        myApp.alert("Unbale to upload comment, Please try again later!");
+    }).always(function(res){
+    })
 }
 
 function add_feed() {
@@ -1073,7 +1190,7 @@ function add_feed() {
         }
     }).fail(function(err) {
         myApp.hideIndicator();
-        console.log("error: " + j2s(err));
+        myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
         console.log("complete");
     });
@@ -1115,7 +1232,7 @@ function loadUsersPageContent(user_id) {
         dataType: 'json',
         crossDomain: true,
         data: {
-            user_id: user_id,
+            user_id: user_id, token_profile_id: token.id,
         },
     }).done(function(res) {
         if (res.status == 'Success') {
@@ -1126,6 +1243,8 @@ function loadUsersPageContent(user_id) {
             $('.followers').text(res.followers);
             $('.followings').text(res.followings);
             $('.p_name').html(res.response.user_details.first_name);
+            $('.p_name').attr('data-business_id', res.response.user_details.id);
+            $('.make_unfollow, .make_follow, .make_chat').attr('data-userid', res.response.user_details.id);
 
             $("#pets_and_business_profiles_list").html('');
             var profiles_list = '';
@@ -1152,7 +1271,9 @@ function loadUsersPageContent(user_id) {
             $("#pets_and_business_profiles_list").html(profiles_list);
 
             var feeds_html = '';
-            $(".profile-feed-container").html('Loading Feeds...');
+            var save_feeds_html = '';
+
+            $(".profile-feed-container, .profile-save-feed-container").html('Loading Feeds...');
 
             $.each(res.response.feeds, function(index, value){
                 var title = value.description;
@@ -1161,7 +1282,23 @@ function loadUsersPageContent(user_id) {
 
                 feeds_html += '<div class="card c_ard ks-facebook-card own_feed">'+
                                 '<div class="black_overlay"></div>'+
-                                '<a class="card-content" href="load_feed_page('+value.id+')">'+
+                                '<a class="card-content" onclick="load_feed_page('+value.id+')">'+
+                                '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
+                                '</a>'+
+                                '<div class="card-footer no-border like_share">'+
+                                '<a href="javascript:void(0);" data-liked="0" onclick="window.plugins.socialsharing.share("'+title+'", "'+title+'", "'+share_image_link+'", "'+share_link+'")" class=""><i class="material-icons white_heart">share</i></a>'+
+                                '</div>'+
+                                '</div>';
+            })
+
+            $.each(res.response.saved_feeds, function(index, value){
+                var title = value.description;
+                var share_image_link = image_url+value.image;
+                var share_link = 'http://pettato.com';
+
+                save_feeds_html += '<div class="card c_ard ks-facebook-card own_feed">'+
+                                '<div class="black_overlay"></div>'+
+                                '<a class="card-content" onclick="load_feed_page('+value.id+')">'+
                                 '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
                                 '</a>'+
                                 '<div class="card-footer no-border like_share">'+
@@ -1171,18 +1308,128 @@ function loadUsersPageContent(user_id) {
             })
 
             if (feeds_html) {
+                feeds_html += '<br><br>';
                 $(".profile-feed-container").html(feeds_html);
             } else {
                 $(".profile-feed-container").html('There are no feeds created by this account!');
             }
+
+            if (save_feeds_html) {
+                save_feeds_html += '<br><br>';
+                $(".profile-save-feed-container").html(save_feeds_html);
+            } else {
+                $(".profile-save-feed-container").html('There are no feeds created by this account!');
+            }
+
+            if (token.id !== res.response.user_details.id) {
+                if (res.response.follower_status == 'Unfollow') {
+                    $(".follow").show();
+                } else {
+                    $(".unfollow").show();
+                }
+
+                $(".chat").show();
+            }
         }
         myApp.hideIndicator();
     }).fail(function(err) {
-        console.log("error: " + j2s(err));
         myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function() {
         console.log("complete");
     });
+}
+
+function make_unfollow(type) {
+    var fieldtoget = '.'+type+'_make_follow';
+    myApp.showIndicator();
+    $.ajax({
+        url: base_url+'make_unfollow',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: $(fieldtoget).data('userid'), user_token_id: token.id,
+        }
+    }).done(function(res){
+        myApp.hideIndicator();
+        if (res.status == 'Success') {
+            $(".unfollow").hide();
+            $(".follow").show();
+        } else {
+            myApp.alert(res.api_msg);
+        }
+    }).error(function(res){
+        myApp.hideIndicator();
+        myApp.alert('Unbale to update, Please try again later!');
+    }).always(function(res){
+        myApp.hideIndicator();
+    })
+}
+
+function make_follow(type) {
+    var fieldtoget = '.'+type+'_make_follow';
+    myApp.showIndicator();
+    $.ajax({
+        url: base_url+'make_follow',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: $(fieldtoget).data('userid'), user_token_id: token.id,
+        }
+    }).done(function(res){
+        myApp.hideIndicator();
+        if (res.status == 'Success') {
+            $(".follow").hide();
+            $(".unfollow").show();
+        } else {
+            myApp.alert(res.api_msg);
+        }
+    }).error(function(res){
+        myApp.hideIndicator();
+        myApp.alert('Unbale to update, Please try again later!');
+    }).always(function(res){
+        myApp.hideIndicator();
+    })
+}
+
+function add_review_business() {
+    var html_count = $(".addBusinessReview_active").length;
+
+    if (!html_count || html_count == 0) {
+        myApp.alert("Please add Review");
+        return false;
+    }
+
+    if (!$("#review_comments").val()) {
+        myApp.alert("Please add comments!");
+        return false;
+    }
+
+    myApp.showIndicator();
+    $.ajax({
+        url: base_url+'add_review_business',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            business_id: $(".p_name_business_sub").data('business_id'),
+            user_id: token.id,
+            comment: $("#review_comments").val(),
+            review: html_count
+        }
+    }).done(function(res) {
+        myApp.hideIndicator();
+        if (res.status == 'Success') {
+            $(".close-popup").click();
+        } else {
+            myApp.alert(res.api_msg);
+        }
+    }).fail(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function() {
+        console.log("complete");
+    });
+
 }
 
 function loadBusinessPageContent(user_id) {
@@ -1201,7 +1448,7 @@ function loadBusinessPageContent(user_id) {
         dataType: 'json',
         crossDomain: true,
         data: {
-            user_id: user_id,
+            user_id: user_id, token_profile_id: token.id,
         },
     }).done(function(res) {
         if (res.status == 'Success') {
@@ -1216,10 +1463,23 @@ function loadBusinessPageContent(user_id) {
             var append_p_name = res.response.user_details.first_name+'<br>'+res.response.user_details.company+'<br><i class="material-icons">star_rate</i>'+'<i class="material-icons">star_rate</i>'+'<i class="material-icons">star_rate</i>'+'<i class="material-icons">star_rate</i>'+'<i class="material-icons">star_rate</i>'+'<br><p class="color_757575 mrg0" style="font-size: 13px">29 Reviews &nbsp;&nbsp;&nbsp;<a href="#" data-popup=".popup-review" class="open-popup color_757575 mrg0" style="font-size: 13px">Add Review</a></p>';
 
             $('.p_name_business_sub').html(append_p_name);
+            $('.p_name_business_sub').attr('data-business_id', res.response.user_details.id);
+            $('.make_unfollow, .make_follow, .make_chat').attr('data-userid', res.response.user_details.id);
 
-            var feeds_html = '';
+            $(".business_make_call").attr('data-businessnumber', res.response.user_details.phone);
+            $(".business_email_to").attr('data-businessemail', res.response.user_details.email);
+            $(".business_location_to").attr('data-businesslat', res.response.user_details.lat);
+            $(".business_location_to").attr('data-businesslong', res.response.user_details.lng);
+
+            $(".business_make_call").click(function(e){
+                e.preventDefault();
+                make_call($(this).data('businessnumber'));
+            })
+
+            var feeds_html, reviews_html = '';
 
             $(".profile-feed-container").html('Loading Feeds...');
+            $(".profile-reviews_container").html('Loading Reviews...');
 
             $.each(res.response.feeds, function(index, value) {
                 var title = value.description;
@@ -1228,7 +1488,7 @@ function loadBusinessPageContent(user_id) {
 
                 feeds_html += '<div class="card c_ard ks-facebook-card own_feed">'+
                                 '<div class="black_overlay"></div>'+
-                                '<a class="card-content" href="load_feed_page('+value.id+')">'+
+                                '<a class="card-content" onclick="load_feed_page('+value.id+')">'+
                                 '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
                                 '</a>'+
                                 '<div class="card-footer no-border like_share">'+
@@ -1242,12 +1502,46 @@ function loadBusinessPageContent(user_id) {
             } else {
                 $(".profile-feed-container").html('There are no feeds created by this account!');
             }
+
+            $.each(res.response.business_reviews, function(index, value){
+                reviews_html += '<div class="card">'+
+                                    '<div class="card-header">'+value.first_name+'</div>'+
+                                    '<div class="card-content">'+
+                                        '<div class="card-content-inner text-left">'+value.comments+'</div>'+
+                                    '</div>'+
+                                    '<div class="card-footer">'+
+                                    '<p class="reviews_star">';
+
+                for (var i = 0; i < value.rating; i++) {
+                    reviews_html += '<i class="material-icons">star_rate</i>';
+                }
+
+                reviews_html += '</p>'+
+                                '</div>'+
+                                '</div>';
+            })
+
+            if (reviews_html) {
+                $(".profile-reviews_container").html(reviews_html);
+            } else {
+                $(".profile-reviews_container").html('There are no reviews created by this account!');
+            }
+
+            if (token.id !== res.response.user_details.id) {
+                if (res.response.follower_status == 'Unfollow') {
+                    $(".follow").show();
+                } else {
+                    $(".unfollow").show();
+                }
+
+                $(".chat").show();
+            }
         }
 
         myApp.hideIndicator();
     }).fail(function(err) {
-        console.log("error: " + j2s(err));
         myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function() {
         console.log("complete");
     });
@@ -1261,7 +1555,7 @@ function loadBusinessPageContentSub(user_id) {
     $(".p_name1_business_sub").html('');
     $(".followers").text('0');
     $(".followings").text('0');
-    // $(".unfollow, .follow, .chat").hide();
+    $(".unfollow, .follow, .chat").hide();
 
     $.ajax({
         url: base_url + 'get_user_profile',
@@ -1269,7 +1563,7 @@ function loadBusinessPageContentSub(user_id) {
         dataType: 'json',
         crossDomain: true,
         data: {
-            user_id: user_id,
+            user_id: user_id, token_profile_id: token.id,
         },
     }).done(function(res) {
         if (res.status == 'Success') {
@@ -1284,10 +1578,23 @@ function loadBusinessPageContentSub(user_id) {
             var append_p_name = res.response.user_details.first_name+'<br>'+res.response.user_details.company+'<br><i class="material-icons">star_rate</i>'+'<i class="material-icons">star_rate</i>'+'<i class="material-icons">star_rate</i>'+'<i class="material-icons">star_rate</i>'+'<i class="material-icons">star_rate</i>'+'<br><p class="color_757575 mrg0" style="font-size: 13px">29 Reviews &nbsp;&nbsp;&nbsp;<a href="#" data-popup=".popup-review" class="open-popup color_757575 mrg0" style="font-size: 13px">Add Review</a></p>';
 
             $('.p_name_business_sub').html(append_p_name);
+            $('.p_name_business_sub').attr('data-business_id', res.response.user_details.id);
+            $('.business_sub_make_unfollow, .business_sub_make_follow, .business_sub_make_chat').attr('data-userid', res.response.user_details.id);
 
-            var feeds_html = '';
+            $(".business_make_call").attr('data-businessnumber', res.response.user_details.phone);
+            $(".business_email_to").attr('data-businessemail', res.response.user_details.email);
+            $(".business_location_to").attr('data-businesslat', res.response.user_details.lat);
+            $(".business_location_to").attr('data-businesslong', res.response.user_details.lng);
+
+            $(".business_make_call").click(function(e){
+                e.preventDefault();
+                make_call($(this).data('businessnumber'));
+            })
+
+            var feeds_html, reviews_html = '';
 
             $(".profile-feed-container").html('Loading Feeds...');
+            $(".profile-reviews_container").html('Loading Reviews...');
 
             $.each(res.response.feeds, function(index, value) {
                 var title = value.description;
@@ -1296,7 +1603,7 @@ function loadBusinessPageContentSub(user_id) {
 
                 feeds_html += '<div class="card c_ard ks-facebook-card own_feed">'+
                                 '<div class="black_overlay"></div>'+
-                                '<a class="card-content" href="load_feed_page('+value.id+')">'+
+                                '<a class="card-content" onclick="load_feed_page('+value.id+')">'+
                                 '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
                                 '</a>'+
                                 '<div class="card-footer no-border like_share">'+
@@ -1310,12 +1617,46 @@ function loadBusinessPageContentSub(user_id) {
             } else {
                 $(".profile-feed-container").html('There are no feeds created by this account!');
             }
+
+            $.each(res.response.business_reviews, function(index, value){
+                reviews_html += '<div class="card">'+
+                                    '<div class="card-header">'+value.first_name+'</div>'+
+                                    '<div class="card-content">'+
+                                        '<div class="card-content-inner text-left">'+value.comments+'</div>'+
+                                    '</div>'+
+                                    '<div class="card-footer">'+
+                                    '<p class="reviews_star">';
+
+                for (var i = 0; i < value.rating; i++) {
+                    reviews_html += '<i class="material-icons">star_rate</i>';
+                }
+
+                reviews_html += '</p>'+
+                                '</div>'+
+                                '</div>';
+            })
+
+            if (reviews_html) {
+                $(".profile-reviews_container").html(reviews_html);
+            } else {
+                $(".profile-reviews_container").html('There are no reviews created by this account!');
+            }
+
+            if (token.id !== res.response.user_details.id) {
+                if (res.response.follower_status == 'Unfollow') {
+                    $(".follow").show();
+                } else {
+                    $(".unfollow").show();
+                }
+
+                $(".chat").show();
+            }
         }
 
         myApp.hideIndicator();
     }).fail(function(err) {
-        console.log("error: " + j2s(err));
         myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function() {
         console.log("complete");
     });
@@ -1388,8 +1729,8 @@ function loadPetPageContent(pet_id) {
         $(".pet_details_profile_tb_row").html(html);
         myApp.hideIndicator();
     }).error(function(res) {
-        console.log("error: " + j2s(res));
         myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(res) {
         console.log("complete");
     })
@@ -1441,7 +1782,7 @@ function add_to_become_parent() {
         }
     }).error(function(err) {
         myApp.hideIndicator();
-        console.log("error: " + j2s(err));
+        myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
         console.log("complete");
     });
@@ -1537,7 +1878,7 @@ function add_to_find_parent() {
         }
     }).fail(function(err) {
         myApp.hideIndicator();
-        console.log("error: " + j2s(err));
+        myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
         console.log("complete");
     });
@@ -1584,7 +1925,7 @@ function loadBecomeParentContent(user_id) {
         }
     }).error(function(res){
         myApp.hideIndicator();
-        console.log("error: " + j2s(err));
+        myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
         console.log("complete");
     });
@@ -1634,7 +1975,7 @@ function loadFindParentContent(user_id) {
         }
     }).error(function(res){
         myApp.hideIndicator();
-        console.log("error: " + j2s(err));
+        myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
         console.log("complete");
     });
@@ -1677,7 +2018,6 @@ function loadLostFoundContent(user_id) {
             $(".click_to_expand").click(function(e){
                 $(".text_expand").css('height', '20px');
                 var trigger_id = $(this).data('trigger');
-                console.log(trigger_id);
                 $(trigger_id).css('height', 'auto');
             })
         } else {
@@ -1687,7 +2027,7 @@ function loadLostFoundContent(user_id) {
         }
     }).error(function(err){
         myApp.hideIndicator();
-        console.log("error: " + j2s(err));
+        myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
         console.log("complete");
     });
@@ -1748,9 +2088,8 @@ function loadProfilesList(account_default_id, profile_list_type) {
 
             })
 
-            console.log(html);
-
             $("#list_profiles_dynamic").html(html);
+
         } else {
             myApp.hideIndicator();
             var html = '<p style="text-align: center;">'+res.api_msg+'</p>';
@@ -1758,11 +2097,248 @@ function loadProfilesList(account_default_id, profile_list_type) {
         }
     }).error(function(err){
         myApp.hideIndicator();
-        console.log("error: " + j2s(err));
+        myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
         console.log("complete");
     });
 }
 
+function loadSearchList() {
+    myApp.showIndicator();
+    $.ajax({
+        url: base_url+'search_list',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: token.id
+        }
+    }).done(function(res){
+        myApp.hideIndicator();
+        $("#search-list-users > ul").html('Loading users...');
+        var html = '';
+        $.each(res.response.users_list, function(index, value){
+            html += '<li class="item-content pad0">'+
+                        '<div class="item-inner">';
+
+            if (value.user_type == 'Pet') {
+                html += '<div class="item-content" onclick="goto_profile_shopper_pet('+value.id+');">';
+            } else if (value.user_type == 'Business') {
+                html += '<div class="item-content" onclick="goto_business_page('+value.id+');">';
+            } else {
+                html += '<div class="item-content" onclick="goto_user_page('+value.id+');">';
+            }
+                        html += '<div class="item-media pad0">'+
+                                    '<img src="'+image_url+value.profile_image+'" width="75" height="75">'+
+                                '</div>'+
+                                '<div class="item-inner">'+
+                                    '<div class="item-title-row">'+
+                                        '<div class="item-title">'+value.first_name+'</div>'+
+                                        '<div class="item-subtitle">'+value.user_type+' Profile</div>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>'+
+                        '</div>'+
+                    '</li>';
+        })
+
+        $("#search-list-users > ul").html(html);
+
+        var html = '';
+        $("#search-list-feeds > ul").html('Loading feeds...');
+        $.each(res.response.feeds_list, function(index, value){
+            html += '<li class="item-content">'+
+                        '<div class="item-inner">'+
+                            '<div class="card c_ard ks-facebook-card">'+
+                                '<div class="black_overlay"></div>'+
+                                    '<a href="#" class="card-header no-border pro_view">'+
+                                        '<div class="ks-facebook-avatar pro_pic">'+
+                                            '<img src="'+image_url+value.profile_image+'" width="34" height="34">'+
+                                        '</div>'+
+                                        '<div class="ks-facebook-name pro_name item-title">'+value.first_name+'</div>'+
+                                        '<div class="ks-facebook-date pro_tag item-title">'+value.feeds_content.substring(0, 50)+'</div>'+
+                                        '<div class="ks-facebook-date pro_tag">0 Comments 0 Likes</div>'+
+                                    '</a>'+
+                                    '<a class="card-content" onclick="load_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
+                                        '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
+                                    '</a>'+
+                                    '<div class="card-footer no-border like_share">';
+
+                            html += '</div>'+
+                                '</div>'+
+                            '</div>'+
+                        '</li>';
+        })
+
+        $("#search-list-feeds > ul").html(html);
+
+        var html = '';
+        $("#search-list-breeds > ul").html('Loading breeds...');
+        $.each(res.response.breeds_list, function(index, value){
+            html += '<li class="item-content">'+
+                        '<div class="item-inner">'+
+                            '<div class="item-title">'+value.breed+'</div>'+
+                        '</div>'+
+                    '</li>';
+        })
+
+        $("#search-list-breeds > ul").html(html);
+    }).error(function(res){
+        myApp.hideIndicator();
+    }).always(function(res){
+        myApp.hideIndicator();
+    })
+}
+
+function goto_user_page(user_id) {
+    account_id = user_id;
+    mainView.router.load({
+        url: 'profile_shopper_sub.html',
+        ignoreCache: false,
+    });
+}
+
+function loadChatsList() {
+    myApp.showIndicator();
+    $.ajax({
+        url: base_url+'load_chat_list',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: token.id,
+        }
+    }).done(function(res){
+        if (res.status == 'Success') {
+            var html = '';
+
+            $("#dyn_chats_list > ul").html('Loading Chat List...');
+
+            $.each(res.response.chats_list, function(index, value) {
+                var time = new Date(value.created_date);
+                var timechng = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+                if (value.read_status == 1) {
+                    html += '<li class="swipeout item-content messages_from_id_'+value.id+'" onclick="goto_page()">';
+                } else {
+                    html += '<li class="swipeout item-content messages_from_id_'+value.id+' read_active" onclick="goto_page()">';
+                }
+                    html += '<div class="swipeout-content item-content">'+
+                                '<div class="item-media pad0">'+
+                                    '<img src="'+image_url+value.profile_image+'" width="75" height="75">'+
+                                '</div>'+
+                                '<div class="item-inner">'+
+                                    '<div class="item-title-row">'+
+                                        '<div class="item-title">'+value.first_name+'<span class="time-text">'+timechng+'</span>'+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<div class="item-subtitle">'+value.messages+'</div>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="swipeout-actions-right">'+
+                                '<a href="#" data-messageid="'+value.id+'" class="action1 change_message_read_status">Mark Read</a>'+
+                            '</div>'+
+                        '</li>';
+            })
+
+            if (html) {
+                $("#dyn_chats_list > ul").html(html);
+            } else {
+                $("#dyn_chats_list > ul").html('You do not have chat list.');
+            }
+
+            $(".change_message_read_status").click(function(e){
+                e.preventDefault();
+                var chng_status_clas = ".messages_from_id_"+$(this).data('messageid');
+                $.ajax({
+                    url: base_url+'change_message_read_status',
+                    type: 'POST',
+                    crossDomain: true,
+                    data: {
+                        message_id: $(this).data('messageid'),
+                        user_id: token.id,
+                    }
+                }).done(function(res){
+                    if (res.status == 'Success') {
+                        $(chng_status_clas).removeClass('read_active');
+                    } else {
+                        myApp.alert('Some error occured while updating the status!');
+                    }
+                }).error(function(res){
+                    myApp.alert('Some error occured while updating the status!');
+                })
+            })
+
+            myApp.hideIndicator();
+        } else {
+            myApp.alert(res.api_msg);
+            myApp.hideIndicator();
+        }
+    }).error(function(res){
+        myApp.alert('Something went wrong, Please check your connection!');
+        myApp.hideIndicator();
+    }).always(function(res){
+        myApp.hideIndicator();
+    })
+}
+
+function formatAMPM(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+}
+
+function load_edit_profile_shopper() {
+    myApp.showIndicator();
+    $.ajax({
+        url: base_url + 'get_user',
+        type: 'POST',
+        crossDomain: true,
+        async: false,
+        data: {
+            user_id: token.id
+        },
+    })
+    .done(function(res) {
+        myApp.hideIndicator();
+        if (res.status = 'Success') {
+            user_data = res.response.user_details;
+
+            // calendarDefault = myApp.calendar({
+            //     input: '.calendar-default',
+            //     maxDate: new Date(),
+            //     value: [new Date(user_data.dob)],
+            // });
+
+            load_city('#edit_profile_shopper-city_select');
+
+            // $('#edit_profile_shopper-city_select').change(function(event) {
+            //     var city_id = $(this).val();
+            //     console.log('city_id: ' + city_id);
+            //     load_location('#edit_profile_shopper-location_select', city_id, function(){});
+            // });
+            // load_location('#edit_profile_shopper-location_select', user_data.city_id, load_location_after_city_load_for_edit_profile_shopper);
+
+            $('#edit_profile_shopper-username').val(user_data.username);
+            $('#edit_profile_shopper-name').val(user_data.first_name);
+            $('#edit_profile_shopper-email').val(user_data.email);
+            $('#edit_profile_shopper-phone').val(user_data.phone);
+            $('#edit_profile_shopper-city_select').val(user_data.city_id);
+            // $('#edit_profile_shopper-location_select').val(user_data.location_id);
+            $('input[name=edit_profile_shopper-gender][value='+user_data.gender+']').attr('checked', true); 
+            image_from_device = user_data.image;
+
+        } else {
+            myApp.alert('Some error occurred');
+        }        
+    }).fail(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Some error occurred');
+    }).always();
+}
 
 
+function update_shopper_profile() {
+}

@@ -33,6 +33,7 @@ var feed_details_fetch_id = 0;
 var account_default_id = 0;
 var account_id = 0;
 var profile_list_type = 0;
+var edit_profile_id = 0;
 
 openFB.init('2106128496268926', '', window.localStorage);
 
@@ -119,6 +120,11 @@ myApp.onPageInit('profile_shopper', function(page) {
     loadUsersPageContent(account_default_id);
 });
 
+// users account profile
+myApp.onPageInit('profile_shopper_sub', function(page) {
+    loadUsersPageContent(account_id);
+});
+
 // business account profile
 myApp.onPageInit('profile_business', function(page) {
     loadBusinessPageContent(account_default_id);
@@ -132,6 +138,32 @@ myApp.onPageInit('profile_shopper_pet', function(page) {
 // business page sub profile
 myApp.onPageInit('profile_business_sub', function(page) {
     loadBusinessPageContentSub(account_id);
+
+    $("#addBusinessReview1").click(function(e){
+        e.preventDefault();
+        $(".addBusinessReview").removeClass('addBusinessReview_active');
+        $("#addBusinessReview1").addClass('addBusinessReview_active');
+    })
+    $("#addBusinessReview2").click(function(e){
+        e.preventDefault();
+        $(".addBusinessReview").removeClass('addBusinessReview_active');
+        $("#addBusinessReview1, #addBusinessReview2").addClass('addBusinessReview_active');
+    })
+    $("#addBusinessReview3").click(function(e){
+        e.preventDefault();
+        $(".addBusinessReview").removeClass('addBusinessReview_active');
+        $("#addBusinessReview1, #addBusinessReview2, #addBusinessReview3").addClass('addBusinessReview_active');
+    })
+    $("#addBusinessReview4").click(function(e){
+        e.preventDefault();
+        $(".addBusinessReview").removeClass('addBusinessReview_active');
+        $("#addBusinessReview1, #addBusinessReview2, #addBusinessReview3, #addBusinessReview4").addClass('addBusinessReview_active');
+    })
+    $("#addBusinessReview5").click(function(e){
+        e.preventDefault();
+        $(".addBusinessReview").removeClass('addBusinessReview_active');
+        $("#addBusinessReview1, #addBusinessReview2, #addBusinessReview3, #addBusinessReview4, #addBusinessReview5").addClass('addBusinessReview_active');
+    })
 });
 
 // become a parent list
@@ -165,6 +197,7 @@ myApp.onPageInit('become_parent_create', function(page) {
 // profile settings
 myApp.onPageInit('settings', function(page) {
     $("#username_disp_dyn").html(token.username);
+    $("#username_disp_dyn1").html(token.username);
 });
 
 // add account type selection
@@ -204,3 +237,23 @@ myApp.onPageInit('lost_and_found', function(page) {
 myApp.onPageInit('profiles', function(page) {
     loadProfilesList(account_default_id, profile_list_type);
 });
+
+// search listing page
+myApp.onPageInit('search', function(page) {
+    loadSearchList();
+});
+
+// chats listing page
+myApp.onPageInit('chats', function(page) {
+    loadChatsList();
+});
+
+// edit business details page
+myApp.onPageInit('edit_profile_business', function(page) {
+});
+
+// edit users details page
+myApp.onPageInit('edit_profile_shopper', function(page) {
+    load_edit_profile_shopper();
+});
+

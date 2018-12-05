@@ -25,15 +25,15 @@
 							</div>
 						</div>
 						<div class="col-100">
-							<p class="p_name_business_sub textupper">Pettato</p>
+							<p class="p_name p_name_business_sub textupper">Pettato</p>
 							<p class="p_name1_business_sub"></p>
 						</div>
 					</div>
 					<div class="col-35">
 						<div class="follow_block">
-			                <a href="#" class="button button-green unfollow">Unfollow</a>
-			                <a href="#" class="button button-red follow">Follow</a>
-			                <a href="#" class="button button-green chat" style="background: #775942">Chat</a>
+			                <a href="#" data-userid="" onclick="make_unfollow('business');" class="button business_make_unfollow make_unfollow button-green unfollow">Unfollow</a>
+			                <a href="#" data-userid="" onclick="make_follow('business');" class="button business_make_follow make_follow button-red follow">Follow</a>
+			                <a href="#" data-userid="" onclick="make_chat('business');" class="button business_make_chat make_chat button-green chat" style="background: #775942">Chat</a>
 			            </div>
 					</div>
 				</div>
@@ -49,27 +49,27 @@
 			    </div>
 			</div>
 			<div class="user_blk">
-				<div class="pro_file_icons follow_block call">
+				<div class="pro_file_icons follow_block call business_make_call" data-businessnumber="">
 					<i class="material-icons">call</i>
 					<p>Call</p>
 				</div>
 				<div class="pro_file_icons chat follow_block">
 					<i class="material-icons">email</i>
-					<p>rhuzaif@yahoo.com</p>
+					<p class="business_email_to" data-businessemail="">rhuzaif@yahoo.com</p>
 				</div>
 				<div class="pro_file_icons follow_block">
 					<center><i class="material-icons">location_on</i></center>
-					<p class="">Location</p>
+					<p class="business_location_to" data-businesslat="" data-businesslong="">Location</p>
 				</div>
 			</div>
 			<div class="buttons-row">
-			    <a href="#account-feeds" class="tab-link active button">Feeds</a>
-			    <a href="#account-reviews" class="tab-link button">Reviews</a>
+			    <a href="#profile_business_account-feeds" class="tab-link active button">Feeds</a>
+			    <a href="#profile_business_account-reviews" class="tab-link button">Reviews</a>
 			</div>
         </div>
 		<div class="tabs">
 		    <!-- Tab 1, active by default -->
-		    <div id="account-feeds" class="tab active">
+		    <div id="profile_business_account-feeds" class="tab active">
 		        <div class="content-block mrg0 pad0">
 				    <div class="user_own_feed f_box">
 						<div class="profile-feed-container f_box">
@@ -79,55 +79,10 @@
 		        </div>
 		    </div>
 		    <!-- Tab 2 -->
-		    <div id="account-reviews" class="tab">
+		    <div id="profile_business_account-reviews" class="tab">
 		    	<div class="content-block mrg0 pad0">
 			        <div class="user_own_feed f_box">
 						<div class="profile-reviews_container f_box">
-							<div class="card">
-							    <div class="card-header">User Name</div>
-							    <div class="card-content">
-							        <div class="card-content-inner text-left">Card with header and footer. Card header is used to display card title and footer for some additional information or for custom actions.</div>
-							    </div>
-							    <div class="card-footer">
-							    	<p class="reviews_star"><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i></p>
-							    </div>
-							</div>
-							<div class="card">
-							    <div class="card-header">User Name</div>
-							    <div class="card-content">
-							        <div class="card-content-inner text-left">Card with header and footer. Card header is used to display card title and footer for some additional information or for custom actions.</div>
-							    </div>
-							    <div class="card-footer">
-							    	<p class="reviews_star"><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i></p>
-							    </div>
-							</div>
-							<div class="card">
-							    <div class="card-header">User Name</div>
-							    <div class="card-content">
-							        <div class="card-content-inner text-left">Card with header and footer. Card header is used to display card title and footer for some additional information or for custom actions.</div>
-							    </div>
-							    <div class="card-footer">
-							    	<p class="reviews_star"><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i></p>
-							    </div>
-							</div>
-							<div class="card">
-							    <div class="card-header">User Name</div>
-							    <div class="card-content">
-							        <div class="card-content-inner text-left">Card with header and footer. Card header is used to display card title and footer for some additional information or for custom actions.</div>
-							    </div>
-							    <div class="card-footer">
-							    	<p class="reviews_star"><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i></p>
-							    </div>
-							</div>
-							<div class="card">
-							    <div class="card-header">User Name</div>
-							    <div class="card-content">
-							        <div class="card-content-inner text-left">Card with header and footer. Card header is used to display card title and footer for some additional information or for custom actions.</div>
-							    </div>
-							    <div class="card-footer">
-							    	<p class="reviews_star"><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i><i class="material-icons">star_rate</i></p>
-							    </div>
-							</div>
 						</div>
 					</div>
 		    	</div>

@@ -619,7 +619,7 @@
 
 .insert_cover {
     position: absolute;
-    top: 40%;
+    top: 50%;
     right: 0;
 }
 
@@ -1414,7 +1414,6 @@ label.label-radio input[type=checkbox]:checked+.item-media i.icon-form-radio:aft
     width: 100px;
     height: 100px;
     bottom: 10%;
-    opacity: 0.7;
 }
 
 .floating-button, .floating-button-toolbar, .speed-dial {
@@ -1438,8 +1437,9 @@ label.label-radio input[type=checkbox]:checked+.item-media i.icon-form-radio:aft
     box-shadow: none;
 }
 
-
-
+.addBusinessReview_active {
+    color: #e4e445;
+}
 
 
 

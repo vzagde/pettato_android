@@ -16,9 +16,9 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="link"><i class="material-icons color_8ac640">favorite_border</i></a>
-                    <a href="#" class="link"><i class="material-icons color_8ac640">share</i></a>
-                    <a href="#" class="link"><i class="material-icons color_8ac640">save</i></a>
+                    <a href="#" class="link feedDetailsLike" data-feed_id="" onclick="feedLikeStatusChng();"><i class="material-icons color_8ac640">favorite_border</i></a>
+                    <a href="#" class="link feedDetailsShare" data-feed_id="" data-title="" data-image_link="" onclick="feedShareStatusChng();"><i class="material-icons color_8ac640">share</i></a>
+                    <a href="#" class="link feedDetailsSave" data-feed_id="" onclick="feedSaveStatusChng();"><i class="material-icons color_8ac640">save</i></a>
                 </div>
                 <div class="card-header">
                     <div class="facebook-avatar"><img src="img/profile_dummy.jpg" class="inner_pro_pic" width="50" height="50"></div>
@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="page-content messages-content">
-                <div class="messages feed_comments_container">
+                <div class="messages feed_comments_container" id="feedDetailsMessagesContainer">
                     <div class="message message-with-avatar message-received"> 
                         <div class="message-name">Huzaif</div>
                         <div class="message-text-new">Awesome :)</div>
