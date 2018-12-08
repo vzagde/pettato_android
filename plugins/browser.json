@@ -10,9 +10,6 @@
     "cordova-plugin-camera": {
       "PACKAGE_NAME": "com.kreaserv.pettato"
     },
-    "cordova-plugin-media-capture": {
-      "PACKAGE_NAME": "com.kreaserv.pettato"
-    },
     "cordova-plugin-device": {
       "PACKAGE_NAME": "com.kreaserv.pettato"
     },
@@ -31,10 +28,16 @@
     "cordova-plugin-inappbrowser": {
       "PACKAGE_NAME": "com.kreaserv.pettato"
     },
+    "cordova-plugin-media-capture": {
+      "PACKAGE_NAME": "com.kreaserv.pettato"
+    },
     "cordova-plugin-network-information": {
       "PACKAGE_NAME": "com.kreaserv.pettato"
     },
     "cordova-plugin-vibration": {
+      "PACKAGE_NAME": "com.kreaserv.pettato"
+    },
+    "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.kreaserv.pettato"
     }
   },
