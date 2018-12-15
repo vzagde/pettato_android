@@ -23,7 +23,7 @@
         <string>Photo Library Access Warning</string>
     </plugin>
     <!-- <gap:plugin name="cordova-plugin-social-message" source="npm" /> -->
-    <gap:plugin name="nl.x-services.plugins.socialsharing" version="4.3.16" />
+    <gap:plugin name="cordova-plugin-x-socialsharing" source="npm" />
     <plugin name="cordova-plugin-geolocation" source="npm" spec="~2.4.3" />
     <plugin name="cordova-plugin-globalization" source="npm" spec="~1.0.7" />
     <plugin name="cordova-plugin-inappbrowser" source="npm" spec="~1.7.1" />
