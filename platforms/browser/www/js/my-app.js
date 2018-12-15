@@ -111,7 +111,6 @@ myApp.onPageInit('create_feed', function(page) {
 
 // feed detail page
 myApp.onPageInit('feed', function(page) {
-    console.log('Calling Function');
     loadFeedsDetails();
 });
 
@@ -189,6 +188,19 @@ myApp.onPageInit('find_parent_create', function(page) {
     })
 });
 
+// filter find parent details
+myApp.onPageInit('become_parent_filter', function(page) {
+    load_pet_categories('#find_parent_filter-pettype');
+    $("#find_parent_filter-pettype").change(function(e) {
+        e.preventDefault();
+        if ($("#find_parent_filter-pettype").val() == 'Select Pet Type') {
+            myApp.alert("Please select the Pet Type");
+        } else {
+            load_breed_dropdown($("#find_parent_filter-pettype").val(), '#find_parent_filter-breed');
+        }
+    })
+});
+
 // find parent list
 myApp.onPageInit('find_parent_list', function(page) {
     loadFindParentContent(account_default_id);
@@ -253,6 +265,40 @@ myApp.onPageInit('chats', function(page) {
     loadChatsList();
 });
 
+// chats listing page
+myApp.onPageInit('chat', function(page) {
+    loadChatMessages(account_id);
+
+    var chatroom_id = account_id;
+
+    setInterval(function(){
+        $.ajax({
+            url: base_url + 'check_new_chat',
+            type: 'POST',
+            crossDomain: true,
+            data: {
+                user_id: token.id,
+                acc_id: chatroom_id
+            }
+        }).done(function(res){
+            if (res.status == 'Success') {
+                var html = '';
+                $.each(res.response, function(index, value){
+                    var receiver_profile = $(".chat_reviever_img").attr('src');
+                    html += '<div class="message message-received">'+
+                                '<div class="message-text">'+value.messages+'</div>'+
+                                '<div style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
+                            '</div>';
+                })
+
+                $("#messages_box_dyn").append(html);
+            } else {
+            }
+        }).error(function(res){
+        })
+    }, 2000);
+});
+
 // edit business details page
 myApp.onPageInit('edit_profile_business', function(page) {
 });
@@ -260,5 +306,10 @@ myApp.onPageInit('edit_profile_business', function(page) {
 // edit users details page
 myApp.onPageInit('edit_profile_shopper', function(page) {
     load_edit_profile_shopper();
+});
+
+// edit pet details page
+myApp.onPageInit('edit_profile_pet', function(page) {
+    // load_edit_profile_shopper();
 });
 

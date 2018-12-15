@@ -8,6 +8,8 @@
         Kreaserv Team
     </author>
     <content src="index.html" />
+    <gap:plugin name="cordova-plugin-social-message" source="npm" />
+    <gap:plugin name="cordova-plugin-x-socialsharing" source="npm" />
     <icon src="app_icon.png" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

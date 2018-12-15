@@ -716,7 +716,6 @@
 
 .follow_block a {
     color: #fff;
-    background: #68bd45;
     height: auto;
     padding: 10px 2px;
     margin: 5px 5px 0 0;
@@ -979,7 +978,7 @@
 
 .chat_box_design .message-sent .message-text {
     margin-right: 60px;
-    padding: 3% !important;
+    padding: 5% !important;
     background: #e8e7e7 !important;
 }
 
@@ -1001,7 +1000,7 @@
 
 .chat_box_design .message-received .message-text {
     background: #d8e699 !important;
-    padding: 2% 5% !important;
+    padding: 5% !important;
 }
 
 .chat_box_design .message-avatar {
@@ -1052,7 +1051,7 @@ label.label-radio input[type=checkbox]:checked+.item-media i.icon-form-radio:aft
 }
 
 #feed-container .facebook-name {
-    margin: 15px 0 0 !important;
+    margin: 5px 0 0 !important;
     margin-left: 70px !important;
     font-weight: 500 !important;
 }
@@ -1441,9 +1440,20 @@ label.label-radio input[type=checkbox]:checked+.item-media i.icon-form-radio:aft
     color: #e4e445;
 }
 
+.make_follow, .make_chat {
+    background: #818181;
+}
 
+.make_unfollow {
+    background: #68bd45 !important;
+}
 
-
+.modal-buttons.modal-buttons-vertical .modal-button {
+    text-align: left;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    height: 55px;
+    line-height: 55px;
+}
 
 
 

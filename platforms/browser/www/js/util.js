@@ -68,6 +68,15 @@ function make_call(number) {
     window.open('tel:' + number);
 }
 
+function sendEmail() {
+    window.open('mailto:' + $(".business_email_to").html());
+}
+
+function locatioRoute() {
+    // window.open('email:' + $(".business_email_to").html());
+    directions.navigateTo($(".business_email_to").data('businesslat'), $(".business_email_to").data('businesslong'));
+}
+
 function logout() {
     Lockr.flush();
     token = false;
@@ -909,7 +918,7 @@ function loadFeeds() {
         url: base_url+'feeds',
         type: 'POST',
         data: {
-            user_id: token,
+            user_id: token.id,
         },
     }).done(function(res){
         var html = '';
@@ -917,26 +926,32 @@ function loadFeeds() {
 
         if (res.status == 'Success') {
             $.each(res.response, function(index, value){
+                var share_image_link = image_url+value.image;
+                var share_image_title = value.feeds_content.substring(0, 50);
                 html += '<div class="card c_ard ks-facebook-card">'+
                         '<div class="black_overlay"></div>'+
                         '<a href="#" class="card-header no-border pro_view">'+
                         '<div class="ks-facebook-avatar pro_pic">'+
                         '<img src="'+image_url+value.profile_image+'" width="34" height="34">'+
-                        '</div>'+
-                        '<div class="ks-facebook-name pro_name">'+value.first_name+'</div>'+
-                        '<div class="ks-facebook-date pro_tag">'+value.feeds_content.substring(0, 50)+'</div>'+
+                        '</div>';
+                if (value.user_type == 'Business') {
+                    html += '<div class="ks-facebook-name pro_name" onclick="goto_business_page('+value.user_id+')">'+value.first_name+'</div>';
+                } else {
+                    html += '<div class="ks-facebook-name pro_name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>';
+                }
+                html += '<div class="ks-facebook-date pro_tag">'+share_image_title+'</div>'+
                         '<div class="ks-facebook-date pro_tag">0 Comments 0 Likes</div>'+
                         '</a>'+
                         '<a class="card-content" onclick="load_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
-                        '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
+                        '<img data-src="'+share_image_link+'" src="'+share_image_link+'" width="100%" class="lazy lazy-fadein">'+
                         '</a>'+
                         '<div class="card-footer no-border like_share">'+
-                        '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i onclick="feedShareStatusChng()" class="material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>'+
+                        '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+share_image_title+'" data-image_link="'+share_image_link+'" class="share_feeds_'+value.feed_id+' material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>'+
                         '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>'+
                         '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" style="" onclick="chngSaveStatus('+value.feed_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren3" style="font-size:20px !important;">save</i></a>'+
                         '<a href="javascript:void(0);" class="add_clk" style="z-index: 999"><i class="material-icons white_heart">add_circle</i></a>';
 
-                if (token.id == value.user_id && value.like_status == 1) {
+                if (value.like_status == 1) {
                     html += '<a href="javascript:void(0);" data-liked="0" onclick="chngLikeStatus('+value.feed_id+');" class="like_block_chng_active'+value.feed_id+'"><i class="material-icons white_heart white_heart_active">favorite</i></a>';
                 } else {
                     html += '<a href="javascript:void(0);" data-liked="0" onclick="chngLikeStatus('+value.feed_id+');" class="like_block_chng_active'+value.feed_id+'"><i class="material-icons white_heart white_heart_active">favorite_border</i></a>';
@@ -1040,16 +1055,76 @@ function load_feed_page(feed_id) {
     });
 }
 
-function feedLikeStatusChng() {
-    var feed_id = $('.feedDetailsLike').data('feed_id');
-    chngLikeStatus(feed_id);
+function sharePetProfile() {
+    var title = $(".share_profileButtonhide").data('title');
+    var share_image_link = $(".share_profileButtonhide").data('image_link');
+
+    myApp.modal({
+        title: title,
+        text: '<img src="'+share_image_link+'" width="100%;">',
+        verticalButtons: true,
+        buttons: [{
+                text: 'Share on Social Media',
+                onClick: function() {
+                    window.plugins.socialsharing.share(title, title, share_image_link, '');
+                }
+            },
+            {
+                text: 'Share on Pettato',
+                onClick: function() {
+                    share_with_freinds();
+                }
+            },
+            {
+                text: 'Cancel',
+                onClick: function() {
+                    myApp.closeModal();
+                }
+            },
+        ]
+    })
 }
 
-function feedShareStatusChng() {
-    var title = $('.feedDetailsShare').data('title');
-    var share_image_link = $('.feedDetailsShare').data('image_link');
+function feedShareStatusChng(id) {
+    var title, share_image_link = '';
+    if (id == 0) {
+        title = $(".feedDetailsShare").data('title');
+        share_image_link = $(".feedDetailsShare").data('image_link');
+    } else {
+        title = $(".share_feeds_"+id).data('title')+'...';
+        share_image_link = $(".share_feeds_"+id).data('image_link');
+    }
+
     var share_link = 'http://pettato.com';
-    window.plugins.socialsharing.share(title, title, share_image_link, share_link);
+
+    myApp.modal({
+        title: title,
+        text: '<img src="'+share_image_link+'" width="100%;">',
+        verticalButtons: true,
+        buttons: [{
+                text: 'Share on Social Media',
+                onClick: function() {
+                    window.plugins.socialsharing.share(title, title, share_image_link, share_link);
+                }
+            },
+            {
+                text: 'Share on Pettato',
+                onClick: function() {
+                    share_with_freinds();
+                }
+            },
+            {
+                text: 'Cancel',
+                onClick: function() {
+                    myApp.closeModal();
+                }
+            },
+        ]
+    })
+}
+
+function share_with_freinds(title, title, share_image_link, share_link) {
+    myApp.alert("Shared with your friends!");
 }
 
 function feedSaveStatusChng() {
@@ -1078,7 +1153,13 @@ function loadFeedsDetails() {
         if (res.status == 'Success') {
             $(".feed_image").attr("src", image_url+res.response.image);
             $(".inner_pro_pic").attr("src", image_url+res.response.profile_image);
-            $(".feed_creator").html(res.response.first_name);
+
+            if (res.response.user_type == 'Business') {
+                $(".feed_creator").html('<span onclick="goto_business_page('+res.response.user_id+')">'+res.response.first_name+'</span>');
+            } else {
+                $(".feed_creator").html('<span onclick="goto_user_page('+res.response.user_id+')">'+res.response.first_name+'</span>');
+            }
+
             $(".feed_comment_like").html('9 Comments 5 Likes');
             $(".feed_desc").html(res.response.feeds_content);
             // $("#feedDetailsMessagesContainer").html('');
@@ -1096,7 +1177,7 @@ function loadFeedsDetails() {
 
             $(".feedDetailsLike").attr('data-feed_id', res.response.feed_id);
             $(".feedDetailsShare").attr('data-feed_id', res.response.feed_id);
-            $(".feedDetailsShare").attr('data-title', res.response.feed_id);
+            $(".feedDetailsShare").attr('data-title', res.response.feeds_content.substring(0, 50));
             $(".feedDetailsShare").attr('data-image_link', image_url+res.response.image);
             $(".feedDetailsSave").attr('data-feed_id', res.response.feed_id);
 
@@ -1139,6 +1220,8 @@ function add_comment_feed() {
                         '</div>';
 
             $("#feedDetailsMessagesContainer").prepend(comments);
+
+            $("#feed_comment").val('');
         } else {
             myApp.alert("Unbale to upload comment, Please try again later!");
         }
@@ -1152,6 +1235,7 @@ function add_feed() {
     var feed_image = feed_image_upload.trim();
     var description = $('#create_feed-description').val().trim();
     var location_id = $('#create_feed-location').val();
+    var post_create_id = 0;
 
     if (feed_image == '') {
         myApp.alert('Please upload image.');
@@ -1168,12 +1252,46 @@ function add_feed() {
 
     myApp.showIndicator();
     $.ajax({
-        url: base_url + 'create_feed',
+        url: base_url+'get_users_business_acc',
         type: 'POST',
         dataType: 'json',
         crossDomain: true,
         data: {
             user_id: token.id,
+        }
+    }).done(function(res){
+        var json_data = [];
+        if (res.status == 'Success') {
+            $.each(res.response, function(index, value){
+                post_create_id = value.id;
+                json_data.push({text: '@'+value.username, onClick: function() { create_feed(post_create_id, feed_image, description, location_id); }});
+            })
+
+            myApp.hideIndicator();
+
+            myApp.modal({
+                verticalButtons: true,
+                buttons: json_data
+            })
+        } else {
+            myApp.hideIndicator();
+            myApp.alert("Unable to fetch user's list!");
+        }
+    }).error(function(res){
+        myApp.hideIndicator();
+        myApp.alert("Unable to fetch user's list!");
+    })
+}
+
+function create_feed(post_create_id, feed_image, description, location_id) {
+    myApp.showIndicator();
+    $.ajax({
+        url: base_url + 'create_feed',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            user_id: post_create_id,
             description: description,
             image: feed_image,
             location: location_id,
@@ -1393,6 +1511,17 @@ function make_follow(type) {
     })
 }
 
+function make_chat(type) {
+    var user_id = 0;
+
+    if (type == 'business_sub') {
+        user_id = $(".business_sub_make_chat").data('userid');
+    } else {
+        user_id = $(".user_sub_make_chat").data('userid');
+    }
+    goto_chat_inner(user_id);
+}
+
 function add_review_business() {
     var html_count = $(".addBusinessReview_active").length;
 
@@ -1420,9 +1549,13 @@ function add_review_business() {
     }).done(function(res) {
         myApp.hideIndicator();
         if (res.status == 'Success') {
+            myApp.alert('Thank you for reviewing the Business!');
+            $(".addBusinessReview").removeClass('addBusinessReview_active');
+            $("#review_comments").val('');
             $(".close-popup").click();
         } else {
             myApp.alert(res.api_msg);
+            return false;
         }
     }).fail(function(err) {
         myApp.hideIndicator();
@@ -1430,7 +1563,6 @@ function add_review_business() {
     }).always(function() {
         console.log("complete");
     });
-
 }
 
 function loadBusinessPageContent(user_id) {
@@ -1591,6 +1723,10 @@ function loadBusinessPageContentSub(user_id) {
             $('.followers').text(res.followers);
             $('.followings').text(res.followings);
 
+            $(".business_email_to").html(res.email);
+            $(".business_location_to").attr('data-businesslat', res.lat);
+            $(".business_location_to").attr('data-businesslong', res.lng);
+
             var stars_html = '';
             var stars_count = Math.round(res.response.stars_count);
 
@@ -1722,6 +1858,11 @@ function loadPetPageContent(pet_id) {
             $(".hideforOthers").hide();
         }
 
+        $(".share_profileButtonhide").attr('data-title', res.response.first_name);
+        $(".share_profileButtonhide").attr('data-image_link', image_url+res.response.profile_image);
+
+        // owners_name
+
         $(".cover_image").attr("src", image_url+res.response.cover_pic);
         $(".profie_image").attr("src", image_url+res.response.profile_image);
 
@@ -1732,6 +1873,10 @@ function loadPetPageContent(pet_id) {
                     '<div class="row">'+
                     '<div class="col-33">Username</div>'+
                     '<div class="col-66">'+res.response.username+'</div>'+
+                    '</div>'+
+                    '<div class="row">'+
+                    '<div class="col-33">Owner</div>'+
+                    '<div class="col-66" onclick="goto_user_page('+res.response.owners_id+');">'+res.response.owners_name+' (@'+res.response.owners_username+')</div>'+
                     '</div>'+
                     '<div class="row">'+
                     '<div class="col-33">Type of Pet</div>'+
@@ -2023,7 +2168,7 @@ function loadFindParentContent(user_id) {
                 html += '<div class="card facebook-card">'+
                             '<div class="card-header">'+
                                 '<div class="facebook-avatar"><img src="'+image_url+value.profile_pic+'" width="50" height="50"></div>'+
-                                '<div class="facebook-name">'+value.first_name+'</div>'+
+                                '<div class="facebook-name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>'+
                                 '<div class="facebook-date">@'+value.username+'</div>'+
                             '</div>'+
                             '<div class="card-content">'+
@@ -2301,9 +2446,9 @@ function loadChatsList() {
                 var time = new Date(value.created_date);
                 var timechng = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
                 if (value.read_status == 1) {
-                    html += '<li class="swipeout item-content messages_from_id_'+value.id+'" onclick="goto_page()">';
+                    html += '<li class="swipeout item-content messages_from_id_'+value.id+'" onclick="goto_chat_inner('+value.user_id+')">';
                 } else {
-                    html += '<li class="swipeout item-content messages_from_id_'+value.id+' read_active" onclick="goto_page()">';
+                    html += '<li class="swipeout item-content messages_from_id_'+value.id+' read_active" onclick="goto_chat_inner('+value.user_id+')">';
                 }
                     html += '<div class="swipeout-content item-content">'+
                                 '<div class="item-media pad0">'+
@@ -2361,6 +2506,137 @@ function loadChatsList() {
         myApp.hideIndicator();
     }).always(function(res){
         myApp.hideIndicator();
+    })
+}
+
+function goto_chat_inner(user_id) {
+    account_id = user_id;
+    mainView.router.load({
+        url: 'chat.html',
+        ignoreCache: false,
+    });
+}
+
+function send_chat() {
+    var user_id = token.id;
+    var acc_id = $(".chat_reviever_id").html();
+    var message = $("#mesage_sent").val();
+    console.log(message);
+    if (!message) {
+        return false;
+    } else {
+        myApp.showIndicator();
+
+        $.ajax({
+            url: base_url + 'creat_chat',
+            type: 'POST',
+            crossDomain: true,
+            data: {
+                user_id: user_id, acc_id: acc_id, message: message,
+            }
+        }).done(function(res){
+            if (res.status == 'Success') {
+                myApp.hideIndicator();
+                html = '<div class="message message-sent">'+
+                            '<div class="message-text">'+message+'</div>'+
+                            '<div style="background-image:url('+image_url+token.profile_image+')" class="message-avatar"></div>'+
+                        '</div>';
+                $("#messages_box_dyn").append(html);
+
+                $("#mesage_sent").val('');
+            } else {
+                myApp.hideIndicator();
+                myApp.alert("Network Error Occured, Please try again later!");
+            }
+        }).error(function(res){
+            myApp.hideIndicator();
+            myApp.alert("Network Error Occured, Please try again later!");
+
+        })
+    }
+}
+
+function loadChatMessages(user_id) {
+    myApp.showIndicator();
+
+    $(".chat_reviever_id").html(user_id);
+    
+    $.ajax({
+        url: base_url+'load_chat_messages',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: token.id,
+            acc_id: user_id,
+        }
+    }).done(function(res){
+        var html = '';
+
+        $("#messages_box_dyn").html('');
+
+        if (res.status == 'Success') {
+            var receiver_name = res.users_details.first_name;
+            var receiver_profile = image_url+res.users_details.profile_image;
+
+            $(".chat_reviever_img").attr('src', receiver_profile);
+            $(".chat_reviever_name").html(receiver_name);
+
+            $.each(res.response, function(index, value) {
+                if (value.sender_id == token.id) {
+                    html += '<div class="message message-sent">'+
+                                '<div class="message-text">'+value.messages+'</div>'+
+                                '<div style="background-image:url('+image_url+value.sender_profile_image+')" class="message-avatar"></div>'+
+                            '</div>';
+                } else {
+                    html += '<div class="message message-received">'+
+                                '<div class="message-text">'+value.messages+'</div>'+
+                                '<div style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
+                            '</div>';
+                }
+
+                // <div class="messages-date">Sunday, Feb 9 <span>12:58</span></div>
+                // <div class="message message-sent">
+                //     <div class="message-text">Yo!</div>
+                //     <div style="background-image:url(img/twinkle_profile_pic.png)" class="message-avatar"></div>
+                // </div>
+                // <div class="message message-sent">
+                //     <div class="message-text">I went to the adoption center yesterday</div>
+                //     <div style="background-image:url(img/twinkle_profile_pic.png)" class="message-avatar"></div>
+                // </div>
+                // <div class="message message-received">
+                //     <div class="message-text">Yo</div>
+                //     <div style="background-image:url(img/sid_profile_pic.png)" class="message-avatar"></div>
+                // </div>
+                // <div class="message message-received">
+                //     <div class="message-text">did you find something?</div>
+                //     <div style="background-image:url(img/sid_profile_pic.png)" class="message-avatar"></div>
+                // </div>
+                // <div class="messages-date">Sunday, Feb 10 <span>11:58</span></div>
+                // <div class="message message-sent">
+                //     <div class="message-text">Yes, I ll Send you a pic</div>
+                //     <div style="background-image:url(img/twinkle_profile_pic.png)" class="message-avatar"></div>
+                // </div>
+                // <div class="message message-sent message-pic">
+                //     <div class="message-text"><img src="https://pawsforprogress.co.uk/wp-content/uploads/2018/03/26233171-10154962083821455-5547238076054156425-o_1_orig-225x300.jpg"></div>
+                //     <div style="background-image:url(img/twinkle_profile_pic.png)" class="message-avatar"></div>
+                // </div>
+                // <div class="message message-received">
+                //     <div class="message-text">Wow, awesome!</div>
+                //     <div style="background-image:url(img/sid_profile_pic.png)" class="message-avatar"></div>
+                // </div>
+                // <div class="message message-received">
+                //     <div class="message-text">Yo</div>
+                //     <div style="background-image:url(img/sid_profile_pic.png)" class="message-avatar"></div>
+                // </div>
+            })
+
+            $("#messages_box_dyn").html(html);
+        }
+        
+        myApp.hideIndicator();
+    }).error(function(res){
+        myApp.hideIndicator();
+        myApp.alert("Some error occured, Please try again later!");
     })
 }
 

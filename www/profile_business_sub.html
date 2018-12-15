@@ -2,7 +2,7 @@
 	<div class="navbar header">
         <div class="navbar-inner">
             <div class="left">
-                <a href="#" class="open-panel link icon-only">
+                <a href="#" class="link icon-only">
 					<i class="material-icons color_8ac640">menu</i>
 				</a>
             </div>
@@ -36,7 +36,7 @@
 						<div class="follow_block">
 			                <a href="#" data-userid="" onclick="make_unfollow('business_sub');" class="button business_sub_make_unfollow button-green unfollow">Unfollow</a>
 			                <a href="#" data-userid="" onclick="make_follow('business_sub');" class="button business_sub_make_follow button-red follow">Follow</a>
-			                <a href="#" data-userid="" onclick="make_chat('business_sub');" class="button business_sub_make_chat button-green chat" style="background: #775942">Chat</a>
+			                <a href="#" data-userid="" onclick="make_chat('business_sub');" class="button business_sub_make_chat button-green chat">Chat</a>
 			            </div>
 					</div>
 				</div>
@@ -58,11 +58,11 @@
 				</div>
 				<div class="pro_file_icons chat follow_block">
 					<i class="material-icons">email</i>
-					<p class="business_email_to" data-businessemail="">rhuzaif@yahoo.com</p>
+					<p class="business_email_to" data-businessemail="" onclick="sendEmail();"></p>
 				</div>
 				<div class="pro_file_icons follow_block">
 					<center><i class="material-icons">location_on</i></center>
-					<p class="business_location_to" data-businesslocation="">Location</p>
+					<p class="business_location_to" data-businesslat="" data-businesslong="" onclick="locatioRoute();">Location</p>
 				</div>
 			</div>
 			<div class="buttons-row">
@@ -105,7 +105,7 @@
                 </a>
                 <a href="#" class="tab-link chats" onclick="goto_page('chats.html')">
                     <span class="badge bg-red"></span>
-                    <i class="material-icons color_blk">chat</i>
+                    <i class="material-icons color_blk">chat_bubble_outline</i>
                 </a>
 				<a href="#" class="tab-link notifications" onclick="goto_page('notifications.html')">
                     <span class="badge bg-green"></span>
@@ -142,11 +142,11 @@
                 </ul>
             </div>
             <div class="content-block register-btn" style="margin-top: 10% !important;">
-                <a id="login-btn" href="#" class="button button-big lo_gin" onclick="add_review_business()">POST REVIEW</a>
+                <a href="#" id="" class="button button-big lo_gin" onclick="add_review_business()">POST REVIEW</a>
             </div>
             <br>
             <div class="content-block register-btn mrg0">
-                <a id="login-btn" href="#" class="close-popup close-popup_review button button-big lo_gin"">CANCEL</a>
+                <a id="close_popup_review" href="#" class="close-popup close-popup_review button button-big lo_gin"">CANCEL</a>
             </div>
 	        <p style="display: none;"><a href="#" class="close-popup">Cancel</a></p>
 	    </div>
