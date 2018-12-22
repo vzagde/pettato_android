@@ -34,6 +34,10 @@ var account_default_id = 0;
 var account_id = 0;
 var profile_list_type = 0;
 var edit_profile_id = 0;
+var find_parent_filter_pettype = '';
+var find_parent_filter_breed = '';
+var find_parent_filter_age = '';
+var find_parent_filter_gender = '';
 
 openFB.init('2106128496268926', '', window.localStorage);
 
@@ -171,6 +175,11 @@ myApp.onPageInit('become_parent_list', function(page) {
 });
 
 // become a parent list
+myApp.onPageInit('become_parent_list_filtered', function(page) {
+    loadBecomeParentFilteredContent(account_default_id);
+});
+
+// become a parent list
 myApp.onPageInit('become_parent_disp', function(page) {
     loadBecomeParentDetails(account_id);
 });
@@ -257,7 +266,11 @@ myApp.onPageInit('profiles', function(page) {
 
 // search listing page
 myApp.onPageInit('search', function(page) {
-    loadSearchList();
+    // loadSearchList();
+
+    $("#search_all").on('change', function(){
+        loadSearchList();
+    })
 });
 
 // chats listing page
@@ -301,6 +314,7 @@ myApp.onPageInit('chat', function(page) {
 
 // edit business details page
 myApp.onPageInit('edit_profile_business', function(page) {
+    load_edit_profile_business(account_id);
 });
 
 // edit users details page
@@ -310,6 +324,6 @@ myApp.onPageInit('edit_profile_shopper', function(page) {
 
 // edit pet details page
 myApp.onPageInit('edit_profile_pet', function(page) {
-    // load_edit_profile_shopper();
+    load_edit_profile_pet(account_id);
 });
 

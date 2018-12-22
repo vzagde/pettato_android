@@ -11,6 +11,11 @@
       "src": "app_icon.png",
       "type": "image/png",
       "sizes": "undefinedxundefined"
+    },
+    {
+      "src": "app_icon.png",
+      "type": "image/png",
+      "sizes": "57x57"
     }
   ],
   "start_url": "index.html",

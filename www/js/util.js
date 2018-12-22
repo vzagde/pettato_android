@@ -940,7 +940,7 @@ function loadFeeds() {
                     html += '<div class="ks-facebook-name pro_name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>';
                 }
                 html += '<div class="ks-facebook-date pro_tag">'+share_image_title+'</div>'+
-                        '<div class="ks-facebook-date pro_tag">0 Comments 0 Likes</div>'+
+                        '<div class="ks-facebook-date pro_tag">'+value.feed_comment_count+' Comments '+value.likes_count+' Likes</div>'+
                         '</a>'+
                         '<a class="card-content" onclick="load_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
                         '<img data-src="'+share_image_link+'" src="'+share_image_link+'" width="100%" class="lazy lazy-fadein">'+
@@ -1160,7 +1160,7 @@ function loadFeedsDetails() {
                 $(".feed_creator").html('<span onclick="goto_user_page('+res.response.user_id+')">'+res.response.first_name+'</span>');
             }
 
-            $(".feed_comment_like").html('9 Comments 5 Likes');
+            $(".feed_comment_like").html(res.feed_comment_count+' Comments '+res.likes_count+' Likes');
             $(".feed_desc").html(res.response.feeds_content);
             // $("#feedDetailsMessagesContainer").html('');
 
@@ -2061,6 +2061,57 @@ function add_to_find_parent() {
 
 }
 
+function loadBecomeParentFilteredContent(user_id) {
+    myApp.showIndicator();
+
+    $.ajax({
+        url: base_url+'get_become_parent_list_filtered',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            user_id: user_id, 
+            pettype: find_parent_filter_pettype,
+            breed: find_parent_filter_breed,
+            age: find_parent_filter_age,
+            gender: find_parent_filter_gender,
+        }
+    }).done(function(res){
+        if (res.status == 'Success') {
+            var html = '';
+            $.each(res.response, function(index, value){
+                html += '<div class="item">'+
+                        '<a class="card-content color_8ac640" onclick="goto_becomeParentDetails('+value.id+');">'+
+                        '<div class="profile_photo">'+
+                        '<img src="'+image_url+value.profile_pic+'" width="100%">'+
+                        '</div>'+
+                        '<div class="content_blocker">'+
+                        '<h3 class="mrg0">'+value.pet_name+'</h3>'+
+                        '<p class="mrg0">'+value.pet_type+'</p>'+
+                        '<p class="mrg0">Age: '+value.age+'</p>'+
+                        '<p class="mrg0">'+value.gender+'</p>'+
+                        '</div>'+
+                        '</a>'+
+                        '</div>';
+            })
+
+            $("#become_parent_listDyn").html(html);
+
+            myApp.hideIndicator();
+        } else {
+            myApp.hideIndicator();
+            var html = '<p style="text-align: center;">'+res.api_msg+'</p>';
+            $("#become_parent_listDyn").html(html);
+        }
+    }).error(function(res){
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function(){
+        console.log("complete");
+    });
+}
+
+
 function loadBecomeParentContent(user_id) {
     myApp.showIndicator();
 
@@ -2340,7 +2391,8 @@ function loadSearchList() {
         type: 'POST',
         crossDomain: true,
         data: {
-            user_id: token.id
+            user_id: token.id,
+            search_term: $("#search_all").val(),
         }
     }).done(function(res){
         myApp.hideIndicator();
@@ -2371,7 +2423,12 @@ function loadSearchList() {
                     '</li>';
         })
 
-        $("#search-list-users > ul").html(html);
+        if (html) {
+            $("#search-list-users > ul").html(html);
+        } else {
+            $("#search-list-users > ul").html('There no listing availabel for this search!');
+        }
+
 
         var html = '';
         $("#search-list-feeds > ul").html('Loading feeds...');
@@ -2399,19 +2456,15 @@ function loadSearchList() {
                         '</li>';
         })
 
+        if (html) {
+            $("#search-list-feeds > ul").html(html);
+        } else {
+            $("#search-list-feeds > ul").html('There no listing availabel for this search!');
+        }
+
         $("#search-list-feeds > ul").html(html);
 
-        var html = '';
-        $("#search-list-breeds > ul").html('Loading breeds...');
-        $.each(res.response.breeds_list, function(index, value){
-            html += '<li class="item-content">'+
-                        '<div class="item-inner">'+
-                            '<div class="item-title">'+value.breed+'</div>'+
-                        '</div>'+
-                    '</li>';
-        })
-
-        $("#search-list-breeds > ul").html(html);
+        $(".subnavbar").removeClass('hide');
     }).error(function(res){
         myApp.hideIndicator();
     }).always(function(res){
@@ -2675,12 +2728,13 @@ function load_edit_profile_shopper() {
 
             load_city('#edit_profile_shopper-city_select');
 
-            // $('#edit_profile_shopper-city_select').change(function(event) {
-            //     var city_id = $(this).val();
-            //     console.log('city_id: ' + city_id);
-            //     load_location('#edit_profile_shopper-location_select', city_id, function(){});
-            // });
-            // load_location('#edit_profile_shopper-location_select', user_data.city_id, load_location_after_city_load_for_edit_profile_shopper);
+            $('#edit_profile_shopper-city_select').change(function(event) {
+                var city_id = $(this).val();
+                console.log('city_id: ' + city_id);
+                load_location('#edit_profile_shopper-location_select', city_id, function(){});
+            });
+
+            load_location('#edit_profile_shopper-location_select', user_data.city_id, load_location_after_city_load_for_edit_profile_shopper);
 
             $('#edit_profile_shopper-username').val(user_data.username);
             $('#edit_profile_shopper-name').val(user_data.first_name);
@@ -2700,6 +2754,224 @@ function load_edit_profile_shopper() {
     }).always();
 }
 
+function load_edit_profile_business(user_id) {
+    myApp.showIndicator();
+    $.ajax({
+        url: base_url + 'get_user',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: user_id
+        },
+    })
+    .done(function(res) {
+        console.log('res: ' + j2s(res));
+        myApp.hideIndicator();
+        if (res.status = 'success') {
+            user_data = res.data;
 
-function update_shopper_profile() {
+            // calendarDefault = myApp.calendar({
+            //     input: '.calendar-default',
+            //     maxDate: new Date(),
+            //     value: [new Date(user_data.dob)],
+            // });
+
+            load_city('#edit_profile_business-city_select');
+
+            $('#edit_profile_business-city_select').change(function(event) {
+                var city_id = $(this).val();
+                console.log('city_id: ' + city_id);
+                load_location('#edit_profile_business-location_select', city_id, function(){});
+            });
+
+            load_location('#edit_profile_business-location_select', user_data.city_id, load_location_after_city_load_for_edit_profile_business);
+
+            $('#edit_profile_business-name').val(user_data.first_name);
+            $('#edit_profile_business-email').val(user_data.username);
+            $('#edit_profile_business-phone').val(user_data.phone);
+            $('#edit_profile_business-city_select').val(user_data.city_id);
+            $('#edit_profile_business-buissness').val(user_data.bussiness_name);
+
+            load_category('#edit_profile_business-category', set_category_business_edit);
+
+            $('input[name=edit_profile_business-gender][value='+user_data.gender+']').attr('checked', true); 
+            image_from_device = user_data.image;
+        } else {
+            myApp.alert('Some error occurred');
+        }
+    }).fail(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Some error occurred');
+    }).always();
 }
+
+function load_location(selector, city_id, callback) {
+    console.log('city-id: '+city_id);
+    $.ajax({
+        url: base_url + 'get_location',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            city_id: city_id,
+        },
+    })
+    .done(function(res) {
+        console.log("success: " + j2s(res));
+        if (res.status == 'success') {
+            html = '<option value="">Select Location</option>';
+            $.each(res.data, function(index, val) {
+                html += '<option value="' + val.id + '">' + val.name + '</option>';
+            });
+            $(selector).html(html);
+            callback();
+        }
+    })
+    .fail(function(err) {
+        console.log("error: " + err);
+    })
+    .always(function() {
+        console.log("complete");
+    });
+}
+
+function load_location_after_city_load_for_edit_profile_business() {
+    $('#edit_profile_business-location_select').val(user_data.location_id);
+}
+
+function edit_profile_business() {
+    var name = $('#edit_profile_business-name').val().trim();
+    var email = $('#edit_profile_business-email').val().trim();
+    var city_id = $('#edit_profile_business-city_select').val();
+    var location_id = $('#edit_profile_business-location_select').val();
+    var gender = $('input[name=edit_profile_business-gender]:checked').val();
+    var profile_image = image_from_device.trim();
+    var phone = $('#edit_profile_business-phone').val().trim();
+    var business_name = $('#edit_profile_business-buissness').val().trim();
+    var category = $('#edit_profile_business-category').val();
+    var business_category = '';
+
+    $.each(category, function(index, val) {
+        business_category += val + ',';
+    });
+    business_category = business_category.slice(0, -1);
+
+    if (name == '') {
+        myApp.alert('Please provide name.');
+        return false;
+    }
+    if (email == '') {
+        myApp.alert('Please provide email.');
+        return false;
+    }
+    if (!email.match(email_regex)) {
+        myApp.alert('Please provide valid email id.');
+        return false;
+    }
+    if (!phone.match(phone_regex)) {
+        myApp.alert('Please enter valid phone number.');
+        return false;
+    }
+    if (business_name==''){
+        myApp.alert('Please provide business name.');
+        return false;
+    }
+    if (city_id == '') {
+        myApp.alert('Please provide city.');
+        return false;
+    }
+    if (!location_id) {
+        myApp.alert('Please provide location.');
+        return false;
+    }
+    if (!gender) {
+        myApp.alert('Please select gender.');
+        return false;
+    }
+    if (profile_image == '') {
+        myApp.alert('Please upload profile image.');
+        return false;
+    }
+    if (!business_category) {
+        myApp.alert('Please choose category.');
+        return false;
+    }
+
+    myApp.showIndicator();
+    $.ajax({
+        url: base_url + 'update_user',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            id: account_id,
+            identity: email,
+            username: email,
+            first_name: name,
+            city_id: city_id,
+            location_id: location_id,
+            gender: gender,
+            image: profile_image,
+            phone: phone,
+            bussiness_name: business_name,
+            bussiness_category_id: business_category,
+        },
+    })
+    .done(function(res) {
+        console.log("success: " + j2s(res));
+        myApp.hideIndicator();
+        if (res.status == 'success') {
+            myApp.alert('Successfully updated.');
+            mainView.router.refreshPage();
+        } else {
+            myApp.alert('some error');
+        }
+    })
+    .fail(function(err) {
+        myApp.hideIndicator();
+        console.log("error: " + j2s(err));
+        // myApp.alert("error: "+j2s(err));
+    })
+    .always(function() {
+        console.log("complete");
+    });
+}
+
+function filter_find_parent() {
+    find_parent_filter_pettype = $("#find_parent_filter-pettype").val();
+    find_parent_filter_breed = $("#find_parent_filter-breed").val();
+    find_parent_filter_age = $("#find_parent_filter-age").val();
+
+    if ($("#find_parent_filter-Male").is(":checked")) {
+        find_parent_filter_gender = 'Male';
+    }
+
+    if ($("#find_parent_filter-Female").is(":checked")) {
+        find_parent_filter_gender = 'Female';
+    }
+
+    if (!find_parent_filter_pettype) {
+        myApp.alert("Please select Pet Type!");
+        return false;
+    }
+    if (!find_parent_filter_breed) {
+        myApp.alert("Please select Breed!");
+        return false;
+    }
+    if (!find_parent_filter_age) {
+        myApp.alert("Please enter age!");
+        return false;
+    }
+    if (!find_parent_filter_gender) {
+        myApp.alert("Please select gender!");
+        return false;
+    }
+
+    mainView.router.load({
+        url: 'become_parent_list_filtered.html',
+        ignoreCache: false,
+    });
+}
+
+
+
