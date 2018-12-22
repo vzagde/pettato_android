@@ -327,3 +327,9 @@ myApp.onPageInit('edit_profile_pet', function(page) {
     load_edit_profile_pet(account_id);
 });
 
+
+// edit pet details page
+myApp.onPageInit('notifications', function(page) {
+    load_edit_profile_pet(account_id);
+});
+

@@ -1421,7 +1421,7 @@ label.label-radio input[type=checkbox]:checked+.item-media i.icon-form-radio:aft
 }
 
 .tabbar a.tab-link i {
-    color: #68bd45 !important;
+    color: #848484 !important;
 }
 
 .floating-button {
@@ -1455,7 +1455,13 @@ label.label-radio input[type=checkbox]:checked+.item-media i.icon-form-radio:aft
     line-height: 55px;
 }
 
+.toolbar {
+    background: #ffffff !important;
+}
 
+.font-CooperHewittLight {
+    font-family: 'CooperHewitt-Light' !important;
+}
 
 
 
