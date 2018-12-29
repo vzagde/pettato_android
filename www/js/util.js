@@ -1285,6 +1285,7 @@ function add_feed() {
 }
 
 function create_feed(post_create_id, feed_image, description, location_id) {
+    console.log(post_create_id);
     myApp.showIndicator();
     $.ajax({
         url: base_url + 'create_feed',
@@ -1613,6 +1614,7 @@ function loadBusinessPageContent(user_id) {
 
             $(".business_make_call").attr('data-businessnumber', res.response.user_details.phone);
             $(".business_email_to").attr('data-businessemail', res.response.user_details.email);
+            $(".business_email_to").html(res.response.user_details.email);
             $(".business_location_to").attr('data-businesslat', res.response.user_details.lat);
             $(".business_location_to").attr('data-businesslong', res.response.user_details.lng);
 
@@ -1743,6 +1745,7 @@ function loadBusinessPageContentSub(user_id) {
 
             $(".business_make_call").attr('data-businessnumber', res.response.user_details.phone);
             $(".business_email_to").attr('data-businessemail', res.response.user_details.email);
+            $(".business_email_to").html(res.response.user_details.email);
             $(".business_location_to").attr('data-businesslat', res.response.user_details.lat);
             $(".business_location_to").attr('data-businesslong', res.response.user_details.lng);
 
