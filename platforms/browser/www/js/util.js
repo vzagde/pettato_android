@@ -1104,7 +1104,8 @@ function feedShareStatusChng(id) {
         buttons: [{
                 text: 'Share on Social Media',
                 onClick: function() {
-                    window.plugins.socialsharing.share(title, title, share_image_link, share_link);
+                    window.plugins.socialsharing.share('Message and image', null, 'https://www.google.nl/images/srpr/logo4w.png', null);
+                    // window.plugins.socialsharing.share(title, title, share_image_link, share_link);
                 }
             },
             {
@@ -2704,6 +2705,101 @@ function formatAMPM(date) {
     return strTime;
 }
 
+function load_location_after_city_load_for_edit_profile_shopper() {
+    $('#edit_profile_shopper-location_select').val(user_data.location_id);
+}
+
+function update_shopper_profile() {
+    var name = $('#edit_profile_shopper-name').val().trim();
+    var email = $('#edit_profile_shopper-email').val().trim();
+    var city_id = $('#edit_profile_shopper-city_select').val();
+    var gender = $('input[name=edit_profile_shopper-gender]:checked').val();
+    var profile_image = profile_image_link;
+    var cover_image = profile_cover_image_link;
+    var phone = $('#edit_profile_shopper-phone').val().trim();
+
+    if (name == '') {
+        myApp.alert('Please provide name.');
+        return false;
+    }
+
+    if (email == '') {
+        myApp.alert('Please provide email id.');
+        return false;
+    }
+
+    if (!email.match(email_regex)) {
+        myApp.alert('Please provide valid email id.');
+        return false;
+    }
+
+    if (!phone.match(phone_regex)) {
+        myApp.alert('Please enter valid phone number.');
+        return false;
+    }
+
+    if (city_id == '') {
+        myApp.alert('Please provide city.');
+        return false;
+    }
+
+    if (!gender) {
+        myApp.alert('Please select gender.');
+        return false;
+    }
+
+    if (profile_image == '') {
+        myApp.alert('Please upload profile image.');
+        return false;
+    }
+
+    if (cover_image == '') {
+        myApp.alert('Please upload cover image.');
+        return false;
+    }
+
+
+    myApp.showIndicator();
+    $.ajax({
+        url: base_url + 'update_user',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            id: token,
+            identity: email,
+            username: email,
+            first_name: name,
+            city_id: city_id,
+            gender: gender,
+            cover_pic: cover_image,
+            image: profile_image,
+            medium: 'register',
+            user_type: 'User',
+            phone: phone,
+            profile_image: profile_image,
+        },
+    })
+    .done(function(res) {
+        console.log("success: " + j2s(res));
+        myApp.hideIndicator();
+        if (res.status == 'success') {
+            myApp.alert('Successfully updated.');
+            mainView.router.refreshPage();
+        } else {
+            myApp.alert('Some error occurred');
+        }
+    })
+    .fail(function(err) {
+        myApp.hideIndicator();
+        console.log("error: " + j2s(err));
+        // myApp.alert("error: "+j2s(err));
+    })
+    .always(function() {
+        console.log("complete");
+    });
+}
+
 function load_edit_profile_shopper() {
     myApp.showIndicator();
     $.ajax({
@@ -2720,12 +2816,6 @@ function load_edit_profile_shopper() {
         if (res.status = 'Success') {
             user_data = res.response.user_details;
 
-            // calendarDefault = myApp.calendar({
-            //     input: '.calendar-default',
-            //     maxDate: new Date(),
-            //     value: [new Date(user_data.dob)],
-            // });
-
             load_city('#edit_profile_shopper-city_select');
 
             $('#edit_profile_shopper-city_select').change(function(event) {
@@ -2740,10 +2830,12 @@ function load_edit_profile_shopper() {
             $('#edit_profile_shopper-name').val(user_data.first_name);
             $('#edit_profile_shopper-email').val(user_data.email);
             $('#edit_profile_shopper-phone').val(user_data.phone);
-            $('#edit_profile_shopper-city_select').val(user_data.city_id);
-            // $('#edit_profile_shopper-location_select').val(user_data.location_id);
+            $('#edit_profile_shopper-city_select').val(user_data.city);
+
             $('input[name=edit_profile_shopper-gender][value='+user_data.gender+']').attr('checked', true); 
-            image_from_device = user_data.image;
+
+            profile_image_link = user_data.image;
+            profile_cover_image_link = user_data.cover_pic;
 
         } else {
             myApp.alert('Some error occurred');
@@ -2845,7 +2937,7 @@ function edit_profile_business() {
     var city_id = $('#edit_profile_business-city_select').val();
     var location_id = $('#edit_profile_business-location_select').val();
     var gender = $('input[name=edit_profile_business-gender]:checked').val();
-    var profile_image = image_from_device.trim();
+    var profile_image = image_from_device;
     var phone = $('#edit_profile_business-phone').val().trim();
     var business_name = $('#edit_profile_business-buissness').val().trim();
     var category = $('#edit_profile_business-category').val();
