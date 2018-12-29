@@ -233,6 +233,7 @@ myApp.onPageInit('before_add_account', function(page) {
 // pet add account page
 myApp.onPageInit('pet_register', function(page) {
     load_pet_categories('#pet_register-pettype');
+    load_city('#pet_register-city');
     $("#pet_register-pettype").change(function(e) {
         e.preventDefault();
         if ($("#pet_register-pettype").val() == 'Select Pet Type') {
