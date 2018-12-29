@@ -69,7 +69,7 @@ function make_call(number) {
 }
 
 function sendEmail() {
-    window.open('mailto:' + $(".business_email_to").html());
+    window.open('mailto:' + $(".business_email_to").data('businessemail'));
 }
 
 function locatioRoute() {
@@ -736,6 +736,7 @@ function register_pet() {
     var breed = $("#pet_register-breed").val();
     var age = $("#pet_register-age").val();
     var description = $("#pet_register-description").val();
+    var city = $("#pet_register-city").val();
     var profile_btn = profile_image_link;
     var cover_btn = profile_cover_image_link;
 
@@ -774,6 +775,7 @@ function register_pet() {
                 pettype: pettype,
                 breed: breed,
                 age: age,
+                city: city,
                 profile_btn: profile_btn,
                 cover_btn: cover_btn,
                 parent_user_id: token.id,
@@ -781,9 +783,10 @@ function register_pet() {
             }
         }).done(function(res){
             if (res.status == 'Success') {
-                goto_page('profile_pet.html');
+                account_id = res.response;
+                goto_page('profile_shopper_pet.html');
             } else {
-                myApp.alert("Some Error Occured while processing the request, Please try again later");
+                myApp.alert(res.api_msg);
                 return false;
             }
         }).error(function(res){
@@ -1617,7 +1620,7 @@ function loadBusinessPageContent(user_id) {
 
             $(".business_make_call").attr('data-businessnumber', res.response.user_details.phone);
             $(".business_email_to").attr('data-businessemail', res.response.user_details.email);
-            $(".business_email_to").html(res.response.user_details.email);
+            $(".business_email_to").html('Email');
             $(".business_location_to").attr('data-businesslat', res.response.user_details.lat);
             $(".business_location_to").attr('data-businesslong', res.response.user_details.lng);
 
@@ -1748,7 +1751,7 @@ function loadBusinessPageContentSub(user_id) {
 
             $(".business_make_call").attr('data-businessnumber', res.response.user_details.phone);
             $(".business_email_to").attr('data-businessemail', res.response.user_details.email);
-            $(".business_email_to").html(res.response.user_details.email);
+            $(".business_email_to").html('Email');
             $(".business_location_to").attr('data-businesslat', res.response.user_details.lat);
             $(".business_location_to").attr('data-businesslong', res.response.user_details.lng);
 
