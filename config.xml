@@ -13,7 +13,7 @@
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="14" />
     <preference name="orientation" value="portrait" />
-    <preference name="fullscreen" value="true" />
+    <!-- <preference name="fullscreen" value="true" /> -->
 
     <icon src="app_icon.png" />
     <icon density="mdpi" height="57" platform="android" src="app_icon.png" width="57" />
