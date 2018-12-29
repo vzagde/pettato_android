@@ -2373,7 +2373,7 @@ function loadProfilesList(account_default_id, profile_list_type) {
                             '</div>'+
                             '<div class="swipeout-actions-right">'+
                                 '<a href="#" class="action1" '+onclick_html+'>Edit</a>'+
-                                '<a href="#" class="action2" '+onclick_html+'>View</a>'+
+                                '<a href="#" class="action2" '+onclick_html+'>Delete</a>'+
                             '</div>'+
                         '</li>';
 
