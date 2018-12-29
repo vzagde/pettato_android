@@ -30,7 +30,7 @@
     </platform>
     <!-- <plugin name="cordova-plugin-x-socialsharing" spec="4.3.16" /> -->
     <!-- <gap:plugin name="nl.x-services.plugins.socialsharing" version="4.3.16" /> -->
-    <plugin spec="https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git" source="git">
+    <plugin spec="https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git" source="git" />
     <plugin name="cordova-plugin-battery-status" spec="~1.1.1" />
     <plugin name="cordova-plugin-camera" spec="~2.1.1" />
     <plugin name="cordova-plugin-media-capture" spec="~1.2.0" />
