@@ -865,7 +865,7 @@
     text-transform:none;
 }
 
-#mapCanvas {
+#mapCanvas, #edit_mapCanvas {
     width: 100%;
     height: 250px;
 }

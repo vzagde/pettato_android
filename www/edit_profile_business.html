@@ -72,21 +72,6 @@
                             </div>
                         </a>
                     </li>
-                    <li>
-                        <a href="#" class="item-link smart-select" data-searchbar="true" data-searchbar-placeholder="Search location" data-back-on-select="true">
-                            <select name="locations" id="edit_profile_business-location_select">
-                            </select>
-
-                            <div class="item-content">
-                                <div class="item-inner">
-                                    <!-- Select label -->
-                                    <div class="item-title">Location</div>
-                                    <!-- Selected value, not required -->
-                                    <div class="item-after"></div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
                     <li class="item-content">
                         <!-- <div class="item-title">Gender</div> -->
                         <div class="content-block-title">Gender</div>
@@ -117,6 +102,20 @@
                     </li>
                     <li class="item-content">
                         <div class="item-inner">
+                            <div class="item-title label">Address</div>
+                            <div class="item-input">
+                                <div id="edit_mapCanvas"></div>
+                            </div>
+                            <br>
+                            <div class="item-input">
+                                <textarea id="edit_business_register-address" placeholder="Address"></textarea>
+                                <input type="text" name="edit_business_register-lat" id="edit_business_register-lat" value="" style="display: none">
+                                <input type="text" name="edit_business_register-lng" id="edit_business_register-lng" value="" style="display: none">
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
                             <div class="item-title">Profile pic</div>
                             <div class="item-input">
                                 <a href="#" id="edit_profile_business-profile_btn" onclick="open_dialog_for_image('user_profile')" class="floating-button black_clr btn-center">
@@ -127,7 +126,7 @@
                     </li>
                     <li class="item-content">
                         <div class="item-inner">
-                            <div class="item-title">Profile pic</div>
+                            <div class="item-title">Cover pic</div>
                             <div class="item-input">
                                 <a href="#" id="edit_profile_business-cover_pic" onclick="open_dialog_for_image('cover_pic')" class="floating-button black_clr btn-center">
                                     <i class="material-icons">add_a_photo</i>

@@ -178,9 +178,9 @@ function load_breed_dropdown(dropdown_value, dropdown_id) {
     })
 }
 
-function initialize() {
+function initialize(disp_lat, disp_lng, canvas) {
     var mapOptions = {
-        center: new google.maps.LatLng('19.113645', '72.869734'),
+        center: new google.maps.LatLng(disp_lat, disp_lng),
         zoom: 14,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
@@ -188,13 +188,13 @@ function initialize() {
     var geocoder = new google.maps.Geocoder();
     var infoWindow = new google.maps.InfoWindow();
     var latlngbounds = new google.maps.LatLngBounds();
-    var map = new google.maps.Map(document.getElementById("mapCanvas"), mapOptions);
+    var map = new google.maps.Map(document.getElementById(canvas), mapOptions);
 
     if (lat) {
         if (lng) {
             var myLatLng = {lat: lat, lng: lng};
 
-            var map = new google.maps.Map(document.getElementById('mapCanvas'), {
+            var map = new google.maps.Map(document.getElementById(canvas), {
                 zoom: 17,
                 center: myLatLng
             });
@@ -211,13 +211,13 @@ function initialize() {
             google.maps.event.addListener(marker, 'dragend', function (e) {
                 lat = e.latLng.lat();
                 lng = e.latLng.lng();
-                $("#business_register-lat, #business_register_add-lat").val(lat);
-                $("#business_register-lng, #business_register_add-lng").val(lng);
+                $("#business_register-lat, #edit_business_register-lat, #business_register_add-lat").val(lat);
+                $("#edit_business_register-lng, #business_register-lng, #business_register_add-lng").val(lng);
 
                 geocoder.geocode({'location': {lat: lat, lng: lng}}, function (results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
                         if (results[0]) {
-                            $("#business_register-address, #business_register_add-address").val(results[0].formatted_address);
+                            $("#business_register-address, #edit_business_register-address, #business_register_add-address").val(results[0].formatted_address);
                         } else {
                             myApp.alert('No results found');
                         }
@@ -232,13 +232,13 @@ function initialize() {
     google.maps.event.addListener(map, 'click', function (e) {
         lat = e.latLng.lat();
         lng = e.latLng.lng();
-        $("#business_register-lat, #business_register_add-lat").val(lat);
-        $("#business_register-lng, #business_register_add-lng").val(lng);
+        $("#business_register-lat, #edit_business_register-lat, #business_register_add-lat").val(lat);
+        $("#edit_business_register-lng, #business_register-lng, #business_register_add-lng").val(lng);
 
         geocoder.geocode({'location': {lat: lat, lng: lng}}, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 if (results[0]) {
-                    $("#business_register-address, #business_register_add-address").val(results[0].formatted_address);
+                    $("#business_register-address, #edit_business_register-address, #business_register_add-address").val(results[0].formatted_address);
                 } else {
                     myApp.alert('No results found');
                 }
@@ -246,7 +246,7 @@ function initialize() {
                 myApp.alert('Geocoder failed due to: ' + status);
             }
         });
-        initialize();
+        initialize('19.113645', '72.869734', 'mapCanvas');
     });
 }
 
@@ -1418,6 +1418,8 @@ function loadUsersPageContent(user_id) {
                                 '</div>';
             })
 
+            feeds_html += '<span style="min-height: 40px; width: 100%;" class="card c_ard ks-facebook-card own_feed"></span>';
+
             $.each(res.response.saved_feeds, function(index, value){
                 var title = value.description;
                 var share_image_link = image_url+value.image;
@@ -1433,6 +1435,8 @@ function loadUsersPageContent(user_id) {
                                 '</div>'+
                                 '</div>';
             })
+
+            save_feeds_html += '<span style="min-height: 40px; width: 100%;" class="card c_ard ks-facebook-card own_feed"></span>';
 
             if (feeds_html) {
                 feeds_html += '<br><br>';
@@ -2929,7 +2933,6 @@ function load_edit_profile_business(user_id) {
         },
     })
     .done(function(res) {
-        console.log('res: ' + j2s(res));
         myApp.hideIndicator();
         if (res.status = 'success') {
             user_data = res.response.user_details;
@@ -2949,9 +2952,17 @@ function load_edit_profile_business(user_id) {
             $('#edit_profile_business-email').val(user_data.email);
             $('#edit_profile_business-phone').val(user_data.phone);
             $('#edit_profile_business-city_select').val(user_data.city_id);
-            $('#edit_profile_business-buissness').val(user_data.company);
+            $('#edit_business_register-address').val(user_data.address);
 
-            load_category('#edit_profile_business-category', set_category_business_edit);
+            console.log(user_data.lat);
+            console.log(user_data.lng);
+
+            $("#edit_business_register-lat").val(user_data.lat);
+            $("#edit_business_register-lng").val(user_data.lng);
+
+            initialize(user_data.lat, user_data.lng, 'edit_mapCanvas');
+
+            // load_category('#edit_profile_business-category', function(){});
 
             $('input[name=edit_profile_business-gender][value='+user_data.gender+']').attr('checked', true); 
 
