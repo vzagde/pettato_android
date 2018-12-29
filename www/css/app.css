@@ -1463,6 +1463,9 @@ label.label-radio input[type=checkbox]:checked+.item-media i.icon-form-radio:aft
     font-family: 'CooperHewitt-Light' !important;
 }
 
-
+.no-style {
+    background: transparent !important;
+    border: transparent 0px solid !important;
+}
 
 
