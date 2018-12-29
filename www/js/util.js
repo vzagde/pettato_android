@@ -127,7 +127,7 @@ function load_category(selector, afterCallback) {
                 html += '<option value="' + val.id + '" >' + val.category_name + '</option>';
             });
             $(selector).html(html);
-            afterCallback();
+            // afterCallback();
         } else {
         }
     })
@@ -1384,10 +1384,13 @@ function loadUsersPageContent(user_id) {
                 }
             })
 
-            profiles_list += '<div class="change_width-20 text-center" onclick="goto_before_add_account();">'+
-                                '<img src="img/create-group-button.png" width="60%" style="border-radius: 5px; padding: 5%;">'+
-                                '<p class="mrg0 color_757575">Add Acount</p>'+
-                            '</div>';
+            if (res.response.user_details.id == token.id) {
+                profiles_list += '<div class="change_width-20 text-center" onclick="goto_before_add_account();">'+
+                                    '<img src="img/create-group-button.png" width="60%" style="border-radius: 5px; padding: 5%;">'+
+                                    '<p class="mrg0 color_757575">Add Acount</p>'+
+                                '</div>';
+            }
+
 
             $("#pets_and_business_profiles_list").html(profiles_list);
 
@@ -2715,6 +2718,7 @@ function load_location_after_city_load_for_edit_profile_shopper() {
 function update_shopper_profile() {
     var name = $('#edit_profile_shopper-name').val().trim();
     var email = $('#edit_profile_shopper-email').val().trim();
+    var username = $('#edit_profile_shopper-username').val().trim();
     var city_id = $('#edit_profile_shopper-city_select').val();
     var gender = $('input[name=edit_profile_shopper-gender]:checked').val();
     var profile_image = profile_image_link;
@@ -2726,6 +2730,11 @@ function update_shopper_profile() {
         return false;
     }
 
+    if (username == '') {
+        myApp.alert('Please provide username.');
+        return false;
+    }
+
     if (email == '') {
         myApp.alert('Please provide email id.');
         return false;
@@ -2733,11 +2742,6 @@ function update_shopper_profile() {
 
     if (!email.match(email_regex)) {
         myApp.alert('Please provide valid email id.');
-        return false;
-    }
-
-    if (!phone.match(phone_regex)) {
-        myApp.alert('Please enter valid phone number.');
         return false;
     }
 
@@ -2761,7 +2765,6 @@ function update_shopper_profile() {
         return false;
     }
 
-
     myApp.showIndicator();
     $.ajax({
         url: base_url + 'update_user',
@@ -2769,16 +2772,13 @@ function update_shopper_profile() {
         dataType: 'json',
         crossDomain: true,
         data: {
-            id: token,
+            id: token.id,
             identity: email,
-            username: email,
+            username: username,
             first_name: name,
             city_id: city_id,
             gender: gender,
             cover_pic: cover_image,
-            image: profile_image,
-            medium: 'register',
-            user_type: 'User',
             phone: phone,
             profile_image: profile_image,
         },
@@ -2788,7 +2788,8 @@ function update_shopper_profile() {
         myApp.hideIndicator();
         if (res.status == 'success') {
             myApp.alert('Successfully updated.');
-            mainView.router.refreshPage();
+            goto_profile()
+            // mainView.router.refreshPage();
         } else {
             myApp.alert('Some error occurred');
         }
@@ -2801,6 +2802,72 @@ function update_shopper_profile() {
     .always(function() {
         console.log("complete");
     });
+}
+
+function load_edit_profile_pet(user_id) {
+    myApp.showIndicator();
+    $.ajax({
+        url: base_url + 'get_user',
+        type: 'POST',
+        crossDomain: true,
+        async: false,
+        data: {
+            user_id: user_id
+        },
+    })
+    .done(function(res) {
+        myApp.hideIndicator();
+        if (res.status = 'Success') {
+            user_data = res.response.user_details;
+
+            $("#edit_pet_register-name").val(user_data.first_name);
+            $("#edit_pet_register-username").val(user_data.username);
+            // $("#edit_pet_register-pettype").val(user_data.first_name);
+            // $("#edit_pet_register-breed").val();
+            $("#edit_pet_register-age").val(user_data.age);
+            $("#edit_pet_register-description").val(user_data.description);
+            load_pet_categories("#edit_pet_register-pettype");
+
+            $("#edit_pet_register-pettype").change(function(e) {
+                e.preventDefault();
+                if ($("#edit_pet_register-pettype").val() == 'Select Pet Type') {
+                    myApp.alert("Please select the Pet Type");
+                } else {
+                    load_breed_dropdown($("#edit_pet_register-pettype").val(), '#edit_pet_register-breed');
+                }
+            })
+
+            $("#edit_pet_register-pettype").val(user_data.type_of_pet);
+
+            load_breed_dropdown(user_data.type_of_pet, "#edit_pet_register-breed");
+            $("#edit_pet_register-breed").val(user_data.breed);
+            // load_city('#edit_profile_shopper-city_select');
+
+            // $('#edit_profile_shopper-city_select').change(function(event) {
+            //     var city_id = $(this).val();
+            //     console.log('city_id: ' + city_id);
+            //     load_location('#edit_profile_shopper-location_select', city_id, function(){});
+            // });
+
+            // load_location('#edit_profile_shopper-location_select', user_data.city_id, load_location_after_city_load_for_edit_profile_shopper);
+
+            // $('#edit_profile_shopper-username').val(user_data.username);
+            // $('#edit_profile_shopper-name').val(user_data.first_name);
+            // $('#edit_profile_shopper-email').val(user_data.email);
+            // $('#edit_profile_shopper-phone').val(user_data.phone);
+            // $('#edit_profile_shopper-city_select').val(user_data.city);
+
+            // $('input[name=edit_profile_shopper-gender][value='+user_data.gender+']').attr('checked', true); 
+
+            profile_image_link = user_data.profile_image;
+            profile_cover_image_link = user_data.cover_pic;
+        } else {
+            myApp.alert('Some error occurred');
+        }        
+    }).fail(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Some error occurred');
+    }).always();
 }
 
 function load_edit_profile_shopper() {
@@ -2837,9 +2904,8 @@ function load_edit_profile_shopper() {
 
             $('input[name=edit_profile_shopper-gender][value='+user_data.gender+']').attr('checked', true); 
 
-            profile_image_link = user_data.image;
+            profile_image_link = user_data.profile_image;
             profile_cover_image_link = user_data.cover_pic;
-
         } else {
             myApp.alert('Some error occurred');
         }        
@@ -2863,34 +2929,31 @@ function load_edit_profile_business(user_id) {
         console.log('res: ' + j2s(res));
         myApp.hideIndicator();
         if (res.status = 'success') {
-            user_data = res.data;
-
-            // calendarDefault = myApp.calendar({
-            //     input: '.calendar-default',
-            //     maxDate: new Date(),
-            //     value: [new Date(user_data.dob)],
-            // });
+            user_data = res.response.user_details;
 
             load_city('#edit_profile_business-city_select');
 
             $('#edit_profile_business-city_select').change(function(event) {
-                var city_id = $(this).val();
-                console.log('city_id: ' + city_id);
-                load_location('#edit_profile_business-location_select', city_id, function(){});
+                var city = $(this).val();
+                console.log('city_id: ' + city);
+                load_location('#edit_profile_business-location_select', city, function(){});
             });
 
-            load_location('#edit_profile_business-location_select', user_data.city_id, load_location_after_city_load_for_edit_profile_business);
+            load_location('#edit_profile_business-location_select', user_data.city, load_location_after_city_load_for_edit_profile_business(user_data.location_id));
 
             $('#edit_profile_business-name').val(user_data.first_name);
-            $('#edit_profile_business-email').val(user_data.username);
+            $('#edit_profile_business-buissness').val(user_data.company);
+            $('#edit_profile_business-email').val(user_data.email);
             $('#edit_profile_business-phone').val(user_data.phone);
             $('#edit_profile_business-city_select').val(user_data.city_id);
-            $('#edit_profile_business-buissness').val(user_data.bussiness_name);
+            $('#edit_profile_business-buissness').val(user_data.company);
 
             load_category('#edit_profile_business-category', set_category_business_edit);
 
             $('input[name=edit_profile_business-gender][value='+user_data.gender+']').attr('checked', true); 
-            image_from_device = user_data.image;
+
+            profile_image_link = user_data.profile_image;
+            profile_cover_image_link = user_data.cover_pic;
         } else {
             myApp.alert('Some error occurred');
         }
@@ -2930,8 +2993,8 @@ function load_location(selector, city_id, callback) {
     });
 }
 
-function load_location_after_city_load_for_edit_profile_business() {
-    $('#edit_profile_business-location_select').val(user_data.location_id);
+function load_location_after_city_load_for_edit_profile_business(location_id) {
+    $('#edit_profile_business-location_select').val(location_id);
 }
 
 function edit_profile_business() {
@@ -2940,11 +3003,12 @@ function edit_profile_business() {
     var city_id = $('#edit_profile_business-city_select').val();
     var location_id = $('#edit_profile_business-location_select').val();
     var gender = $('input[name=edit_profile_business-gender]:checked').val();
-    var profile_image = image_from_device;
+    var profile_image = profile_image_link;
     var phone = $('#edit_profile_business-phone').val().trim();
     var business_name = $('#edit_profile_business-buissness').val().trim();
     var category = $('#edit_profile_business-category').val();
     var business_category = '';
+    var cover_pic = profile_cover_image_link;
 
     $.each(category, function(index, val) {
         business_category += val + ',';
