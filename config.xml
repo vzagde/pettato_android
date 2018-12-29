@@ -42,7 +42,7 @@
     <plugin name="cordova-plugin-device-motion" spec="~1.2.0" />
     <plugin name="cordova-plugin-device-orientation" spec="~1.0.2" />
     <plugin name="cordova-plugin-dialogs" spec="~1.2.0" />
-    <plugin name="https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git" source="git" >
+    <plugin spec="https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git" source="git" >
         <param name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
     </plugin>
     <plugin name="cordova-plugin-file" source="npm" spec="~4.3.3">
