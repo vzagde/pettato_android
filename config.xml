@@ -28,7 +28,8 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
-    <gap:plugin name="cordova-plugin-x-socialsharing" source="npm" />
+    <plugin name="cordova-plugin-x-socialsharing" spec="5.4.3" />
+    <!-- <gap:plugin name="nl.x-services.plugins.socialsharing" version="4.3.16" /> -->
     <plugin name="cordova-plugin-battery-status" spec="~1.1.1" />
     <plugin name="cordova-plugin-camera" spec="~2.1.1" />
     <plugin name="cordova-plugin-media-capture" spec="~1.2.0" />
