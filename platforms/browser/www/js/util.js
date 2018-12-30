@@ -69,7 +69,13 @@ function make_call(number) {
 }
 
 function sendEmail() {
-    window.open('mailto:' + $(".business_email_to").data('businessemail'));
+    cordova.plugins.email.open({
+        to:      $(".business_email_to").data('businessemail'),
+        cc:      'petattoo@gmail.com',
+        subject: 'Enquiry From Pettato User',
+    });
+
+    // window.open('mailto:' + $(".business_email_to").data('businessemail'));
 }
 
 function locatioRoute() {
