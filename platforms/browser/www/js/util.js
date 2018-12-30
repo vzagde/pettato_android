@@ -74,7 +74,7 @@ function sendEmail() {
 
 function locatioRoute() {
     // window.open('email:' + $(".business_email_to").html());
-    directions.navigateTo($(".business_email_to").data('businesslat'), $(".business_email_to").data('businesslong'));
+    // directions.navigateTo($(".business_email_to").data('businesslat'), $(".business_email_to").data('businesslong'));
 }
 
 function logout() {
@@ -1617,6 +1617,13 @@ function loadBusinessPageContent(user_id) {
             $(".business_email_to").html('Email');
             $(".business_location_to").attr('data-businesslat', res.response.user_details.lat);
             $(".business_location_to").attr('data-businesslong', res.response.user_details.lng);
+            $(".business_location_to").attr('data-address', res.response.user_details.address);
+            $(".business_location_to").attr('data-company', res.response.user_details.company);
+
+            $(".business_location_to").click(function(e){
+                e.preventDefault();
+                myApp.alert($(this).data('address'), $(this).data('company'));
+            })
 
             $(".business_make_call").click(function(e){
                 e.preventDefault();
@@ -1726,8 +1733,6 @@ function loadBusinessPageContentSub(user_id) {
             $('.followings').text(res.followings);
 
             $(".business_email_to").html(res.email);
-            $(".business_location_to").attr('data-businesslat', res.lat);
-            $(".business_location_to").attr('data-businesslong', res.lng);
 
             var stars_html = '';
             var stars_count = Math.round(res.response.stars_count);
@@ -1747,6 +1752,13 @@ function loadBusinessPageContentSub(user_id) {
             $(".business_email_to").html('Email');
             $(".business_location_to").attr('data-businesslat', res.response.user_details.lat);
             $(".business_location_to").attr('data-businesslong', res.response.user_details.lng);
+            $(".business_location_to").attr('data-address', res.response.user_details.address);
+            $(".business_location_to").attr('data-company', res.response.user_details.company);
+
+            $(".business_location_to").click(function(e){
+                e.preventDefault();
+                myApp.alert($(this).data('address'), $(this).data('company'));
+            })
 
             $(".business_make_call").click(function(e){
                 e.preventDefault();
@@ -1894,10 +1906,10 @@ function loadPetPageContent(pet_id) {
                     '<div class="col-33">Age</div>'+
                     '<div class="col-66">'+res.response.age+'</div>'+
                     '</div>'+
-                    // '<div class="row">'+
-                    // '<div class="col-33">Gender</div>'+
-                    // '<div class="col-66">'+res.response.gender+'</div>'+
-                    // '</div>'+
+                    '<div class="row">'+
+                    '<div class="col-33">Gender</div>'+
+                    '<div class="col-66">'+res.response.gender+'</div>'+
+                    '</div>'+
                     '<div class="row">'+
                     '<div class="col-33">Location</div>'+
                     '<div class="col-66">'+res.response.pet_city+'</div>'+
