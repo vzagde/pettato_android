@@ -186,26 +186,26 @@ myApp.onPageInit('become_parent_disp', function(page) {
 
 // find parent upload details
 myApp.onPageInit('find_parent_create', function(page) {
-    load_pet_categories('#find_parent_create-pettype');
+    load_pet_categories('#find_parent_create-pettype', function(){});
     $("#find_parent_create-pettype").change(function(e) {
         e.preventDefault();
         if ($("#find_parent_create-pettype").val() == 'Select Pet Type') {
             myApp.alert("Please select the Pet Type");
         } else {
-            load_breed_dropdown($("#find_parent_create-pettype").val(), '#find_parent_create-breed');
+            load_breed_dropdown($("#find_parent_create-pettype").val(), '#find_parent_create-breed', function(){});
         }
     })
 });
 
 // filter find parent details
 myApp.onPageInit('become_parent_filter', function(page) {
-    load_pet_categories('#find_parent_filter-pettype');
+    load_pet_categories('#find_parent_filter-pettype', function(){});
     $("#find_parent_filter-pettype").change(function(e) {
         e.preventDefault();
         if ($("#find_parent_filter-pettype").val() == 'Select Pet Type') {
             myApp.alert("Please select the Pet Type");
         } else {
-            load_breed_dropdown($("#find_parent_filter-pettype").val(), '#find_parent_filter-breed');
+            load_breed_dropdown($("#find_parent_filter-pettype").val(), '#find_parent_filter-breed', function(){});
         }
     })
 });
@@ -217,7 +217,7 @@ myApp.onPageInit('find_parent_list', function(page) {
 
 // become parent upload details
 myApp.onPageInit('become_parent_create', function(page) {
-    load_pet_categories('#become_parent_create-pettype');
+    load_pet_categories('#become_parent_create-pettype', function(){});
 });
 
 // profile settings
@@ -232,14 +232,14 @@ myApp.onPageInit('before_add_account', function(page) {
 
 // pet add account page
 myApp.onPageInit('pet_register', function(page) {
-    load_pet_categories('#pet_register-pettype');
+    load_pet_categories('#pet_register-pettype', function(){});
     load_city('#pet_register-city');
     $("#pet_register-pettype").change(function(e) {
         e.preventDefault();
         if ($("#pet_register-pettype").val() == 'Select Pet Type') {
             myApp.alert("Please select the Pet Type");
         } else {
-            load_breed_dropdown($("#pet_register-pettype").val(), '#pet_register-breed');
+            load_breed_dropdown($("#pet_register-pettype").val(), '#pet_register-breed', function(){});
         }
     })
 });

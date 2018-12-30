@@ -137,7 +137,7 @@ function load_category(selector, afterCallback) {
     }).always();
 }
 
-function load_pet_categories(dropdown_id) {
+function load_pet_categories(dropdown_id, callBack) {
     $.ajax({
         url: base_url + 'get_pet_type_list',
         type: 'POST',
@@ -151,12 +151,14 @@ function load_pet_categories(dropdown_id) {
             })
         }
         $(dropdown_id).html(html);
+
+        callBack();
     }).error(function(res){
         $(dropdown_id).html('');
     })
 }
 
-function load_breed_dropdown(dropdown_value, dropdown_id) {
+function load_breed_dropdown(dropdown_value, dropdown_id, callBack) {
     $.ajax({
         url: base_url + 'get_breeds_list',
         type: 'POST',
@@ -173,6 +175,7 @@ function load_breed_dropdown(dropdown_value, dropdown_id) {
             })
         }
         $(dropdown_id).html(html);
+        callBack();
     }).error(function(res){
         $(dropdown_id).html('');
     })
@@ -754,6 +757,9 @@ function register_pet() {
         return false;
     } else if (!age) {
         myApp.alert("Please provide Pet Age");
+        return false;
+    } else if (!city) {
+        myApp.alert("Please provide City");
         return false;
     } else if (!profile_btn) {
         myApp.alert("Please provide Pet Profile Image");
@@ -2795,7 +2801,7 @@ function update_shopper_profile() {
         myApp.hideIndicator();
         if (res.status == 'success') {
             myApp.alert('Successfully updated.');
-            goto_profile()
+            goto_profile();
             // mainView.router.refreshPage();
         } else {
             myApp.alert('Some error occurred');
@@ -2827,44 +2833,32 @@ function load_edit_profile_pet(user_id) {
         if (res.status = 'Success') {
             user_data = res.response.user_details;
 
+            $("#edit_pet_register-id").val(user_id);
+
             $("#edit_pet_register-name").val(user_data.first_name);
             $("#edit_pet_register-username").val(user_data.username);
-            // $("#edit_pet_register-pettype").val(user_data.first_name);
-            // $("#edit_pet_register-breed").val();
             $("#edit_pet_register-age").val(user_data.age);
             $("#edit_pet_register-description").val(user_data.description);
-            load_pet_categories("#edit_pet_register-pettype");
+
+            load_pet_categories("#edit_pet_register-pettype", function() { $("#edit_pet_register-pettype").val(user_data.type_of_pet); });
+            load_city("#edit_pet_register-city");
 
             $("#edit_pet_register-pettype").change(function(e) {
                 e.preventDefault();
                 if ($("#edit_pet_register-pettype").val() == 'Select Pet Type') {
                     myApp.alert("Please select the Pet Type");
                 } else {
-                    load_breed_dropdown($("#edit_pet_register-pettype").val(), '#edit_pet_register-breed');
+                    load_breed_dropdown($("#edit_pet_register-pettype").val(), '#edit_pet_register-breed', function(){});
                 }
             })
 
+            $("#edit_pet_register-city").val(user_data.city);
+
             $("#edit_pet_register-pettype").val(user_data.type_of_pet);
 
-            load_breed_dropdown(user_data.type_of_pet, "#edit_pet_register-breed");
-            $("#edit_pet_register-breed").val(user_data.breed);
-            // load_city('#edit_profile_shopper-city_select');
+            load_breed_dropdown(user_data.type_of_pet, "#edit_pet_register-breed", function(){ $("#edit_pet_register-breed").val(user_data.breed); });
 
-            // $('#edit_profile_shopper-city_select').change(function(event) {
-            //     var city_id = $(this).val();
-            //     console.log('city_id: ' + city_id);
-            //     load_location('#edit_profile_shopper-location_select', city_id, function(){});
-            // });
-
-            // load_location('#edit_profile_shopper-location_select', user_data.city_id, load_location_after_city_load_for_edit_profile_shopper);
-
-            // $('#edit_profile_shopper-username').val(user_data.username);
-            // $('#edit_profile_shopper-name').val(user_data.first_name);
-            // $('#edit_profile_shopper-email').val(user_data.email);
-            // $('#edit_profile_shopper-phone').val(user_data.phone);
-            // $('#edit_profile_shopper-city_select').val(user_data.city);
-
-            // $('input[name=edit_profile_shopper-gender][value='+user_data.gender+']').attr('checked', true); 
+            $('input[name=edit_profile_pet-gender][value='+user_data.gender+']').attr('checked', true); 
 
             profile_image_link = user_data.profile_image;
             profile_cover_image_link = user_data.cover_pic;
@@ -2875,6 +2869,111 @@ function load_edit_profile_pet(user_id) {
         myApp.hideIndicator();
         myApp.alert('Some error occurred');
     }).always();
+}
+
+function edit_pet() {
+    var id = $("#edit_pet_register-id").val();
+    var name = $("#edit_pet_register-name").val();
+    var username = $("#edit_pet_register-username").val();
+    var pettype = $("#edit_pet_register-pettype").val();
+    var breed = $("#edit_pet_register-breed").val();
+    var age = $("#edit_pet_register-age").val();
+    var city = $("#edit_pet_register-city").val();
+    var description = $("#edit_pet_register-description").val();
+    var gender = $('input[name=edit_profile_pet-gender]:checked').val();
+    var profile_image = profile_image_link;
+    var cover_pic = profile_cover_image_link;
+
+    if (!name) {
+        myApp.alert('Please provide name');
+        return false;
+    }
+
+    if (!username) {
+        myApp.alert('Please provide username');
+        return false;
+    }
+
+    if (!pettype || pettype == 'Select Pet Type') {
+        myApp.alert('Please provide pet type');
+        return false;
+    }
+
+    if (!breed || breed == 'Select Pet Type') {
+        myApp.alert('Please provide breed');
+        return false;
+    }
+
+    if (!age) {
+        myApp.alert('Please provide age');
+        return false;
+    }
+
+    if (!city) {
+        myApp.alert('Please provide city');
+        return false;
+    }
+
+    if (!gender) {
+        myApp.alert('Please provide gender');
+        return false;
+    }
+
+    if (!description) {
+        myApp.alert('Please provide description');
+        return false;
+    }
+
+    if (!profile_image) {
+        myApp.alert('Please provide profile image');
+        return false;
+    }
+
+    if (!cover_pic) {
+        myApp.alert('Please provide cover picture');
+        return false;
+    }
+
+    myApp.showIndicator();
+    $.ajax({
+        url: base_url + 'update_pet',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            id: id,
+            username: username,
+            first_name: name,
+            type_of_pet: pettype,
+            breed: breed,
+            city: city,
+            age: age,
+            gender: gender,
+            description: description,
+            profile_image: profile_image,
+            cover_pic: cover_pic,
+        },
+    })
+    .done(function(res) {
+        console.log("success: " + j2s(res));
+        myApp.hideIndicator();
+        if (res.status == 'success') {
+            myApp.alert('Successfully updated.');
+            goto_profile_shopper_pet(res.response.id);
+            // mainView.router.refreshPage();
+        } else {
+            myApp.alert('some error');
+        }
+    })
+    .fail(function(err) {
+        myApp.hideIndicator();
+        console.log("error: " + j2s(err));
+        // myApp.alert("error: "+j2s(err));
+    })
+    .always(function() {
+        console.log("complete");
+    });
+
 }
 
 function load_edit_profile_shopper() {

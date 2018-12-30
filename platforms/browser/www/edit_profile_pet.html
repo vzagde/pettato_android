@@ -15,6 +15,14 @@
         <form>
             <div class="list-block inputs-list">
                 <ul>
+                    <li class="item-content hide">
+                        <div class="item-inner">
+                            <div class="item-title label">Pet Id</div>
+                            <div class="item-input">
+                                <input id="edit_pet_register-id" type="text" placeholder="" value="" />
+                            </div>
+                        </div>
+                    </li>
                     <li class="item-content">
                         <div class="item-inner">
                             <div class="item-title label">Pet Name</div>
@@ -63,6 +71,40 @@
                             </div>
                         </div>
                     </li>
+                    <li>
+                        <label class="label-radio item-content">
+                            <input type="radio" name="edit_profile_pet-gender" value="male" class="shopper_register-gender">
+                            <div class="item-media">
+                                <i class="icon icon-form-radio"></i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Male</div>
+                            </div>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="label-radio item-content">
+                            <input type="radio" name="edit_profile_pet-gender" value="female" class="shopper_register-gender">
+                            <div class="item-media">
+                                <i class="icon icon-form-radio"></i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Female</div>
+                            </div>
+                        </label>
+                    </li>
+                    <li>
+                        <a href="#" class="item-link smart-select" data-searchbar="true" data-searchbar-placeholder="Search City">
+                            <select name="car" id="edit_pet_register-city">
+                            </select>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title">City</div>
+                                    <div class="item-after"></div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
                     <li class="item-content">
                         <div class="item-inner">
                             <div class="item-title label">Pet Description</div>
@@ -94,7 +136,7 @@
                 </ul>
             </div>
             <div class="content-block submit-btn">
-                <a href="#" class="button button-big" onclick="register_pet()">Register</a>
+                <a href="#" class="button button-big" onclick="edit_pet()">Register</a>
             </div>
         </form>
     </div>
