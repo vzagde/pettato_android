@@ -86,7 +86,7 @@ function logout() {
     });
 }
 
-function load_city(selecter) {
+function load_city(selecter, callBack) {
     myApp.showIndicator();
     $.ajax({
         url: base_url + 'get_city_master',
@@ -102,7 +102,8 @@ function load_city(selecter) {
             $.each(res.response, function(index, val) {
                 html += '<option value="' + val.id + '" >' + val.city + '</option>';
             });
-            $(selecter).append(html)
+            $(selecter).append(html);
+            callBack();
         } else {}
     }).fail(function(err) {
         myApp.hideIndicator();
@@ -127,7 +128,7 @@ function load_category(selector, afterCallback) {
                 html += '<option value="' + val.id + '" >' + val.category_name + '</option>';
             });
             $(selector).html(html);
-            // afterCallback();
+            afterCallback();
         } else {
         }
     })
@@ -612,12 +613,10 @@ function register_shopper() {
         myApp.hideIndicator();
         myApp.alert('Some error occured while processing your request, Please try again later.');
     }).always(function() {
-        console.log("complete");
     });
 }
 
 function register_business() {
-    var name = $('#business_register-name').val().trim();
     var username = $('#business_register-username').val().trim();
     var business_name = $('#business_register-buissness').val().trim();
     var category = $('#business_register-category').val();
@@ -627,15 +626,8 @@ function register_business() {
     var confirm_password = $('#business_register-confirm_password').val().trim();
     var city_id = $('#business_register-city_select').val().trim();
     var address = $('#business_register-address').val().trim();
-    var lat_add = $('#business_register-lat').val().trim();
-    var lng_add = $('#business_register-lng').val().trim();
     var business_category = '';
-    // var profile_image = image_from_device.trim();
 
-    if (name == '') {
-        myApp.alert('Please provide name.');
-        return false;
-    }
     if (username == '') {
         myApp.alert('Please provide username.');
         return false;
@@ -694,16 +686,15 @@ function register_business() {
         dataType: 'json',
         crossDomain: true,
         data: {
+            linked_acc: token.id,
             username: username,
             business_name: business_name,
             email:email,
-            first_name: name,
+            first_name: 'Business',
             password: password,
-            category: category,
+            category: category.toString(),
             city_id: city_id,
             address: address,
-            lat: lat_add,
-            lng: lng_add,
             medium: 'register',
             user_type: 'Business',
             phone: phone,
@@ -728,7 +719,6 @@ function register_business() {
         myApp.hideIndicator();
         myApp.alert('Some error occured while processing your request, Please try again later.');
     }).always(function() {
-        console.log("complete");
     });
 }
 
@@ -914,7 +904,6 @@ function upload_business() {
         myApp.hideIndicator();
         myApp.alert('Some error occured while processing your request, Please try again later.');
     }).always(function() {
-        console.log("complete");
     });
 }
 
@@ -1203,7 +1192,6 @@ function loadFeedsDetails() {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
-        console.log("complete");
     });
 }
 
@@ -1294,7 +1282,6 @@ function add_feed() {
 }
 
 function create_feed(post_create_id, feed_image, description, location_id) {
-    console.log(post_create_id);
     myApp.showIndicator();
     $.ajax({
         url: base_url + 'create_feed',
@@ -1321,13 +1308,12 @@ function create_feed(post_create_id, feed_image, description, location_id) {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
-        console.log("complete");
     });
 }
 
 function goto_profile() {
     account_id = token.id;
-    if (user_data.user_type == 'User') {
+    if (token.user_type == 'User') {
         mainView.router.load({
             url: 'profile_shopper.html',
             query: {
@@ -1473,7 +1459,6 @@ function loadUsersPageContent(user_id) {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function() {
-        console.log("complete");
     });
 }
 
@@ -1579,7 +1564,6 @@ function add_review_business() {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function() {
-        console.log("complete");
     });
 }
 
@@ -1622,7 +1606,7 @@ function loadBusinessPageContent(user_id) {
                 stars_html += '<i class="material-icons">star_rate</i>';
             }
 
-            var append_p_name = res.response.user_details.first_name+'<br>'+res.response.user_details.company+'<br>'+stars_html+'<br><p class="color_757575 mrg0" style="font-size: 13px">'+res.response.reviews_count+' Reviews &nbsp;&nbsp;&nbsp;<a href="#" data-popup=".popup-review" class="open-popup color_757575 mrg0" style="font-size: 13px">Add Review</a></p>';
+            var append_p_name = res.response.user_details.company+'<br>'+res.response.user_details.username+'<br>'+stars_html+'<br><p class="color_757575 mrg0" style="font-size: 13px">'+res.response.reviews_count+' Reviews &nbsp;&nbsp;&nbsp;<a href="#" data-popup=".popup-review" class="open-popup color_757575 mrg0" style="font-size: 13px">Add Review</a></p>';
 
             $('.p_name_business_sub').html(append_p_name);
             $('.p_name_business_sub').attr('data-business_id', res.response.user_details.id);
@@ -1706,7 +1690,6 @@ function loadBusinessPageContent(user_id) {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function() {
-        console.log("complete");
     });
 }
 
@@ -1753,7 +1736,7 @@ function loadBusinessPageContentSub(user_id) {
                 stars_html += '<i class="material-icons">star_rate</i>';
             }
 
-            var append_p_name = res.response.user_details.first_name+'<br>'+res.response.user_details.company+'<br>'+stars_html+'<br><p class="color_757575 mrg0" style="font-size: 13px">'+res.response.reviews_count+' Reviews &nbsp;&nbsp;&nbsp;<a href="#" data-popup=".popup-review" class="open-popup color_757575 mrg0" style="font-size: 13px">Add Review</a></p>';
+            var append_p_name = res.response.user_details.company+'<br>'+res.response.user_details.username+'<br>'+stars_html+'<br><p class="color_757575 mrg0" style="font-size: 13px">'+res.response.reviews_count+' Reviews &nbsp;&nbsp;&nbsp;<a href="#" data-popup=".popup-review" class="open-popup color_757575 mrg0" style="font-size: 13px">Add Review</a></p>';
 
             $('.p_name_business_sub').html(append_p_name);
             $('.p_name_business_sub').attr('data-business_id', res.response.user_details.id);
@@ -1837,7 +1820,6 @@ function loadBusinessPageContentSub(user_id) {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function() {
-        console.log("complete");
     });
 }
 
@@ -1850,10 +1832,12 @@ function goto_profile_shopper_pet(pet_id) {
 }
 
 function goto_business_page(business_id) {
-    account_id = business_id;
     mainView.router.load({
         url: 'profile_business_sub.html',
         ignoreCache: false,
+        query: {
+            id: business_id
+        },
     });
 }
 
@@ -1928,7 +1912,6 @@ function loadPetPageContent(pet_id) {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(res) {
-        console.log("complete");
     })
 }
 
@@ -1980,7 +1963,6 @@ function add_to_become_parent() {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
-        console.log("complete");
     });
 
 }
@@ -2076,7 +2058,6 @@ function add_to_find_parent() {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
-        console.log("complete");
     });
 
 }
@@ -2127,7 +2108,6 @@ function loadBecomeParentFilteredContent(user_id) {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
-        console.log("complete");
     });
 }
 
@@ -2174,7 +2154,6 @@ function loadBecomeParentContent(user_id) {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
-        console.log("complete");
     });
 }
 
@@ -2217,7 +2196,6 @@ function loadBecomeParentDetails(account_id) {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
-        console.log("complete");
     });
 }
 
@@ -2267,7 +2245,6 @@ function loadFindParentContent(user_id) {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
-        console.log("complete");
     });
 }
 
@@ -2319,7 +2296,6 @@ function loadLostFoundContent(user_id) {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
-        console.log("complete");
     });
 }
 
@@ -2400,7 +2376,6 @@ function loadProfilesList(account_default_id, profile_list_type) {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
-        console.log("complete");
     });
 }
 
@@ -2594,7 +2569,6 @@ function send_chat() {
     var user_id = token.id;
     var acc_id = $(".chat_reviever_id").html();
     var message = $("#mesage_sent").val();
-    console.log(message);
     if (!message) {
         return false;
     } else {
@@ -2797,23 +2771,20 @@ function update_shopper_profile() {
         },
     })
     .done(function(res) {
-        console.log("success: " + j2s(res));
         myApp.hideIndicator();
         if (res.status == 'success') {
             myApp.alert('Successfully updated.');
             goto_profile();
             // mainView.router.refreshPage();
         } else {
-            myApp.alert('Some error occurred');
+            myApp.alert(res.api_msg);
         }
     })
     .fail(function(err) {
         myApp.hideIndicator();
-        console.log("error: " + j2s(err));
         // myApp.alert("error: "+j2s(err));
     })
     .always(function() {
-        console.log("complete");
     });
 }
 
@@ -2841,7 +2812,7 @@ function load_edit_profile_pet(user_id) {
             $("#edit_pet_register-description").val(user_data.description);
 
             load_pet_categories("#edit_pet_register-pettype", function() { $("#edit_pet_register-pettype").val(user_data.type_of_pet); });
-            load_city("#edit_pet_register-city");
+            load_city("#edit_pet_register-city", function(){ $("#edit_pet_register-city").val(user_data.city); });
 
             $("#edit_pet_register-pettype").change(function(e) {
                 e.preventDefault();
@@ -2851,8 +2822,6 @@ function load_edit_profile_pet(user_id) {
                     load_breed_dropdown($("#edit_pet_register-pettype").val(), '#edit_pet_register-breed', function(){});
                 }
             })
-
-            $("#edit_pet_register-city").val(user_data.city);
 
             $("#edit_pet_register-pettype").val(user_data.type_of_pet);
 
@@ -2955,14 +2924,13 @@ function edit_pet() {
         },
     })
     .done(function(res) {
-        console.log("success: " + j2s(res));
         myApp.hideIndicator();
         if (res.status == 'success') {
             myApp.alert('Successfully updated.');
             goto_profile_shopper_pet(res.response.id);
             // mainView.router.refreshPage();
         } else {
-            myApp.alert('some error');
+            myApp.alert(res.api_msg);
         }
     })
     .fail(function(err) {
@@ -2971,7 +2939,6 @@ function edit_pet() {
         // myApp.alert("error: "+j2s(err));
     })
     .always(function() {
-        console.log("complete");
     });
 
 }
@@ -2992,11 +2959,10 @@ function load_edit_profile_shopper() {
         if (res.status = 'Success') {
             user_data = res.response.user_details;
 
-            load_city('#edit_profile_shopper-city_select');
+            load_city('#edit_profile_shopper-city_select', function(){ $('#edit_profile_shopper-city_select').val(user_data.city); });
 
             $('#edit_profile_shopper-city_select').change(function(event) {
                 var city_id = $(this).val();
-                console.log('city_id: ' + city_id);
                 load_location('#edit_profile_shopper-location_select', city_id, function(){});
             });
 
@@ -3006,7 +2972,6 @@ function load_edit_profile_shopper() {
             $('#edit_profile_shopper-name').val(user_data.first_name);
             $('#edit_profile_shopper-email').val(user_data.email);
             $('#edit_profile_shopper-phone').val(user_data.phone);
-            $('#edit_profile_shopper-city_select').val(user_data.city);
 
             $('input[name=edit_profile_shopper-gender][value='+user_data.gender+']').attr('checked', true); 
 
@@ -3036,34 +3001,39 @@ function load_edit_profile_business(user_id) {
         if (res.status = 'success') {
             user_data = res.response.user_details;
 
-            load_city('#edit_profile_business-city_select');
+            load_city('#edit_profile_business-city_select', function(){ $('#edit_profile_business-city_select').val(user_data.city); });
 
-            $('#edit_profile_business-city_select').change(function(event) {
-                var city = $(this).val();
-                console.log('city_id: ' + city);
-                load_location('#edit_profile_business-location_select', city, function(){});
-            });
+            // $('#edit_profile_business-city_select').change(function(event) {
+            //     var city = $(this).val();
+            //     load_location('#edit_profile_business-location_select', city, function(){});
+            // });
 
-            load_location('#edit_profile_business-location_select', user_data.city, load_location_after_city_load_for_edit_profile_business(user_data.location_id));
+            // load_location('#edit_profile_business-location_select', user_data.city, load_location_after_city_load_for_edit_profile_business(user_data.location_id));
 
+            var category_arr = [];
+
+            if (user_data.category) {
+                category_arr = user_data.category.split(',');
+            }
+
+            load_category('#edit_profile_business-category', function(){ $("#edit_profile_business-category").val(category_arr); });
+
+            $('#edit_profile_business-id').val(user_data.id);
+            $('#edit_profile_business-username').val(user_data.username);
             $('#edit_profile_business-name').val(user_data.first_name);
             $('#edit_profile_business-buissness').val(user_data.company);
             $('#edit_profile_business-email').val(user_data.email);
             $('#edit_profile_business-phone').val(user_data.phone);
-            $('#edit_profile_business-city_select').val(user_data.city_id);
             $('#edit_business_register-address').val(user_data.address);
 
-            console.log(user_data.lat);
-            console.log(user_data.lng);
+            // $("#edit_business_register-lat").val(user_data.lat);
+            // $("#edit_business_register-lng").val(user_data.lng);
 
-            $("#edit_business_register-lat").val(user_data.lat);
-            $("#edit_business_register-lng").val(user_data.lng);
-
-            initialize(user_data.lat, user_data.lng, 'edit_mapCanvas');
+            // initialize(user_data.lat, user_data.lng, 'edit_mapCanvas');
 
             // load_category('#edit_profile_business-category', function(){});
 
-            $('input[name=edit_profile_business-gender][value='+user_data.gender+']').attr('checked', true); 
+            // $('input[name=edit_profile_business-gender][value='+user_data.gender+']').attr('checked', true); 
 
             profile_image_link = user_data.profile_image;
             profile_cover_image_link = user_data.cover_pic;
@@ -3077,7 +3047,6 @@ function load_edit_profile_business(user_id) {
 }
 
 function load_location(selector, city_id, callback) {
-    console.log('city-id: '+city_id);
     $.ajax({
         url: base_url + 'get_location',
         type: 'POST',
@@ -3088,7 +3057,6 @@ function load_location(selector, city_id, callback) {
         },
     })
     .done(function(res) {
-        console.log("success: " + j2s(res));
         if (res.status == 'success') {
             html = '<option value="">Select Location</option>';
             $.each(res.data, function(index, val) {
@@ -3102,7 +3070,6 @@ function load_location(selector, city_id, callback) {
         console.log("error: " + err);
     })
     .always(function() {
-        console.log("complete");
     });
 }
 
@@ -3110,26 +3077,20 @@ function load_location_after_city_load_for_edit_profile_business(location_id) {
     $('#edit_profile_business-location_select').val(location_id);
 }
 
-function edit_profile_business() {
-    var name = $('#edit_profile_business-name').val().trim();
+function edit_business() {
+    var id = $('#edit_profile_business-id').val();
     var email = $('#edit_profile_business-email').val().trim();
-    var city_id = $('#edit_profile_business-city_select').val();
-    var location_id = $('#edit_profile_business-location_select').val();
-    var gender = $('input[name=edit_profile_business-gender]:checked').val();
-    var profile_image = profile_image_link;
+    var username = $('#edit_profile_business-username').val().trim();
+    var city = $('#edit_profile_business-city_select').val();
     var phone = $('#edit_profile_business-phone').val().trim();
     var business_name = $('#edit_profile_business-buissness').val().trim();
     var category = $('#edit_profile_business-category').val();
-    var business_category = '';
+    var address = $('#edit_business_register-address').val();
+    var profile_image = profile_image_link;
     var cover_pic = profile_cover_image_link;
 
-    $.each(category, function(index, val) {
-        business_category += val + ',';
-    });
-    business_category = business_category.slice(0, -1);
-
-    if (name == '') {
-        myApp.alert('Please provide name.');
+    if (username == '') {
+        myApp.alert('Please provide email.');
         return false;
     }
     if (email == '') {
@@ -3148,64 +3109,54 @@ function edit_profile_business() {
         myApp.alert('Please provide business name.');
         return false;
     }
-    if (city_id == '') {
+    if (city == '') {
         myApp.alert('Please provide city.');
-        return false;
-    }
-    if (!location_id) {
-        myApp.alert('Please provide location.');
-        return false;
-    }
-    if (!gender) {
-        myApp.alert('Please select gender.');
         return false;
     }
     if (profile_image == '') {
         myApp.alert('Please upload profile image.');
         return false;
     }
-    if (!business_category) {
+    if (!category) {
         myApp.alert('Please choose category.');
         return false;
     }
 
     myApp.showIndicator();
     $.ajax({
-        url: base_url + 'update_user',
+        url: base_url + 'update_business',
         type: 'POST',
         dataType: 'json',
         crossDomain: true,
         data: {
-            id: account_id,
-            identity: email,
-            username: email,
-            first_name: name,
-            city_id: city_id,
-            location_id: location_id,
-            gender: gender,
-            image: profile_image,
+            id: id,
+            email: email,
+            username: username,
+            city: city,
             phone: phone,
-            bussiness_name: business_name,
-            bussiness_category_id: business_category,
+            business_name: business_name,
+            category: category.toString(),
+            address: address,
+            profile_image: profile_image,
+            cover_pic: cover_pic,
         },
     })
     .done(function(res) {
-        console.log("success: " + j2s(res));
         myApp.hideIndicator();
         if (res.status == 'success') {
             myApp.alert('Successfully updated.');
-            mainView.router.refreshPage();
+
+            // goto_business_page(res.response.id);
+            goto_profile();
         } else {
-            myApp.alert('some error');
+            myApp.alert(res.api_msg);
         }
     })
     .fail(function(err) {
         myApp.hideIndicator();
         console.log("error: " + j2s(err));
-        // myApp.alert("error: "+j2s(err));
     })
     .always(function() {
-        console.log("complete");
     });
 }
 

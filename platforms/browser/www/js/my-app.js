@@ -81,24 +81,21 @@ myApp.onPageInit('shopper_register', function(page) {
         maxDate: new Date(),
     });
 
-    load_city('#shopper_register-city_select');
+    load_city('#shopper_register-city_select', function(){});
 
     $('#shopper_register-city_select').change(function(event) {
         var city_id = $(this).val();
-        console.log('city_id: ' + city_id);
         load_location('#shopper_register-location_select', city_id, function(){});
     });
 
     var rightNow = new Date();
-    console.log('rightNow: '+rightNow);
     var res = rightNow.toISOString().slice(0,10).replace(/-/g,"-");
-    console.log('res: '+res);
     $('#shopper_register-dob').attr('max', res);
 });
 
 // business account registration
 myApp.onPageInit('business_register', function(page) {
-    load_city('#business_register-city_select');
+    load_city('#business_register-city_select', function(){});
     initialize();
     load_category('#business_register-category', function(){});
 });
@@ -110,7 +107,7 @@ myApp.onPageInit('feeds', function(page) {
 
 // create feed
 myApp.onPageInit('create_feed', function(page) {
-    load_city('#create_feed-location');
+    load_city('#create_feed-location', function(){});
 });
 
 // feed detail page
@@ -120,16 +117,20 @@ myApp.onPageInit('feed', function(page) {
 
 // users account profile
 myApp.onPageInit('profile_shopper', function(page) {
+    console.log(account_default_id);
     loadUsersPageContent(account_default_id);
 });
 
 // users account profile
 myApp.onPageInit('profile_shopper_sub', function(page) {
+    console.log(account_id);
     loadUsersPageContent(account_id);
 });
 
 // business account profile
 myApp.onPageInit('profile_business', function(page) {
+    // console.log("Business: "+account_default_id);
+    account_default_id = page.query.id;
     loadBusinessPageContent(account_default_id);
 });
 
@@ -140,6 +141,7 @@ myApp.onPageInit('profile_shopper_pet', function(page) {
 
 // business page sub profile
 myApp.onPageInit('profile_business_sub', function(page) {
+    account_id = page.query.id;
     loadBusinessPageContentSub(account_id);
 
     $("#addBusinessReview1").click(function(e){
@@ -233,7 +235,7 @@ myApp.onPageInit('before_add_account', function(page) {
 // pet add account page
 myApp.onPageInit('pet_register', function(page) {
     load_pet_categories('#pet_register-pettype', function(){});
-    load_city('#pet_register-city');
+    load_city('#pet_register-city', function(){});
     $("#pet_register-pettype").change(function(e) {
         e.preventDefault();
         if ($("#pet_register-pettype").val() == 'Select Pet Type') {
@@ -246,8 +248,8 @@ myApp.onPageInit('pet_register', function(page) {
 
 // business add account page
 myApp.onPageInit('business_register_add', function(page) {
-    load_city('#business_register_add-city_select');
-    initialize('19.113645', '72.869734', 'mapCanvas');
+    load_city('#business_register_add-city_select', function(){});
+    // initialize('19.113645', '72.869734', 'mapCanvas');
     load_category('#business_register_add-category', function(){});
 });
 
