@@ -217,6 +217,17 @@ myApp.onPageInit('find_parent_list', function(page) {
     loadFindParentContent(account_default_id);
 });
 
+// become a parent list
+myApp.onPageInit('find_parent_list_filtered', function(page) {
+    loadFindParentContentFilteredContent(account_default_id);
+});
+
+// filter find parent details
+myApp.onPageInit('find_parent_filter', function(page) {
+    load_pet_categories('#become_parent_filter-pettype', function(){});
+});
+
+
 // become parent upload details
 myApp.onPageInit('become_parent_create', function(page) {
     load_pet_categories('#become_parent_create-pettype', function(){});
@@ -250,7 +261,7 @@ myApp.onPageInit('pet_register', function(page) {
 myApp.onPageInit('business_register_add', function(page) {
     load_city('#business_register_add-city_select', function(){});
     // initialize('19.113645', '72.869734', 'mapCanvas');
-    load_category('#business_register_add-category', function(){});
+    load_category('#business_register-category', function(){});
 });
 
 // ambulance listing page

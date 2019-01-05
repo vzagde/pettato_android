@@ -1061,6 +1061,51 @@ function chngSaveStatus(feed_id) {
     })
 }
 
+function chngSaveStatusBecomeParent() {
+    $.ajax({
+        url: base_url+'save_status',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: token.id,
+            feed_id: account_id,
+            feed_type: "Become Parent",
+        },
+    }).done(function(res) {
+        if (res.status == 'Success') {
+            myApp.alert("Feed Added to your list!");
+        } else {
+            myApp.alert(res.api_msg);
+        }
+    }).error(function(res) {
+        myApp.alert("Some error occured, please try again later!");
+    }).always(function(res) {
+    })
+}
+
+function chngSaveStatusFindParent() {
+    var feed_id = $(this).data('account_id');
+    $.ajax({
+        url: base_url+'save_status',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: token.id,
+            feed_id: feed_id,
+            feed_type: "Find Parent",
+        },
+    }).done(function(res) {
+        if (res.status == 'Success') {
+            myApp.alert("Feed Added to your list!");
+        } else {
+            myApp.alert(res.api_msg);
+        }
+    }).error(function(res) {
+        myApp.alert("Some error occured, please try again later!");
+    }).always(function(res) {
+    })
+}
+
 function load_feed_page(feed_id) {
     feed_details_fetch_id = feed_id;
     mainView.router.load({
@@ -2225,6 +2270,56 @@ function loadBecomeParentDetails(account_id) {
     });
 }
 
+function loadFindParentContentFilteredContent(user_id) {
+    myApp.showIndicator();
+
+    $.ajax({
+        url: base_url+'get_find_parent_list_filtered',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            user_id: user_id,
+            pettype: find_parent_filter_pettype,
+        }
+    }).done(function(res){
+        if (res.status == 'Success') {
+            var html = '';
+            $.each(res.response, function(index, value){
+                html += '<div class="card facebook-card">'+
+                            '<div class="card-header">'+
+                                '<div class="facebook-avatar"><img src="'+image_url+value.profile_pic+'" width="50" height="50"></div>'+
+                                '<div class="facebook-name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>'+
+                                '<div class="facebook-date">@'+value.username+'</div>'+
+                            '</div>'+
+                            '<div class="card-content">'+
+                                '<div class="card-content-inner">'+
+                                    '<p>'+value.description+'</p>'+
+                                    '<p class="color-gray">Likes: 112</p>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="card-footer">'+
+                                '<a href="#" class="link"><i class="material-icons color_8ac640">favorite_border</i></a>'+
+                                '<a href="#" class="link"><i class="material-icons color_8ac640" onclick="chngSaveStatusFindParent();">save</i></a>'+
+                            '</div>'+
+                        '</div>';
+            })
+
+            $("#find_parent_listDyn").html(html);
+
+            myApp.hideIndicator();
+        } else {
+            myApp.hideIndicator();
+            var html = '<p style="text-align: center;">'+res.api_msg+'</p>';
+            $("#find_parent_listDyn").html(html);
+        }
+    }).error(function(res){
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function(){
+    });
+}
+
 function loadFindParentContent(user_id) {
     myApp.showIndicator();
 
@@ -2254,7 +2349,7 @@ function loadFindParentContent(user_id) {
                             '</div>'+
                             '<div class="card-footer">'+
                                 '<a href="#" class="link"><i class="material-icons color_8ac640">favorite_border</i></a>'+
-                                '<a href="#" class="link"><i class="material-icons color_8ac640">save</i></a>'+
+                                '<a href="#" class="link"><i class="material-icons color_8ac640" data-account_id="'+value.find_parent_id+'" onclick="chngSaveStatusFindParent();">save</i></a>'+
                             '</div>'+
                         '</div>';
             })
@@ -3218,6 +3313,40 @@ function filter_find_parent() {
 
     mainView.router.load({
         url: 'become_parent_list_filtered.html',
+        ignoreCache: false,
+    });
+}
+
+function filter_become_parent() {
+    find_parent_filter_pettype = $("#become_parent_filter-pettype").val();
+
+    // if ($("#find_parent_filter-Male").is(":checked")) {
+    //     find_parent_filter_gender = 'Male';
+    // }
+
+    // if ($("#find_parent_filter-Female").is(":checked")) {
+    //     find_parent_filter_gender = 'Female';
+    // }
+
+    if (!find_parent_filter_pettype) {
+        myApp.alert("Please select Pet Type!");
+        return false;
+    }
+    // if (!find_parent_filter_breed) {
+    //     myApp.alert("Please select Breed!");
+    //     return false;
+    // }
+    // if (!find_parent_filter_age) {
+    //     myApp.alert("Please enter age!");
+    //     return false;
+    // }
+    // if (!find_parent_filter_gender) {
+    //     myApp.alert("Please select gender!");
+    //     return false;
+    // }
+
+    mainView.router.load({
+        url: 'find_parent_list_filtered.html',
         ignoreCache: false,
     });
 }

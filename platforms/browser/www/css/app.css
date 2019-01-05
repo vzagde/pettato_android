@@ -1141,6 +1141,7 @@ label.label-radio input[type=checkbox]:checked+.item-media i.icon-form-radio:aft
     z-index: 999;
     bottom: 4%;
     right: 15%;
+    width: 40px;
 }
 
 #become_parent_disp_card .form_button i {
