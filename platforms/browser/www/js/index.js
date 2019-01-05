@@ -34,28 +34,6 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
-
-        var push = PushNotification.init({ "android": {"senderID": "836033005549"}, "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {}});
-
-        push.on('registration', function(data) {
-            console.log(data.registrationId);
-            alert(data.registrationId);
-        });
-
-        push.on('notification', function(data) {
-            console.log(data.message);
-            alert(data.title+" Message: " +data.message);
-            // data.title,
-            // data.count,
-            // data.sound,
-            // data.image,
-            // data.additionalData
-        });
-
-        push.on('error', function(e) {
-            console.log(e.message);
-            alert(e.message);
-        });
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
@@ -69,19 +47,3 @@ var app = {
         console.log('Received Event: ' + id);
     }
 };
-
-
-// function initPushwoosh() {
-//     var pushwoosh = cordova.require("pushwoosh-cordova-plugin.PushNotification");
-//     // Should be called before pushwoosh.onDeviceReady
-//     document.addEventListener('push-notification', function(event) {
-//         var notification = event.notification;
-//     });
-
-//     // Initialize Pushwoosh. This will trigger all pending push notifications on start.
-//     pushwoosh.onDeviceReady({
-//     appid: "544A5-AC835",
-//         projectid: "GOOGLE_PROJECT_NUMBER",
-//         serviceName: "MPNS_SERVICE_NAME"
-//     });
-// }
