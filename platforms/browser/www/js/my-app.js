@@ -336,3 +336,7 @@ myApp.onPageInit('notifications', function(page) {
     load_edit_profile_pet(account_id);
 });
 
+// Dating page
+myApp.onPageInit('pet_dating', function(page) {
+    load_dating_profiles(account_id);
+});

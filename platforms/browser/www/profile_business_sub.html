@@ -57,8 +57,10 @@
 					<p>Call</p>
 				</div>
 				<div class="pro_file_icons chat follow_block">
-					<i class="material-icons">email</i>
-					<p class="business_email_to" data-businessemail="" onclick="sendEmail();"></p>
+					<a href="#" data-popup=".popup-sendEmail" data-businessemail="" class="open-popup business_email_to color_757575 mrg0" style="font-size: 13px">
+						<i class="material-icons">email</i>
+					</a>
+					<p class="business_email_to_text" data-businessemail=""></p>
 				</div>
 				<div class="pro_file_icons follow_block">
 					<center><i class="material-icons">location_on</i></center>
@@ -154,6 +156,35 @@
             </div>
             <div class="content-block register-btn" style="margin-top: 10% !important;">
                 <a href="#" id="" class="button button-big lo_gin" onclick="add_review_business()">POST REVIEW</a>
+            </div>
+            <br>
+            <div class="content-block register-btn mrg0">
+                <a id="close_popup_review" href="#" class="close-popup close-popup_review button button-big lo_gin"">CANCEL</a>
+            </div>
+	        <p style="display: none;"><a href="#" class="close-popup">Cancel</a></p>
+	    </div>
+	</div>
+	<div class="popup popup-sendEmail">
+	    <div class="content-block pad_55">
+	        <p>Send Email</p>
+	        <div class="list-block inputs-list">
+                <ul>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <input type="text" name="contact_details"  id="contact_details" placeholder="Contact Info">
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-input">
+                                <textarea id="contact_comments" name="contact_comments" placeholder="Message"></textarea>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="content-block register-btn" style="margin-top: 10% !important;">
+                <a href="#" id="" class="button button-big lo_gin" onclick="sendEmail()">Send Email</a>
             </div>
             <br>
             <div class="content-block register-btn mrg0">

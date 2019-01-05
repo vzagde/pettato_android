@@ -69,11 +69,21 @@ function make_call(number) {
 }
 
 function sendEmail() {
-    cordova.plugins.email.open({
-        to:      $(".business_email_to").data('businessemail'),
-        cc:      'petattoo@gmail.com',
-        subject: 'Enquiry From Pettato User',
-    });
+    myApp.alert('Email has been sent to the Business Page Successfully!');
+    $(".close-popup").click();
+
+    // cordova.plugins.email.open({
+    //     to:      $(".business_email_to").data('businessemail'),
+    //     cc:      'petattoo@gmail.com',
+    //     subject: 'Enquiry From Pettato User',
+    // });
+
+    // myApp.modalLogin('Contact Business', function (contact_info, details) {
+    //     // myApp.alert('Thank you! Username: ' + username + ', Password: ' + password);
+    //     console.log(details);
+    //     console.log(contact_info);
+    //     return false;
+    // });
 
     // window.open('mailto:' + $(".business_email_to").data('businessemail'));
 }
@@ -1620,7 +1630,7 @@ function loadBusinessPageContent(user_id) {
 
             $(".business_make_call").attr('data-businessnumber', res.response.user_details.phone);
             $(".business_email_to").attr('data-businessemail', res.response.user_details.email);
-            $(".business_email_to").html('Email');
+            $(".business_email_to_text").html('Email');
             $(".business_location_to").attr('data-businesslat', res.response.user_details.lat);
             $(".business_location_to").attr('data-businesslong', res.response.user_details.lng);
             $(".business_location_to").attr('data-address', res.response.user_details.address);
@@ -1738,8 +1748,6 @@ function loadBusinessPageContentSub(user_id) {
             $('.followers').text(res.followers);
             $('.followings').text(res.followings);
 
-            $(".business_email_to").html(res.email);
-
             var stars_html = '';
             var stars_count = Math.round(res.response.stars_count);
 
@@ -1755,7 +1763,7 @@ function loadBusinessPageContentSub(user_id) {
 
             $(".business_make_call").attr('data-businessnumber', res.response.user_details.phone);
             $(".business_email_to").attr('data-businessemail', res.response.user_details.email);
-            $(".business_email_to").html('Email');
+            $(".business_email_to_text").html('Email');
             $(".business_location_to").attr('data-businesslat', res.response.user_details.lat);
             $(".business_location_to").attr('data-businesslong', res.response.user_details.lng);
             $(".business_location_to").attr('data-address', res.response.user_details.address);
@@ -3195,18 +3203,18 @@ function filter_find_parent() {
         myApp.alert("Please select Pet Type!");
         return false;
     }
-    if (!find_parent_filter_breed) {
-        myApp.alert("Please select Breed!");
-        return false;
-    }
-    if (!find_parent_filter_age) {
-        myApp.alert("Please enter age!");
-        return false;
-    }
-    if (!find_parent_filter_gender) {
-        myApp.alert("Please select gender!");
-        return false;
-    }
+    // if (!find_parent_filter_breed) {
+    //     myApp.alert("Please select Breed!");
+    //     return false;
+    // }
+    // if (!find_parent_filter_age) {
+    //     myApp.alert("Please enter age!");
+    //     return false;
+    // }
+    // if (!find_parent_filter_gender) {
+    //     myApp.alert("Please select gender!");
+    //     return false;
+    // }
 
     mainView.router.load({
         url: 'become_parent_list_filtered.html',
@@ -3215,4 +3223,173 @@ function filter_find_parent() {
 }
 
 
+function load_dating_profiles(account_id) {
+    $.ajax({
+        url: base_url + 'get_dating_profiles',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: account_id,
+        }
+    }).done(function(res){
+        var html = '';
+        if (res.status == 'Success') {
 
+            var html = "";
+
+            $.each(res.response, function(index, value){
+                console.log(value.profile_image);
+                html += '<div>'+
+                            '<div class="card-content">'+
+                                '<div class="card-content-inner" style="padding: 0 !important">'+
+                                    '<img src="'+image_url+value.profile_image+'" width="100%" class="lazy lazy-fadein">'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="card-header text-center content_contain">'+
+                                '<h2 class="mrg0">'+value.first_name+'</h2>'+
+                                '<p>Breed: Labrador | Age: '+value.age+' | '+value.gender+'</p>'+
+                            '</div>'+
+                        '</div>';
+            })
+
+            $("#pet_dating").html(html);
+
+            $(".dating-slider").slick({
+                autoplay: false,
+                verticalSwiping: false,
+                dots: false,
+                nextArrow: $("#pet_dating_next"),
+                prevArrow: $("#pet_dating_prev"),
+            });
+
+            $(".pro_file_icons_like").click(function() {
+                $(this).addClass("pro_file_icons_like_active");
+            });
+        } else {
+            $("#pet_dating").html('<p class="text-center">'+res.api_msg+'</p>');
+        }
+    }).error(function(res){
+        $("#pet_dating").html('Data not available!');
+    })
+}
+
+function load_profile_content(account_id) {
+    $.ajax({
+        url: base_url + 'get_pet_profile_data',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: account_id,
+        }
+    }).done(function(res){
+        var html = '';
+        if (res.status == 'Success') {
+            // $(".profie_image").attr('src', image_url+res.response.profile_image);
+            // $(".cover_image").attr('src', image_url+res.response.cover_pic);
+            // $(".p_name").attr('src', image_url+res.response.first_name);
+            var html = "";
+
+            $.each(res.response, function(index, value){
+                console.log(value.profile_image);
+                html += '<div>'+
+                            '<div class="card-content">'+
+                                '<div class="card-content-inner" style="padding: 0 !important">'+
+                                    '<img src="'+image_url+value.profile_image+'" width="100%" class="lazy lazy-fadein">'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="card-header text-center content_contain">'+
+                                '<h2 class="mrg0">'+value.first_name+'</h2>'+
+                                '<p>Breed: Labrador | Age: '+value.age+' | '+value.gender+'</p>'+
+                            '</div>'+
+                        '</div>';
+            })
+        }
+        $("#pet_dating").html(html);
+
+        $(".dating-slider").slick({
+            autoplay: false,
+            verticalSwiping: false,
+            dots: false,
+            nextArrow: $("#pet_dating_next"),
+            prevArrow: $("#pet_dating_prev"),
+        });
+
+        $(".pro_file_icons_like").click(function() {
+            $(this).addClass("pro_file_icons_like_active");
+        });
+    }).error(function(res){
+        $("#pet_dating").html('Data not available!');
+    })
+}
+
+
+function add_to_adoption() {
+    $.ajax({
+        url: base_url+'add_to_adoption',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            pet_id: account_id,
+            user_id: token.id
+        }
+    }).done(function(res){
+        if (res.status == 'Success') {
+            myApp.alert(res.api_msg);
+        } else {
+            myApp.alert(res.api_msg);
+        }
+    }).error(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function(){
+    });
+}
+
+function add_lostfound() {
+    $.ajax({
+        url: base_url+'add_to_lostandfound',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            pet_id: account_id,
+            user_id: token.id
+        }
+    }).done(function(res){
+        if (res.status == 'Success') {
+            myApp.alert(res.api_msg);
+            $("#lost_found_content").val('');
+        } else {
+            myApp.alert(res.api_msg);
+        }
+    }).error(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function(){
+    });
+}
+
+function remove_lostfound() {
+    $.ajax({
+        url: base_url+'remove_lostandfound',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            pet_id: account_id,
+            user_id: token.id
+        }
+    }).done(function(res){
+        if (res.status == 'Success') {
+            myApp.alert(res.api_msg);
+            $("#lost_found_content").val('');
+        } else {
+            myApp.alert(res.api_msg);
+        }
+    }).error(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function(){
+    });
+}

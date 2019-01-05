@@ -35,10 +35,12 @@
 								<p class="mrg0 color_757575 font-CooperHewittLight">Dating</p>
 							</div>
 							<div class="col-33 text-center hideforOthers">
-								<img src="img/disease.png" width="50%">
-								<p class="mrg0 color_757575 font-CooperHewittLight">Lost</p>
+                                <a href="#" data-popup=".popup-lostfound" class="open-popup color_757575 mrg0" style="font-size: 13px">
+    								<img src="img/disease.png" width="50%">
+    								<p class="mrg0 color_757575 font-CooperHewittLight">Lost</p>
+                                </a>
 							</div>
-							<div class="col-33 text-center hideforOthers">
+							<div class="col-33 text-center hideforOthers" onclick="add_to_adoption();">
 								<img src="img/dog-leads.png" width="50%">
 								<p class="mrg0 color_757575 font-CooperHewittLight">Adoption</p>
 							</div>
@@ -86,4 +88,33 @@
             </div>
         </div>
     </div>
+    <div class="popup popup-lostfound">
+        <div class="content-block pad_55">
+            <p>LOST & FOUND</p>
+            <div class="list-block inputs-list">
+                <ul>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-input">
+                                <textarea id="lost_found_content" name="lost_found_content" placeholder="Description"></textarea>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="content-block register-btn" style="margin-top: 10% !important;">
+                <a href="#" id="" class="button button-big lo_gin" onclick="add_lostfound()">ADD TO LOST AND FOUND</a>
+            </div>
+            <br>
+            <div class="content-block register-btn" style="margin-top: 10% !important;">
+                <a href="#" id="" class="button button-big lo_gin" onclick="remove_lostfound()">REMOVE FROM LOST AND FOUND</a>
+            </div>
+            <br>
+            <div class="content-block register-btn mrg0">
+                <a id="close_popup_review" href="#" class="close-popup close-popup_review button button-big lo_gin"">CANCEL</a>
+            </div>
+            <p style="display: none;"><a href="#" class="close-popup">Cancel</a></p>
+        </div>
+    </div>
+
 </div>

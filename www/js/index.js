@@ -34,6 +34,13 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
+        var push = PushNotification.init({ 
+            "android": {"senderID": "836033005549",
+        });
+
+        push.on('registration', function(data) {
+            console.log(data.registrationId);
+        });
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
