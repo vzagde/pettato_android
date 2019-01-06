@@ -4,14 +4,14 @@
     <description>
         Social and Business Connectivity platform for pet owners and Pet Businesses
     </description>
-    <author email="vzagde110@gmail.com" href="http://pettato.com">
-        Kreaserv Team
+    <author email="pettatoo@gmail.com" href="http://pettato.com">
+        Pettato Enterprise LLP
     </author>
     <content src="index.html" />
     <preference name='phonegap-version' value='cli-7.0.1' />
     <!-- <preference name='pgb-builder-version' value='1' /> -->
     <preference name="DisallowOverscroll" value="true" />
-    <preference name="android-minSdkVersion" value="14" />
+    <!-- <preference name="android-minSdkVersion" value="14" /> -->
     <preference name="orientation" value="portrait" />
     <icon src="app_icon.png" />
     <icon density="mdpi" height="57" platform="android" src="app_icon.png" width="57" />
