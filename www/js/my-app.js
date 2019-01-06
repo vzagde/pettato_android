@@ -39,6 +39,9 @@ var find_parent_filter_breed = '';
 var find_parent_filter_age = '';
 var find_parent_filter_gender = '';
 
+var sharing_image = '';
+var sharing_content = '';
+
 openFB.init('2106128496268926', '', window.localStorage);
 
 var calendarDefault;
@@ -362,4 +365,9 @@ myApp.onPageInit('notifications', function(page) {
 // Dating page
 myApp.onPageInit('pet_dating', function(page) {
     load_dating_profiles(account_id);
+});
+
+// Dating page
+myApp.onPageInit('share_with_freinds', function(page) {
+    load_friends_profiles("#share_with_freinds-freinds", function(){});
 });

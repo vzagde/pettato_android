@@ -1128,16 +1128,17 @@ function sharePetProfile() {
         title: title,
         text: '<img src="'+share_image_link+'" width="100%;">',
         verticalButtons: true,
-        buttons: [{
-                text: 'Share on Social Media',
-                onClick: function() {
-                    window.plugins.socialsharing.share(title, title, share_image_link, '');
-                }
-            },
+        buttons: [
+            // {
+            //     text: 'Share on Social Media',
+            //     onClick: function() {
+            //         window.plugins.socialsharing.share(title, title, share_image_link, '');
+            //     }
+            // },
             {
                 text: 'Share on Pettato',
                 onClick: function() {
-                    share_with_freinds();
+                    share_with_freinds(share_image_link, title);
                 }
             },
             {
@@ -1166,17 +1167,18 @@ function feedShareStatusChng(id) {
         title: title,
         text: '<img src="'+share_image_link+'" width="100%;">',
         verticalButtons: true,
-        buttons: [{
-                text: 'Share on Social Media',
-                onClick: function() {
-                    window.plugins.socialsharing.share('Message and image', null, 'https://www.google.nl/images/srpr/logo4w.png', null);
-                    // window.plugins.socialsharing.share(title, title, share_image_link, share_link);
-                }
-            },
+        buttons: [
+            // {
+            //     text: 'Share on Social Media',
+            //     onClick: function() {
+            //         window.plugins.socialsharing.share('Message and image', null, 'https://www.google.nl/images/srpr/logo4w.png', null);
+            //         // window.plugins.socialsharing.share(title, title, share_image_link, share_link);
+            //     }
+            // },
             {
                 text: 'Share on Pettato',
                 onClick: function() {
-                    share_with_freinds();
+                    share_with_freinds(share_image_link, title);
                 }
             },
             {
@@ -1189,8 +1191,14 @@ function feedShareStatusChng(id) {
     })
 }
 
-function share_with_freinds(title, title, share_image_link, share_link) {
-    myApp.alert("Shared with your friends!");
+function share_with_freinds(share_image_link, title) {
+    sharing_image = share_image_link;
+    sharing_content = title;
+    // myApp.alert("Shared with your friends!");
+    mainView.router.load({
+        url: 'share_with_freinds.html',
+        ignoreCache: false,
+    });
 }
 
 function feedSaveStatusChng() {
@@ -1299,7 +1307,7 @@ function add_comment_feed() {
 function add_feed() {
     var feed_image = feed_image_upload.trim();
     var description = $('#create_feed-description').val().trim();
-    var location_id = $('#create_feed-location').val();
+    var location_id = '1';
     var post_create_id = 0;
 
     if (feed_image == '') {
@@ -2810,15 +2818,29 @@ function loadChatMessages(user_id) {
 
             $.each(res.response, function(index, value) {
                 if (value.sender_id == token.id) {
-                    html += '<div class="message message-sent">'+
-                                '<div class="message-text">'+value.messages+'</div>'+
-                                '<div style="background-image:url('+image_url+value.sender_profile_image+')" class="message-avatar"></div>'+
-                            '</div>';
+                    if (value.image) {
+                        html += '<div class="message message-sent">'+
+                                    '<div class="message-text"><img src="'+value.image+'" width="100%">'+value.messages+'</div>'+
+                                    '<div style="background-image:url('+image_url+value.sender_profile_image+')" class="message-avatar"></div>'+
+                                '</div>';
+                    } else {
+                        html += '<div class="message message-sent">'+
+                                    '<div class="message-text">'+value.messages+'</div>'+
+                                    '<div style="background-image:url('+image_url+value.sender_profile_image+')" class="message-avatar"></div>'+
+                                '</div>';
+                    }
                 } else {
-                    html += '<div class="message message-received">'+
-                                '<div class="message-text">'+value.messages+'</div>'+
-                                '<div style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
-                            '</div>';
+                    if (value.image) {
+                        html += '<div class="message message-received">'+
+                                    '<div class="message-text"><img src="'+value.image+'" width="100%">'+value.messages+'</div>'+
+                                    '<div style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
+                                '</div>';
+                    } else {
+                        html += '<div class="message message-received">'+
+                                    '<div class="message-text">'+value.messages+'</div>'+
+                                    '<div style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
+                                '</div>';
+                    }
                 }
 
                 // <div class="messages-date">Sunday, Feb 9 <span>12:58</span></div>
@@ -3192,8 +3214,8 @@ function load_edit_profile_business(user_id) {
 
             var category_arr = [];
 
-            if (user_data.category) {
-                category_arr = user_data.category.split(',');
+            if (user_data.business_category) {
+                category_arr = user_data.business_category.split(',');
             }
 
             load_category('#edit_profile_business-category', function(){ $("#edit_profile_business-category").val(category_arr); });
@@ -3216,8 +3238,6 @@ function load_edit_profile_business(user_id) {
             // $("#edit_business_register-lng").val(user_data.lng);
 
             // initialize(user_data.lat, user_data.lng, 'edit_mapCanvas');
-
-            // load_category('#edit_profile_business-category', function(){});
 
             // $('input[name=edit_profile_business-gender][value='+user_data.gender+']').attr('checked', true); 
 
@@ -3643,5 +3663,64 @@ function delete_feed(feed_id) {
     });
 }
 
+function load_friends_profiles(param, calback) {
+    $.ajax({
+        url: base_url+'get_all_friends_profiles',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            user_id: token.id
+        }
+    }).done(function(res){
+        if (res.status == 'Success') {
+            var html = '';
+            $.each(res.response, function(index, value){
+                html += '<option value="'+value.id+'"><img src="'+image_url+value.profile_image+'" style="width: 30px; height: 30px; margin-right: 10px;">'+value.first_name+'</option>';
+            })
 
+            $(param).html(html);
+        } else {
+            myApp.alert(res.api_msg);
+        }
+    }).error(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function(){
+    });
+}
 
+function shareContent() {
+    console.log($("#share_with_freinds-freinds").val());
+    if (!$("#share_with_freinds-freinds").val()) {
+        myApp.alert('Please select list of people to share the content!');
+        return false;
+    }
+
+    myApp.showIndicator();
+
+    $.ajax({
+        url: base_url+'shareContent',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            user_id: token.id,
+            share_user_id: $("#share_with_freinds-freinds").val(),
+            sharing_image: sharing_image,
+            sharing_content: sharing_content,
+        }
+    }).done(function(res){
+        if (res.status == 'Success') {
+            myApp.hideIndicator();
+            myApp.alert(res.api_msg);
+        } else {
+            myApp.hideIndicator();
+            myApp.alert(res.api_msg);
+        }
+    }).error(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function(){
+    });
+}
