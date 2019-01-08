@@ -326,6 +326,7 @@ function image_camera() {
         targetHeight: img_height,
         correctOrientation: true,
         allowEdit: true,
+        mediaType: Camera.MediaType.PICTURE,
     });
 }
 
@@ -347,11 +348,12 @@ function image_gallery() {
     navigator.camera.getPicture(shopper_register_onSuccess, shopper_register_onFail, {
         quality: 72,
         destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType,
+        sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
         targetWidth: img_width,
         targetHeight: img_height,
         correctOrientation: true,
         allowEdit: true,
+        mediaType: Camera.MediaType.PICTURE,
     });
 }
 

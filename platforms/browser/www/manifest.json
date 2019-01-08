@@ -1,8 +1,8 @@
 {
   "background_color": "#FFF",
   "display": "standalone",
-  "name": "Pettato Beta",
-  "short_name": "Pettato Beta",
+  "name": "Pettato",
+  "short_name": "Pettato",
   "version": "com.huzaifrangila.pettato",
   "description": "Social and Business Connectivity platform for pet owners and Pet Businesses",
   "author": "Pettato Enterprise LLP",
