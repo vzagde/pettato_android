@@ -367,3 +367,8 @@ myApp.onPageInit('pet_dating', function(page) {
 myApp.onPageInit('share_with_freinds', function(page) {
     load_friends_profiles("#share_with_freinds-freinds", function(){});
 });
+
+// Privacy Policy page
+myApp.onPageInit('privacy_policy', function(page) {
+    // 
+});
