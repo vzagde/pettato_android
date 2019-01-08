@@ -268,7 +268,7 @@ myApp.onPageInit('pet_register', function(page) {
 
 // business add account page
 myApp.onPageInit('business_register_add', function(page) {
-    load_city('#business_register_add-city_select', function(){});
+    load_city('#business_register-city_select', function(){});
     // initialize('19.113645', '72.869734', 'mapCanvas');
     load_category('#business_register-category', function(){});
 

@@ -319,7 +319,7 @@ function image_camera() {
     }
 
     navigator.camera.getPicture(shopper_register_onSuccess, shopper_register_onFail, {
-        quality: 50,
+        quality: 72,
         destinationType: Camera.DestinationType.FILE_URI,
         sourceType: Camera.PictureSourceType.CAMERA,
         targetWidth: img_width,
@@ -345,7 +345,7 @@ function image_gallery() {
     }
 
     navigator.camera.getPicture(shopper_register_onSuccess, shopper_register_onFail, {
-        quality: 50,
+        quality: 72,
         destinationType: Camera.DestinationType.FILE_URI,
         sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
         targetWidth: img_width,
