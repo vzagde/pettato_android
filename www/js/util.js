@@ -347,7 +347,7 @@ function image_gallery() {
     navigator.camera.getPicture(shopper_register_onSuccess, shopper_register_onFail, {
         quality: 72,
         destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
+        sourceType: Camera.PictureSourceType,
         targetWidth: img_width,
         targetHeight: img_height,
         correctOrientation: true,
