@@ -2649,6 +2649,8 @@ function loadSearchList() {
     }).always(function(res){
         myApp.hideIndicator();
     })
+
+    return false;
 }
 
 function goto_user_page(user_id) {

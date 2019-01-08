@@ -296,10 +296,6 @@ myApp.onPageInit('profiles', function(page) {
 // search listing page
 myApp.onPageInit('search', function(page) {
     // loadSearchList();
-
-    $(".searchbar").on('submit', function(){
-        loadSearchList();
-    })
 });
 
 // chats listing page
