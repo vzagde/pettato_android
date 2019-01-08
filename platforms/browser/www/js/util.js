@@ -319,14 +319,13 @@ function image_camera() {
     }
 
     navigator.camera.getPicture(shopper_register_onSuccess, shopper_register_onFail, {
-        quality: 72,
+        quality: 50,
         destinationType: Camera.DestinationType.FILE_URI,
         sourceType: Camera.PictureSourceType.CAMERA,
         targetWidth: img_width,
         targetHeight: img_height,
         correctOrientation: true,
         allowEdit: true,
-        mediaType: Camera.MediaType.PICTURE,
     });
 }
 
@@ -346,14 +345,13 @@ function image_gallery() {
     }
 
     navigator.camera.getPicture(shopper_register_onSuccess, shopper_register_onFail, {
-        quality: 72,
+        quality: 50,
         destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+        sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
         targetWidth: img_width,
         targetHeight: img_height,
         correctOrientation: true,
         allowEdit: true,
-        mediaType: Camera.MediaType.PICTURE,
     });
 }
 
@@ -496,7 +494,7 @@ function goto_register(type) {
         });
     } else {
         mainView.router.load({
-            url: 'business_register.html',
+            url: 'business_register_add.html',
             ignoreCache: false,
         });
     }
@@ -727,9 +725,7 @@ function register_business() {
     }).done(function(res) {
         myApp.hideIndicator();
         if (res.status == 'success') {
-            Lockr.set('token', res.response);
-            user_data = res.response;
-            account_default_id = user_data.id;
+            account_id = res.response.id;
             mainView.router.load({
                 url: 'feeds.html',
                 ignoreCache: false,
@@ -1451,7 +1447,7 @@ function loadUsersPageContent(user_id) {
                 } else {
                     profiles_list += '<div class="change_width-20 text-center" onclick="goto_business_page('+value.id+')">'+
                                         '<img src="'+image_url+value.profile_image+'" width="70%" style="border-radius: 5px">'+
-                                        '<p class="mrg0 color_757575">'+value.first_name+'</p>'+
+                                        '<p class="mrg0 color_757575">'+value.username+'</p>'+
                                     '</div>';
                 }
             })
@@ -1482,10 +1478,12 @@ function loadUsersPageContent(user_id) {
                                 '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
                                 '</a>'+
                                 '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
-                                '<a href="javascript:void(0);" data-liked="0" onclick="window.plugins.socialsharing.share("'+title+'", "'+title+'", "'+share_image_link+'", "'+share_link+'")" class=""><i class="material-icons white_heart">share</i></a>'+
-                                '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>'+
-                                '</div>'+
-                                '</div>';
+                                '<a href="javascript:void(0);" data-liked="0" onclick="window.plugins.socialsharing.share("'+title+'", "'+title+'", "'+share_image_link+'", "'+share_link+'")" class=""><i class="material-icons white_heart">share</i></a>';
+                                if (value.user_id == token.id) {
+                                    feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                }
+                feeds_html +='</div>'+
+                        '</div>';
             })
 
             feeds_html += '<span style="min-height: 40px; width: 100%;" class="card c_ard ks-facebook-card own_feed"></span>';
@@ -2535,21 +2533,17 @@ function loadProfilesList(account_default_id, profile_list_type) {
                     onclick_html = 'onclick="goto_user_page('+value.id+')"';
                 }
 
-                html += '<li class="swipeout item-content read_active">'+
+                html += '<li class="item-content read_active">'+
                             '<div class="swipeout-content item-content">'+
                                 '<div class="item-media pad0">'+
                                     '<img src="'+image_url+value.profile_image+'" width="75" height="75">'+
                                 '</div>'+
                                 '<div class="item-inner">'+
                                     '<div class="item-title-row">'+
-                                        '<div class="item-title">'+value.first_name+'</div>'+
+                                        '<div class="item-title" '+onclick_html+'>'+value.first_name+'</div>'+
                                     '</div>'+
                                     '<div class="item-subtitle">'+value.username+'</div>'+
                                 '</div>'+
-                            '</div>'+
-                            '<div class="swipeout-actions-right">'+
-                                '<a href="#" class="action1" '+onclick_html+'>Edit</a>'+
-                                '<a href="#" class="action2" '+onclick_html+'>Delete</a>'+
                             '</div>'+
                         '</li>';
 

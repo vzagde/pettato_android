@@ -139,7 +139,7 @@ myApp.onPageInit('profile_shopper_sub', function(page) {
 // business account profile
 myApp.onPageInit('profile_business', function(page) {
     // console.log("Business: "+account_default_id);
-    account_default_id = page.query.id;
+    account_id = page.query.id;
     loadBusinessPageContent(account_default_id);
 });
 
@@ -297,7 +297,7 @@ myApp.onPageInit('profiles', function(page) {
 myApp.onPageInit('search', function(page) {
     // loadSearchList();
 
-    $("#search_all").on('change', function(){
+    $(".searchbar").on('submit', function(){
         loadSearchList();
     })
 });
