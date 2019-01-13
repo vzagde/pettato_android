@@ -965,9 +965,14 @@ function loadFeeds() {
                         '<img data-src="'+share_image_link+'" src="'+share_image_link+'" width="100%" class="lazy lazy-fadein">'+
                         '</a>'+
                         '<div class="card-footer no-border like_share">'+
-                        '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+share_image_title+'" data-image_link="'+share_image_link+'" class="share_feeds_'+value.feed_id+' material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>'+
-                        '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>'+
-                        '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" style="" onclick="chngSaveStatus('+value.feed_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren3" style="font-size:20px !important;">save</i></a>'+
+                        '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+share_image_title+'" data-image_link="'+share_image_link+'" class="share_feeds_'+value.feed_id+' material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>';
+
+                if (value.user_type == 'User') {
+                    html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="goto_chat_inner('+value.user_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>';
+                } else {
+                    html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="goto_chat_inner('+value.linked_acc_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>';
+                }
+                html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="chngSaveStatus('+value.feed_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren3" style="font-size:20px !important;">save</i></a>'+
                         '<a href="javascript:void(0);" class="add_clk" style="z-index: 999"><i class="material-icons white_heart">add_circle</i></a>';
 
                 if (value.like_status == 1) {
@@ -1622,6 +1627,8 @@ function make_chat(type) {
 
     if (type == 'business_sub') {
         user_id = $(".business_sub_make_chat").data('userid');
+    } else if (type == 'business') {
+        user_id = $(".business_make_chat").data('userid');
     } else {
         user_id = $(".user_sub_make_chat").data('userid');
     }
@@ -1726,7 +1733,8 @@ function loadBusinessPageContent(user_id) {
 
             $(".p_categories").html(category_list);
 
-            $('.make_unfollow, .make_follow, .make_chat').attr('data-userid', res.response.user_details.id);
+            $('.make_unfollow, .make_follow').attr('data-userid', res.response.user_details.id);
+            $('.business_sub_make_chat').attr('data-userid', res.response.user_details.linked_acc_id);
 
             $(".business_make_call").attr('data-businessnumber', res.response.user_details.phone);
             $(".business_email_to").attr('data-businessemail', res.response.user_details.email);
@@ -1859,7 +1867,8 @@ function loadBusinessPageContentSub(user_id) {
 
             $('.p_name_business_sub').html(append_p_name);
             $('.p_name_business_sub').attr('data-business_id', res.response.user_details.id);
-            $('.business_sub_make_unfollow, .business_sub_make_follow, .business_sub_make_chat').attr('data-userid', res.response.user_details.id);
+            $('.business_sub_make_unfollow, .business_sub_make_follow').attr('data-userid', res.response.user_details.id);
+            $('.business_sub_make_chat').attr('data-userid', res.response.user_details.linked_acc_id);
 
             var category_list = '';
 
