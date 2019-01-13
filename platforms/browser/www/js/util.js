@@ -937,7 +937,7 @@ function loadFeeds() {
         url: base_url+'feeds',
         type: 'POST',
         data: {
-            user_id: token.id,
+            user_id: account_default_id,
         },
     }).done(function(res){
         var html = '';
