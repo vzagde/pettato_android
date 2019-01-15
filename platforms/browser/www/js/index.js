@@ -34,7 +34,50 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
+        app.setupPush();
     },
+
+    setupPush: function() {
+        alert('calling push init');
+        var push = PushNotification.init({
+            "android": {
+                "senderID": "836033005549"
+            },
+            "browser": {},
+            "ios": {
+                "sound": true,
+                "vibration": true,
+                "badge": true
+            },
+            "windows": {}
+        });
+
+        alert('after init');
+
+        push.on('registration', function(data) {
+            alert('registration event: ' + data.registrationId);
+
+            var oldRegId = localStorage.getItem('registrationId');
+            if (oldRegId !== data.registrationId) {
+                // Save new registration ID
+                // localStorage.setItem('registrationId', data.registrationId);
+                // Post registrationId to your app server as the value has changed
+            }
+        });
+
+        push.on('error', function(e) {
+            console.log("push error = " + e.message);
+
+            alert(e.message);
+        });
+
+        push.on('notification', function(data) {
+            console.log('notification event');
+
+            alert(JSON.stringify(data));
+            alert(data.title + ': ' + data.message);
+       });
+    }
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         var parentElement = document.getElementById(id);
