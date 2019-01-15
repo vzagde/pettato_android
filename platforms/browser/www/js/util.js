@@ -1,7 +1,49 @@
 document.addEventListener("deviceready", onDeviceReady, false);
 
+function sendpush() {
+    myApp.alert('calling push init');
+    var push = PushNotification.init({
+        "android": {
+            "senderID": "836033005549"
+        },
+        "browser": {},
+        "ios": {
+            "sound": true,
+            "vibration": true,
+            "badge": true
+        },
+        "windows": {}
+    });
+
+    myApp.alert('after init');
+
+    push.on('registration', function(data) {
+        myApp.alert('registration event: ' + data.registrationId);
+
+        var oldRegId = localStorage.getItem('registrationId');
+        if (oldRegId !== data.registrationId) {
+            // Save new registration ID
+            // localStorage.setItem('registrationId', data.registrationId);
+            // Post registrationId to your app server as the value has changed
+        }
+    });
+
+    push.on('error', function(e) {
+        myApp.alert("push error = " + e.message);
+    });
+
+    push.on('notification', function(data) {
+        console.log('notification event');
+
+        alert(JSON.stringify(data));
+        alert(data.title + ': ' + data.message);
+   });
+}
+
 function onDeviceReady() {
     myApp.showIndicator();
+
+    sendpush();
     user_data = token;
     if (token === undefined) {
         myApp.hideIndicator();
