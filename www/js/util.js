@@ -1,7 +1,8 @@
 document.addEventListener("deviceready", onDeviceReady, false);
 
-function sendpush() {
-    myApp.alert('calling push init');
+function onDeviceReady() {
+    myApp.showIndicator();
+
     var push = PushNotification.init({
         "android": {
             "senderID": "836033005549"
@@ -15,13 +16,13 @@ function sendpush() {
         "windows": {}
     });
 
-    myApp.alert('after init');
-
     push.on('registration', function(data) {
         myApp.alert('registration event: ' + data.registrationId);
 
-        var oldRegId = localStorage.getItem('registrationId');
-        if (oldRegId !== data.registrationId) {
+        oldPushId = Lockr.get('push_key');
+
+        if (oldPushId !== data.registrationId) {
+            Lockr.set('push_key', data.registrationId);
             // Save new registration ID
             // localStorage.setItem('registrationId', data.registrationId);
             // Post registrationId to your app server as the value has changed
@@ -33,22 +34,27 @@ function sendpush() {
     });
 
     push.on('notification', function(data) {
-        console.log('notification event');
-
-        alert(JSON.stringify(data));
-        alert(data.title + ': ' + data.message);
+        myApp.alert(JSON.stringify(data));
+        myApp.alert(data.title + ': ' + data.message);
    });
-}
 
-function onDeviceReady() {
-    myApp.showIndicator();
-
-    sendpush();
     user_data = token;
     if (token === undefined) {
         myApp.hideIndicator();
         goto_page('index.html');
     } else {
+        $.ajax({
+            url: base_url+ 'store_push_key',
+            type: 'POST',
+            crossDomain: true,
+            data: { user_id: user_data.id, push_id: Lockr.get('push_key'), },
+        }).done(function(res){
+            if (res.status == 'Success') {
+            } else {
+            }
+        }).error(function(res){
+        })
+
         account_default_id = user_data.id;
 
         if (user_data.user_type == 'User') {
@@ -561,8 +567,9 @@ function login() {
         type: 'POST',
         crossDomain: true,
         data: {
-            "identity": email,
-            "password": password,
+            identity: email,
+            password: password,
+            push_id: Lockr.get('push_key'),
         },
     })
     .done(function(res) {
@@ -650,6 +657,7 @@ function register_shopper() {
             city_id: city_id,
             medium: 'register',
             user_type: 'User',
+            push_id: Lockr.get('push_key'),
         },
     }).done(function(res) {
         myApp.hideIndicator();

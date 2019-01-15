@@ -2,6 +2,7 @@ var base_url = 'http://notchitup.in/pettato_ci/index.php/api/';
 var image_url = 'http://notchitup.in/pettato_ci/assets/uploads/upload_image/';
 
 var token = Lockr.get('token');
+var oldPushId = '';
 var user_data;
 var email_regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 var phone_regex = /^\d{10}$/;
