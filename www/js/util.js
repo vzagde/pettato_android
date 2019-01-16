@@ -370,38 +370,42 @@ function image_camera() {
         targetWidth: img_width,
         targetHeight: img_height,
         correctOrientation: true,
-        allowEdit: true,
+        allowEdit: false,
     });
 }
 
 // on Selection of gallery
 function image_gallery() {
-    var img_width = 500;
-    var img_height = 500;
-    if (image_upload_type == 'pet_profile' || image_upload_type == 'user_profile' || image_upload_type == 'business_profile') {
-        img_width = 720;
-        img_height = 640;
-    } else if (image_upload_type == 'feed_image') {
-        img_width = 500;
-        img_height = 500;
-    } else {
-        img_width = 720;
-        img_width = 500;
-    }
+    // var img_width = 500;
+    // var img_height = 500;
+    // if (image_upload_type == 'pet_profile' || image_upload_type == 'user_profile' || image_upload_type == 'business_profile') {
+    //     img_width = 720;
+    //     img_height = 640;
+    // } else if (image_upload_type == 'feed_image') {
+    //     img_width = 500;
+    //     img_height = 500;
+    // } else {
+    //     img_width = 720;
+    //     img_width = 500;
+    // }
 
     navigator.camera.getPicture(shopper_register_onSuccess, shopper_register_onFail, {
-        quality: 50,
+        quality: 100,
         destinationType: Camera.DestinationType.FILE_URI,
         sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
         targetWidth: img_width,
         targetHeight: img_height,
         correctOrientation: true,
-        allowEdit: true,
+        allowEdit: false,
     });
 }
 
 // image selection success function
 function shopper_register_onSuccess(fileURL) {
+    plugins.crop(onCropSuccess, onCropfail, fileURL, { quality: 100, targetWidth: 1000, targetHeight: 1000 });
+}
+
+function onCropSuccess(fileURL) {
     var uri = encodeURI(base_url + "upload_user");
     var options = new FileUploadOptions();
     options.fileKey = "file";
@@ -412,6 +416,10 @@ function shopper_register_onSuccess(fileURL) {
     };
     options.headers = headers;
     new FileTransfer().upload(fileURL, uri, shopper_register_onSuccess_file, shopper_register_onError_file, options);
+}
+
+function onCropfail(message) {
+    myApp.alert('Failed because: ' + message);
 }
 
 // image selection Fail function

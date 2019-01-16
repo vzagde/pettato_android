@@ -59,6 +59,7 @@
     <plugin name="cordova-plugin-statusbar" spec="~2.1.2" />
     <plugin name="cordova-plugin-vibration" spec="~2.1.0" />
     <plugin name="cordova-plugin-whitelist" spec="~1.2.1" />
+    <plugin name="cordova-plugin-crop" spec="~0.3.1" />
     <platform name="android">
         <resource-file src="google-services.json" target="app/google-services.json" />
     </platform>
