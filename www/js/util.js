@@ -17,10 +17,7 @@ function onDeviceReady() {
     });
 
     push.on('registration', function(data) {
-        myApp.alert('registration event: ' + data.registrationId);
-
         oldPushId = Lockr.get('push_key');
-
         if (oldPushId !== data.registrationId) {
             Lockr.set('push_key', data.registrationId);
             // Save new registration ID
@@ -30,13 +27,13 @@ function onDeviceReady() {
     });
 
     push.on('error', function(e) {
-        myApp.alert("push error = " + e.message);
+        // myApp.alert("push error = " + e.message);
     });
 
     push.on('notification', function(data) {
         myApp.alert(JSON.stringify(data));
-        myApp.alert(data.title + ': ' + data.message);
-   });
+        // myApp.alert(data.title + ': ' + data.message);
+    });
 
     user_data = token;
     if (token === undefined) {
@@ -663,6 +660,7 @@ function register_shopper() {
         myApp.hideIndicator();
         if (res.status == 'success') {
             Lockr.set('token', res.response);
+            token = res.response;
             user_data = res.response;
             account_default_id = user_data.id;
             mainView.router.load({
@@ -987,7 +985,7 @@ function loadFeeds() {
         url: base_url+'feeds',
         type: 'POST',
         data: {
-            user_id: account_default_id,
+            user_id: token.id,
         },
     }).done(function(res){
         var html = '';
@@ -2563,7 +2561,7 @@ function goto_profile_list_follow(type) {
     });
 }
 
-function loadProfilesList(account_default_id, profile_list_type) {
+function loadProfilesList(account_id, profile_list_type) {
     myApp.showIndicator();
 
     $.ajax({
@@ -2572,7 +2570,7 @@ function loadProfilesList(account_default_id, profile_list_type) {
         dataType: 'json',
         crossDomain: true,
         data: {
-            user_id: account_default_id,
+            user_id: account_id,
             account_type: profile_list_type,
         }
     }).done(function(res){
