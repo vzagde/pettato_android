@@ -350,25 +350,23 @@ function open_dialog_for_image(type) {
 
 // on Selection of camera
 function image_camera() {
-    var img_width = 500;
-    var img_height = 500;
-    if (image_upload_type == 'pet_profile' || image_upload_type == 'user_profile' || image_upload_type == 'business_profile') {
-        img_width = 720;
-        img_height = 640;
-    } else if (image_upload_type == 'feed_image') {
-        img_width = 500;
-        img_height = 500;
-    } else {
-        img_width = 720;
-        img_width = 500;
-    }
+    // var img_width = 500;
+    // var img_height = 500;
+    // if (image_upload_type == 'pet_profile' || image_upload_type == 'user_profile' || image_upload_type == 'business_profile') {
+    //     img_width = 720;
+    //     img_height = 640;
+    // } else if (image_upload_type == 'feed_image') {
+    //     img_width = 500;
+    //     img_height = 500;
+    // } else {
+    //     img_width = 720;
+    //     img_width = 500;
+    // }
 
     navigator.camera.getPicture(shopper_register_onSuccess, shopper_register_onFail, {
         quality: 50,
         destinationType: Camera.DestinationType.FILE_URI,
         sourceType: Camera.PictureSourceType.CAMERA,
-        targetWidth: img_width,
-        targetHeight: img_height,
         correctOrientation: true,
         allowEdit: false,
     });
@@ -393,8 +391,6 @@ function image_gallery() {
         quality: 100,
         destinationType: Camera.DestinationType.FILE_URI,
         sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
-        targetWidth: img_width,
-        targetHeight: img_height,
         correctOrientation: true,
         allowEdit: false,
     });
