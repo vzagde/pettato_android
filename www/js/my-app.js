@@ -187,6 +187,11 @@ myApp.onPageInit('become_parent_list', function(page) {
 });
 
 // become a parent list
+myApp.onPageInit('mylist_find_parent', function(page) {
+    loadFindParentMyList(account_default_id);
+});
+
+// become a parent list
 myApp.onPageInit('become_parent_list_filtered', function(page) {
     loadBecomeParentFilteredContent(account_default_id);
 });
@@ -257,6 +262,24 @@ myApp.onPageInit('before_add_account', function(page) {
 myApp.onPageInit('pet_register', function(page) {
     load_pet_categories('#pet_register-pettype', function(){});
     load_city('#pet_register-city', function(){});
+
+    $("#pet_register-pettype").on('change', function(){
+        if ($("#pet_register-pettype").val() == 'Type Your Own') {
+            $(".pettypetypeown").removeClass('hideInput');
+            $(".breedselect").addClass('hideInput');
+        } else {
+            $(".pettypetypeown").addClass('hideInput');
+        }
+    })
+
+    $("#pet_register-breed").on('change', function(){
+        if ($("#pet_register-breed").val() == 'Type Your Own') {
+            $(".breedtypeown").removeClass('hideInput');
+        } else {
+            $(".breedtypeown").addClass('hideInput');
+        }
+    })
+
     $("#pet_register-pettype").change(function(e) {
         e.preventDefault();
         if ($("#pet_register-pettype").val() == 'Select Pet Type') {
@@ -373,3 +396,14 @@ myApp.onPageInit('share_with_freinds', function(page) {
 myApp.onPageInit('privacy_policy', function(page) {
     // 
 });
+
+// Privacy Disclaimer
+myApp.onPageInit('disclaimer', function(page) {
+    // 
+});
+
+// Privacy Contact Us
+myApp.onPageInit('contact-us', function(page) {
+    // 
+});
+
