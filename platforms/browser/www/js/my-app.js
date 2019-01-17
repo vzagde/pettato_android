@@ -416,3 +416,8 @@ myApp.onPageInit('about-us', function(page) {
 myApp.onPageInit('notification', function(page) {
     loadNotificationsList();
 });
+
+// Pet Cemetry page
+myApp.onPageInit('pet_cemetry', function(page) {
+    // 
+});

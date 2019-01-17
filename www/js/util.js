@@ -1129,6 +1129,11 @@ function loadFeeds() {
     })
 }
 
+function feedLikeStatusChng() {
+    var feed_id = $('.feedDetailsLike').data('feed_id');
+    chngLikeStatus(feed_id);
+}
+
 function chngLikeStatus(feed_id) {
     $.ajax({
         url: base_url+'like_feeds',
@@ -1446,7 +1451,7 @@ function add_feed() {
         if (res.status == 'Success') {
             $.each(res.response, function(index, value){
                 post_create_id = value.id;
-                json_data.push({text: '@'+value.username, onClick: function() { create_feed(post_create_id, feed_image, description, location_id); }});
+                json_data.push({text: '@'+value.username, onClick: function() { create_feed(value.id, feed_image, description, location_id); }});
             })
 
             myApp.hideIndicator();
@@ -1880,9 +1885,12 @@ function loadBusinessPageContent(user_id) {
                                 '<a class="card-content" onclick="load_feed_page('+value.id+')">'+
                                 '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
                                 '</a>'+
-                                '<div class="card-footer no-border like_share">'+
-                                '<a href="javascript:void(0);" data-liked="0" onclick="window.plugins.socialsharing.share("'+title+'", "'+title+'", "'+share_image_link+'", "'+share_link+'")" class=""><i class="material-icons white_heart">share</i></a>'+
-                                '</div>'+
+                                '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
+                                '<a href="javascript:void(0);" data-liked="0" onclick="window.plugins.socialsharing.share("'+title+'", "'+title+'", "'+share_image_link+'", "'+share_link+'")" class=""><i class="material-icons white_heart">share</i></a>';
+                                if (value.user_id == token.id || res.response.user_details.linked_acc_id == token.id) {
+                                    feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                }
+                feeds_html += '</div>'+
                                 '</div>';
             })
 
@@ -2031,9 +2039,12 @@ function loadBusinessPageContentSub(user_id) {
                                 '<a class="card-content" onclick="load_feed_page('+value.id+')">'+
                                 '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
                                 '</a>'+
-                                '<div class="card-footer no-border like_share">'+
-                                '<a href="javascript:void(0);" data-liked="0" onclick="window.plugins.socialsharing.share("'+title+'", "'+title+'", "'+share_image_link+'", "'+share_link+'")" class=""><i class="material-icons white_heart">share</i></a>'+
-                                '</div>'+
+                                '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
+                                '<a href="javascript:void(0);" data-liked="0" onclick="window.plugins.socialsharing.share("'+title+'", "'+title+'", "'+share_image_link+'", "'+share_link+'")" class=""><i class="material-icons white_heart">share</i></a>';
+                                if (value.user_id == token.id || res.response.user_details.linked_acc_id == token.id) {
+                                    feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                }
+                feeds_html += '</div>'+
                                 '</div>';
             })
 
@@ -2690,7 +2701,6 @@ function loadProfilesList(account_id, profile_list_type) {
         }
     }).done(function(res){
         if (res.status == 'Success') {
-            myApp.hideIndicator();
             var html = '';
 
             $.each(res.response, function(index, value){
@@ -2738,7 +2748,7 @@ function loadProfilesList(account_id, profile_list_type) {
                             '</div>';
                     if (value.id == token.id || value.linked_acc_id == token.id) {
                         html += '<div class="swipeout-actions-right">'+
-                                    '<a href="#" data-messageid="'+value.id+'" class="action1 change_message_read_status">Mark Read</a>'+
+                                    '<a href="#" data-userid="'+value.id+'" class="action1 delete_profile">Delete</a>'+
                                 '</div>';
                     }
                 html += '</li>';
@@ -2749,6 +2759,26 @@ function loadProfilesList(account_id, profile_list_type) {
 
             $("#list_profiles_dynamic").html(html);
 
+            myApp.hideIndicator();
+
+            $(".delete_profile").click(function(e){
+                e.preventDefault();
+                var acc_id = $(this).data('userid');
+                myApp.showIndicator();
+                $.ajax({
+                    url: base_url+'delete_users_profiles',
+                    type: 'POST',
+                    dataType: 'json',
+                    crossDomain: true,
+                    data: {acc_id: acc_id}
+                }).done(function(res) {
+                    myApp.hideIndicator();
+                    myApp.alert(res.api_msg);
+                }).error(function(res) {
+                    myApp.hideIndicator();
+                    myApp.alert("Something went wrong, Please try again later!");
+                })
+            })
         } else {
             myApp.hideIndicator();
             var html = '<p style="text-align: center;">'+res.api_msg+'</p>';
