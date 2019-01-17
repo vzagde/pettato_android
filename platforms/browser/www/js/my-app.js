@@ -397,13 +397,22 @@ myApp.onPageInit('privacy_policy', function(page) {
     // 
 });
 
-// Privacy Disclaimer
+// Disclaimer page
 myApp.onPageInit('disclaimer', function(page) {
     // 
 });
 
-// Privacy Contact Us
+// Contact Us page
 myApp.onPageInit('contact-us', function(page) {
     // 
 });
 
+// About Us page
+myApp.onPageInit('about-us', function(page) {
+    // 
+});
+
+// Notification page
+myApp.onPageInit('notification', function(page) {
+    loadNotificationsList();
+});

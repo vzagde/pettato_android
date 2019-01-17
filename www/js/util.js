@@ -3945,3 +3945,68 @@ function deletePetFromAdoption(adoption_id) {
     }).always(function(){
     });
 }
+
+function addToInterestedList() {
+    $.ajax({
+        url: base_url+'add_to_intersted_list',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: { pet_id: account_id, user_id: token.id, }
+    }).done(function(data){
+        if (res.status == 'Success') {
+            myApp.alert(res.api_msg);
+        } else {
+            myApp.alert(res.api_msg);
+        }
+    }).error(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function(){
+    })
+}
+
+function loadNotificationsList() {
+    $.ajax({
+        url: base_url+'get_notifications',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: { user_id: token.id, }
+    }).done(function(res) {
+        if (res.status == 'Success') {
+            var html = '';
+
+            $.each(res.response, function(index, value) {
+                var time = new Date(value.created_date);
+                var timechng = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+
+                html += '<li class="swipeout item-content read_active">'+
+                            '<div class="swipeout-content item-content">'+
+                                '<div class="item-media pad0">'+
+                                    '<img src="'+image_url+value.profile_image+'" width="75" height="75">'+
+                                '</div>'+
+                                '<div class="item-inner">'+
+                                    '<div class="item-title-row">'+
+                                        '<div class="item-title" onClick="goto_user_page('+value.user_id+');">'+value.first_name+'<span class="time-text">'+timechng+'</span>'+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<div class="item-subtitle">'+value.notification_text+'</div>'+
+                                '</div>'+
+                            '</div>'+
+                            // '<div class="swipeout-actions-right">'+
+                            //     '<a href="#" class="action1">Mark As Read</a>'+
+                            // '</div>'+
+                        '</li>';
+            })
+
+            $("#notifiactionList").html(html);
+        } else {
+            $("#notifiactionList").html(res.api_msg);
+        }
+    }).error(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function(){
+    })
+}
