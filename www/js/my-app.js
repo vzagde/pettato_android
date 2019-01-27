@@ -421,3 +421,8 @@ myApp.onPageInit('notification', function(page) {
 myApp.onPageInit('pet_cemetry', function(page) {
     // 
 });
+
+// Pet Forgot Password
+myApp.onPageInit('forgot_password', function(page) {
+    // 
+});

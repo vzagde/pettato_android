@@ -3,37 +3,37 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
     myApp.showIndicator();
 
-    var push = PushNotification.init({
-        "android": {
-            "senderID": "836033005549"
-        },
-        "browser": {},
-        "ios": {
-            "sound": true,
-            "vibration": true,
-            "badge": true
-        },
-        "windows": {}
-    });
+    // var push = PushNotification.init({
+    //     "android": {
+    //         "senderID": "836033005549"
+    //     },
+    //     "browser": {},
+    //     "ios": {
+    //         "sound": true,
+    //         "vibration": true,
+    //         "badge": true
+    //     },
+    //     "windows": {}
+    // });
 
-    push.on('registration', function(data) {
-        oldPushId = Lockr.get('push_key');
-        if (oldPushId !== data.registrationId) {
-            Lockr.set('push_key', data.registrationId);
-            // Save new registration ID
-            // localStorage.setItem('registrationId', data.registrationId);
-            // Post registrationId to your app server as the value has changed
-        }
-    });
+    // push.on('registration', function(data) {
+    //     oldPushId = Lockr.get('push_key');
+    //     if (oldPushId !== data.registrationId) {
+    //         Lockr.set('push_key', data.registrationId);
+    //         // Save new registration ID
+    //         // localStorage.setItem('registrationId', data.registrationId);
+    //         // Post registrationId to your app server as the value has changed
+    //     }
+    // });
 
-    push.on('error', function(e) {
-        // myApp.alert("push error = " + e.message);
-    });
+    // push.on('error', function(e) {
+    //     // myApp.alert("push error = " + e.message);
+    // });
 
-    push.on('notification', function(data) {
-        myApp.alert(JSON.stringify(data));
-        // myApp.alert(data.title + ': ' + data.message);
-    });
+    // push.on('notification', function(data) {
+    //     myApp.alert(JSON.stringify(data));
+    //     // myApp.alert(data.title + ': ' + data.message);
+    // });
 
     user_data = token;
     if (token === undefined) {
@@ -602,7 +602,7 @@ function register_shopper() {
     var password = $('#shopper_register-password').val().trim();
     var confirm_password = $('#shopper_register-confirm_password').val().trim();
     var city_id = $('#shopper_register-city_select').val();
-    // var profile_image = image_from_device.trim();
+    var profile_image = image_from_device.trim();
 
     if (name == '') {
         myApp.alert('Please enter name');
@@ -644,6 +644,11 @@ function register_shopper() {
         return false;
     }
 
+    if (!profile_image) {
+        myApp.alert('Please Upload Profile Picture!');
+        return false;
+    }
+
     myApp.showIndicator();
     $.ajax({
         url: base_url + 'create_user',
@@ -658,6 +663,7 @@ function register_shopper() {
             city_id: city_id,
             medium: 'register',
             user_type: 'User',
+            profile_image: profile_image,
             push_id: Lockr.get('push_key'),
         },
     }).done(function(res) {
@@ -805,13 +811,14 @@ function register_business() {
 
 function register_pet() {
     var name = $("#pet_register-name").val();
-    var username = $("#pet_register-username").val();
+    // var username = $("#pet_register-username").val();
     var pettype = $("#pet_register-pettype").val();
     var breed = $("#pet_register-breed").val();
     var age = $("#pet_register-age").val();
-    var description = $("#pet_register-description").val();
+    // var description = $("#pet_register-description").val();
+    var description = '';
     var city = $("#pet_register-city").val();
-    var profile_btn = profile_image_link;
+    // var profile_btn = profile_image_link;
     var cover_btn = profile_cover_image_link;
     var new_pettype = '';
     var new_breed = '';
@@ -821,10 +828,10 @@ function register_pet() {
         return false;
     }
 
-    if (!username) {
-        myApp.alert("Please provide Pet Username");
-        return false;
-    }
+    // if (!username) {
+    //     myApp.alert("Please provide Pet Username");
+    //     return false;
+    // }
 
     if (!pettype) {
         if (!$("#pet_register-pettypetypeown").val()) {
@@ -872,20 +879,20 @@ function register_pet() {
         return false;
     }
 
-    if (!profile_btn) {
-        myApp.alert("Please provide Pet Profile Image");
-        return false;
-    }
+    // if (!profile_btn) {
+    //     myApp.alert("Please provide Pet Profile Image");
+    //     return false;
+    // }
 
     if (!cover_btn) {
         myApp.alert("Please provide Pet Cover Image");
         return false;
     }
 
-    if (!description) {
-        myApp.alert("Please provide Pet Description");
-        return false;
-    }
+    // if (!description) {
+    //     myApp.alert("Please provide Pet Description");
+    //     return false;
+    // }
 
     $.ajax({
         url: base_url + 'upload_pet_profile',
@@ -893,14 +900,14 @@ function register_pet() {
         crossDomain: true,
         data: {
             name: name,
-            username: username,
+            username: name,
             pettype: pettype,
             breed: breed,
             new_pettype: new_pettype,
             new_breed: new_breed,
             age: age,
             city: city,
-            profile_btn: profile_btn,
+            profile_btn: cover_btn,
             cover_btn: cover_btn,
             parent_user_id: token.id,
             description: description,
@@ -1616,9 +1623,11 @@ function loadUsersPageContent(user_id) {
                                     '<img data-src="'+image_url+value.feed_image+'" src="'+image_url+value.feed_image+'" width="100%" class="lazy lazy-fadein">'+
                                     '</a>'+
                                     '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
-                                    '<a href="javascript:void(0);" data-liked="0" onclick="window.plugins.socialsharing.share("'+title+'", "'+title+'", "'+share_image_link+'", "'+share_link+'")" class=""><i class="material-icons white_heart">share</i></a>'+
-                                    '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>'+
-                                    '</div>'+
+                                    '<a href="javascript:void(0);" data-liked="0" onclick="window.plugins.socialsharing.share("'+title+'", "'+title+'", "'+share_image_link+'", "'+share_link+'")" class=""><i class="material-icons white_heart">share</i></a>';
+                                    if (value.user_id == token.id) {
+                                        save_feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    }
+                    save_feeds_html += '</div>'+
                                     '</div>';
                 }
 
@@ -1629,9 +1638,11 @@ function loadUsersPageContent(user_id) {
                                     '<img data-src="'+image_url+value.feed_image+'" src="'+image_url+value.feed_image+'" width="100%" class="lazy lazy-fadein">'+
                                     '</a>'+
                                     '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
-                                    '<a href="javascript:void(0);" data-liked="0" onclick="window.plugins.socialsharing.share("'+title+'", "'+title+'", "'+share_image_link+'", "'+share_link+'")" class=""><i class="material-icons white_heart">share</i></a>'+
-                                    '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>'+
-                                    '</div>'+
+                                    '<a href="javascript:void(0);" data-liked="0" onclick="window.plugins.socialsharing.share("'+title+'", "'+title+'", "'+share_image_link+'", "'+share_link+'")" class=""><i class="material-icons white_heart">share</i></a>';
+                                    if (value.user_id == token.id) {
+                                        save_feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    }
+                    save_feeds_html += '</div>'+
                                     '</div>';
                 }
 
@@ -2842,7 +2853,7 @@ function loadSearchList() {
         $.each(res.response.feeds_list, function(index, value){
             html += '<li class="item-content">'+
                         '<div class="item-inner">'+
-                            '<div class="card c_ard ks-facebook-card">'+
+                            '<div class="card c_ard ks-facebook-card" style="width: 100%">'+
                                 '<div class="black_overlay"></div>'+
                                     '<a href="#" class="card-header no-border pro_view">'+
                                         '<div class="ks-facebook-avatar pro_pic">'+
@@ -3235,7 +3246,7 @@ function load_edit_profile_pet(user_id) {
             $("#edit_pet_register-id").val(user_id);
 
             $("#edit_pet_register-name").val(user_data.first_name);
-            $("#edit_pet_register-username").val(user_data.username);
+            // $("#edit_pet_register-username").val(user_data.username);
             $("#edit_pet_register-age").val(user_data.age);
             $("#edit_pet_register-description").val(user_data.description);
 
@@ -3271,7 +3282,7 @@ function load_edit_profile_pet(user_id) {
 function edit_pet() {
     var id = $("#edit_pet_register-id").val();
     var name = $("#edit_pet_register-name").val();
-    var username = $("#edit_pet_register-username").val();
+    // var username = $("#edit_pet_register-username").val();
     var pettype = $("#edit_pet_register-pettype").val();
     var breed = $("#edit_pet_register-breed").val();
     var age = $("#edit_pet_register-age").val();
@@ -3286,10 +3297,10 @@ function edit_pet() {
         return false;
     }
 
-    if (!username) {
-        myApp.alert('Please provide username');
-        return false;
-    }
+    // if (!username) {
+    //     myApp.alert('Please provide username');
+    //     return false;
+    // }
 
     if (!pettype || pettype == 'Select Pet Type') {
         myApp.alert('Please provide pet type');
@@ -3321,10 +3332,10 @@ function edit_pet() {
         return false;
     }
 
-    if (!profile_image) {
-        myApp.alert('Please provide profile image');
-        return false;
-    }
+    // if (!profile_image) {
+    //     myApp.alert('Please provide profile image');
+    //     return false;
+    // }
 
     if (!cover_pic) {
         myApp.alert('Please provide cover picture');
@@ -3339,7 +3350,7 @@ function edit_pet() {
         crossDomain: true,
         data: {
             id: id,
-            username: username,
+            username: name,
             first_name: name,
             type_of_pet: pettype,
             breed: breed,
@@ -3347,7 +3358,7 @@ function edit_pet() {
             age: age,
             gender: gender,
             description: description,
-            profile_image: profile_image,
+            profile_image: cover_pic,
             cover_pic: cover_pic,
         },
     })
@@ -4038,5 +4049,45 @@ function loadNotificationsList() {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
+    })
+}
+
+function forgot_password() {
+    if (!$("#forgot_password-email").val()) {
+        myApp.alert("Please enter Email!");
+        return false;
+    }
+
+    if (!$("#forgot_password-password").val()) {
+        myApp.alert("Please enter Password!");
+        return false;
+    }
+
+    if (!$("#forgot_password-cpassword").val()) {
+        myApp.alert("Please enter Confirm Password!");
+        return false;
+    }
+
+    if ($("#forgot_password-password").val() !== $("#forgot_password-cpassword").val()) {
+        myApp.alert("Please password mismatch!");
+        return false;
+    }
+
+    $.ajax({
+        url: base_url+ 'update_password',
+        type: 'POST',
+        crossDomain: true,
+        data: { 
+            email: $("#forgot_password-email").val(),
+            password: $("#forgot_password-password").val(),
+        },
+    }).done(function(res){
+        if (res.status == 'Success') {
+            myApp.alert(res.msg);
+        } else {
+            myApp.alert(res.msg);
+        }
+    }).error(function(res){
+        myApp.alert("Some network error occured, Please try again later!");
     })
 }
