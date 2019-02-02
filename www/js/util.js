@@ -602,7 +602,7 @@ function register_shopper() {
     var password = $('#shopper_register-password').val().trim();
     var confirm_password = $('#shopper_register-confirm_password').val().trim();
     var city_id = $('#shopper_register-city_select').val();
-    var profile_image = image_from_device.trim();
+    var profile_image = profile_image_link.trim();
 
     if (name == '') {
         myApp.alert('Please enter name');
