@@ -1182,23 +1182,24 @@ label.label-radio input[type=checkbox]:checked+.item-media i.icon-form-radio:aft
 }
 
 #pet_dating .card-header {
-    padding: 5% !important;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
+    padding: 3% !important;
+    /*border-top-left-radius: 30px;
+    border-top-right-radius: 30px;*/
     background: #ffffff;
     color: #333333;
     margin-top: -40px;
 }
 
 #pet_dating .content_contain {
-    padding: 5% !important;
-    border-radius: 15px;
+    padding: 3% !important;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
     background: #ffffff;
     color: #333333;
-    width: 75%;
+    /*width: 75%;*/
     margin: -40px auto 15px;
     text-align: center;
-    box-shadow: 1px 1px 10px 5px rgba(230, 230, 230, 0.5);
+    box-shadow: 2px 3px 0px 0px rgba(230, 230, 230, 0.5);
 }
 
 

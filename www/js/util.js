@@ -3,37 +3,37 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
     myApp.showIndicator();
 
-    var push = PushNotification.init({
-        "android": {
-            "senderID": "836033005549"
-        },
-        "browser": {},
-        "ios": {
-            "sound": true,
-            "vibration": true,
-            "badge": true
-        },
-        "windows": {}
-    });
+    // var push = PushNotification.init({
+    //     "android": {
+    //         "senderID": "836033005549"
+    //     },
+    //     "browser": {},
+    //     "ios": {
+    //         "sound": true,
+    //         "vibration": true,
+    //         "badge": true
+    //     },
+    //     "windows": {}
+    // });
 
-    push.on('registration', function(data) {
-        oldPushId = Lockr.get('push_key');
-        if (oldPushId !== data.registrationId) {
-            Lockr.set('push_key', data.registrationId);
-            // Save new registration ID
-            // localStorage.setItem('registrationId', data.registrationId);
-            // Post registrationId to your app server as the value has changed
-        }
-    });
+    // push.on('registration', function(data) {
+    //     oldPushId = Lockr.get('push_key');
+    //     if (oldPushId !== data.registrationId) {
+    //         Lockr.set('push_key', data.registrationId);
+    //         // Save new registration ID
+    //         // localStorage.setItem('registrationId', data.registrationId);
+    //         // Post registrationId to your app server as the value has changed
+    //     }
+    // });
 
-    push.on('error', function(e) {
-        // myApp.alert("push error = " + e.message);
-    });
+    // push.on('error', function(e) {
+    //     // myApp.alert("push error = " + e.message);
+    // });
 
-    push.on('notification', function(data) {
-        myApp.alert(JSON.stringify(data));
-        // myApp.alert(data.title + ': ' + data.message);
-    });
+    // push.on('notification', function(data) {
+    //     myApp.alert(JSON.stringify(data));
+    //     // myApp.alert(data.title + ': ' + data.message);
+    // });
 
     user_data = token;
     if (token === undefined) {
@@ -2193,10 +2193,6 @@ function loadPetPageContent(pet_id) {
                     '<div class="row">'+
                     '<div class="col-33">Location</div>'+
                     '<div class="col-66">'+res.response.pet_city+'</div>'+
-                    '</div>'+
-                    '<div class="row">'+
-                    '<div class="col-33">About Pet</div>'+
-                    '<div class="col-66">'+res.response.description+'</div>'+
                     '</div>';
         $(".pet_details_profile_tb_row").html(html);
         myApp.hideIndicator();
@@ -3294,7 +3290,7 @@ function edit_pet() {
     var breed = $("#edit_pet_register-breed").val();
     var age = $("#edit_pet_register-age").val();
     var city = $("#edit_pet_register-city").val();
-    var description = $("#edit_pet_register-description").val();
+    // var description = $("#edit_pet_register-description").val();
     var gender = $('input[name=edit_profile_pet-gender]:checked').val();
     var profile_image = profile_image_link;
     var cover_pic = profile_cover_image_link;
@@ -3334,10 +3330,10 @@ function edit_pet() {
         return false;
     }
 
-    if (!description) {
-        myApp.alert('Please provide description');
-        return false;
-    }
+    // if (!description) {
+    //     myApp.alert('Please provide description');
+    //     return false;
+    // }
 
     // if (!profile_image) {
     //     myApp.alert('Please provide profile image');
@@ -3364,7 +3360,6 @@ function edit_pet() {
             city: city,
             age: age,
             gender: gender,
-            description: description,
             profile_image: cover_pic,
             cover_pic: cover_pic,
         },
@@ -3702,12 +3697,16 @@ function load_dating_profiles(account_id) {
 
             var html = "";
 
+            var pet_like_acc = '';
+
             $.each(res.response, function(index, value){
-                console.log(value.profile_image);
-                html += '<div>'+
+                if (index == 0) {
+                    pet_like_acc = value.id;
+                }
+                html += '<div data-accid="'+value.id+'">'+
                             '<div class="card-content">'+
                                 '<div class="card-content-inner" style="padding: 0 !important">'+
-                                    '<img src="'+image_url+value.profile_image+'" width="100%" class="lazy lazy-fadein">'+
+                                    '<img src="'+image_url+value.profile_image+'" width="100%" class="lazy lazy-fadein" style="margin: 0 auto; width: 80%; border-radius: 10px;">'+
                                 '</div>'+
                             '</div>'+
                             '<div class="card-header text-center content_contain">'+
@@ -3717,7 +3716,7 @@ function load_dating_profiles(account_id) {
                         '</div>';
             })
 
-            $("#pet_dating").html(html);
+            $(".dating-slider").html(html);
 
             $(".dating-slider").slick({
                 autoplay: false,
@@ -3727,14 +3726,42 @@ function load_dating_profiles(account_id) {
                 prevArrow: $("#pet_dating_prev"),
             });
 
+            $('.dating-slider').on('afterChange', function(event, slick, currentSlide, nextSlide) {
+                pet_like_acc = $('.slick-current').data('accid');
+                $('#pet_dating_like_profile').removeClass('pro_file_icons_like_active');
+            });
+
+            $("#pet_dating_like_profile").click(function(e){
+                e.preventDefault();
+                if (!pet_like_acc) {
+                } else {
+                    console.log(pet_like_acc);
+                    $.ajax({
+                        url: base_url+'add_to_dating',
+                        type: 'post',
+                        crossDomain: true,
+                        data: {
+                            pet_id: pet_like_acc,
+                            pet_user_id: account_id,
+                            user_id: token.id,
+                        }
+                    }).done(function(res){
+                        console.log(res);
+                    }).error(function(res){
+                        console.log(res);
+                    })
+                }
+            })
+
+
             $(".pro_file_icons_like").click(function() {
                 $(this).addClass("pro_file_icons_like_active");
             });
         } else {
-            $("#pet_dating").html('<p class="text-center">'+res.api_msg+'</p>');
+            $(".dating-slider").html('<p class="text-center">'+res.api_msg+'</p>');
         }
     }).error(function(res){
-        $("#pet_dating").html('Data not available!');
+        $(".dating-slider").html('Data not available!');
     })
 }
 
