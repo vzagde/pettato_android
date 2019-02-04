@@ -3057,27 +3057,37 @@ function loadChatMessages(user_id) {
             $(".chat_reviever_name").html(receiver_name);
 
             $.each(res.response, function(index, value) {
+                var additional_content = '';
+                if (value.message_type == 'Adoption') {
+                    additional_content = '<a href="javascript:void(0)" onclick="goto_becomeParentDetails('+value.message_page_id+')">View More</a>';
+                } else if (value.message_type == 'Profile') {
+                    additional_content = '<a href="javascript:void(0)" onclick="goto_profile_shopper_pet('+value.message_page_id+')">View More</a>';
+                } else {
+                    additional_content = '';
+                }
+ 
                 if (value.sender_id == token.id) {
+
                     if (value.image) {
                         html += '<div class="message message-sent">'+
-                                    '<div class="message-text"><img src="'+value.image+'" width="100%">'+value.messages+'</div>'+
+                                    '<div class="message-text"><img src="'+value.image+'" width="100%">'+value.messages+' '+additional_content+'</div>'+
                                     '<div style="background-image:url('+image_url+value.sender_profile_image+')" class="message-avatar"></div>'+
                                 '</div>';
                     } else {
                         html += '<div class="message message-sent">'+
-                                    '<div class="message-text">'+value.messages+'</div>'+
+                                    '<div class="message-text">'+value.messages+' '+additional_content+'</div>'+
                                     '<div style="background-image:url('+image_url+value.sender_profile_image+')" class="message-avatar"></div>'+
                                 '</div>';
                     }
                 } else {
                     if (value.image) {
                         html += '<div class="message message-received">'+
-                                    '<div class="message-text"><img src="'+value.image+'" width="100%">'+value.messages+'</div>'+
+                                    '<div class="message-text"><img src="'+value.image+'" width="100%">'+value.messages+' '+additional_content+'</div>'+
                                     '<div style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
                                 '</div>';
                     } else {
                         html += '<div class="message message-received">'+
-                                    '<div class="message-text">'+value.messages+'</div>'+
+                                    '<div class="message-text">'+value.messages+' '+additional_content+'</div>'+
                                     '<div style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
                                 '</div>';
                     }
