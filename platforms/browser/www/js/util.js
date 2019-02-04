@@ -696,8 +696,8 @@ function register_business() {
     var category = $('#business_register-category').val();
     var email = $('#business_register-email').val().trim();
     var phone = $('#business_register-phone').val().trim();
-    var password = $('#business_register-password').val().trim();
-    var confirm_password = $('#business_register-confirm_password').val().trim();
+    var password = 'pass';
+    var confirm_password = 'pass';
     var city_id = $('#business_register-city_select').val().trim();
     var address = $('#business_register-address').val().trim();
     var business_category = '';
@@ -1608,7 +1608,7 @@ function loadUsersPageContent(user_id) {
                                 '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
                                 '</a>'+
                                 '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
-                                '<a href="javascript:void(0);" data-liked="0" onclick="window.plugins.socialsharing.share("'+title+'", "'+title+'", "'+share_image_link+'", "'+share_link+'")" class=""><i class="material-icons white_heart">share</i></a>';
+                                '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
                                 if (value.user_id == token.id) {
                                     feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
                                 }
@@ -1619,8 +1619,8 @@ function loadUsersPageContent(user_id) {
             feeds_html += '<span style="min-height: 40px; width: 100%;" class="card c_ard ks-facebook-card own_feed"></span>';
 
             $.each(res.response.saved_feeds, function(index, value){
-                var title = value.description;
-                var share_image_link = image_url+value.image;
+                var title = value.feed_desc;
+                var share_image_link = image_url+value.feed_image;
                 var share_link = 'http://pettato.com';
 
                 if (value.feed_type == 'Feed') {
@@ -1630,10 +1630,10 @@ function loadUsersPageContent(user_id) {
                                     '<img data-src="'+image_url+value.feed_image+'" src="'+image_url+value.feed_image+'" width="100%" class="lazy lazy-fadein">'+
                                     '</a>'+
                                     '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
-                                    '<a href="javascript:void(0);" data-liked="0" onclick="window.plugins.socialsharing.share("'+title+'", "'+title+'", "'+share_image_link+'", "'+share_link+'")" class=""><i class="material-icons white_heart">share</i></a>';
-                                    if (value.user_id == token.id) {
+                                    '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
+                                    // if (value.user_id == token.id) {
                                         save_feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>';
-                                    }
+                                    // }
                     save_feeds_html += '</div>'+
                                     '</div>';
                 }
@@ -1645,10 +1645,10 @@ function loadUsersPageContent(user_id) {
                                     '<img data-src="'+image_url+value.feed_image+'" src="'+image_url+value.feed_image+'" width="100%" class="lazy lazy-fadein">'+
                                     '</a>'+
                                     '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
-                                    '<a href="javascript:void(0);" data-liked="0" onclick="window.plugins.socialsharing.share("'+title+'", "'+title+'", "'+share_image_link+'", "'+share_link+'")" class=""><i class="material-icons white_heart">share</i></a>';
-                                    if (value.user_id == token.id) {
+                                    '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
+                                    // if (value.user_id == token.id) {
                                         save_feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>';
-                                    }
+                                    // }
                     save_feeds_html += '</div>'+
                                     '</div>';
                 }
@@ -3711,7 +3711,7 @@ function load_dating_profiles(account_id) {
                             '</div>'+
                             '<div class="card-header text-center content_contain">'+
                                 '<h2 class="mrg0">'+value.first_name+'</h2>'+
-                                '<p>Breed: Labrador | Age: '+value.age+' | '+value.gender+'</p>'+
+                                '<p>Breed: '+value.breed_name+' | Age: '+value.age+' | '+value.gender+'</p>'+
                             '</div>'+
                         '</div>';
             })
@@ -3887,51 +3887,56 @@ function remove_lostfound() {
 }
 
 function delete_saved(feed_id) { 
-    $.ajax({
-        url: base_url+'remove_saved_data',
-        type: 'POST',
-        dataType: 'json',
-        crossDomain: true,
-        data: {
-            feed_id: feed_id,
-            user_id: token.id
-        }
-    }).done(function(res){
-        if (res.status == 'Success') {
-            myApp.alert(res.api_msg);
-            goto_profile();
-        } else {
-            myApp.alert(res.api_msg);
-        }
-    }).error(function(err) {
-        myApp.hideIndicator();
-        myApp.alert('Somthing went wrong, Please try again later!');
-    }).always(function(){
+    myApp.prompt('This will erase the feed from your saved list, Do you realy want to delete?', function (value) {
+        $.ajax({
+            url: base_url+'remove_saved_data',
+            type: 'POST',
+            dataType: 'json',
+            crossDomain: true,
+            data: {
+                feed_id: feed_id,
+                user_id: token.id
+            }
+        }).done(function(res){
+            if (res.status == 'Success') {
+                myApp.alert(res.api_msg);
+                goto_profile();
+            } else {
+                myApp.alert(res.api_msg);
+            }
+        }).error(function(err) {
+            myApp.hideIndicator();
+            myApp.alert('Somthing went wrong, Please try again later!');
+        }).always(function(){
+        });
     });
+
 }
 
 function delete_feed(feed_id) { 
-    $.ajax({
-        url: base_url+'remove_feed_id',
-        type: 'POST',
-        dataType: 'json',
-        crossDomain: true,
-        data: {
-            feed_id: feed_id,
-            user_id: token.id
-        }
-    }).done(function(res){
-        if (res.status == 'Success') {
-            myApp.alert(res.api_msg);
-            goto_profile();
-        } else {
-            myApp.alert(res.api_msg);
-        }
-    }).error(function(err) {
-        myApp.hideIndicator();
-        myApp.alert('Somthing went wrong, Please try again later!');
-    }).always(function(){
-    });
+    myApp.prompt('This will erase the feed from your profile, Do you realy want to delete?', function (value) {
+        $.ajax({
+            url: base_url+'remove_feed_id',
+            type: 'POST',
+            dataType: 'json',
+            crossDomain: true,
+            data: {
+                feed_id: feed_id,
+                user_id: token.id
+            }
+        }).done(function(res){
+            if (res.status == 'Success') {
+                myApp.alert(res.api_msg);
+                goto_profile();
+            } else {
+                myApp.alert(res.api_msg);
+            }
+        }).error(function(err) {
+            myApp.hideIndicator();
+            myApp.alert('Somthing went wrong, Please try again later!');
+        }).always(function(){
+        });
+    })
 }
 
 function load_friends_profiles(param, calback) {
@@ -4028,7 +4033,7 @@ function addToInterestedList() {
         dataType: 'json',
         crossDomain: true,
         data: { pet_id: account_id, user_id: token.id, }
-    }).done(function(data){
+    }).done(function(res){
         if (res.status == 'Success') {
             myApp.alert(res.api_msg);
         } else {
