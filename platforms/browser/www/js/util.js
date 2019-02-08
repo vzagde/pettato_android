@@ -3,37 +3,37 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
     myApp.showIndicator();
 
-    // var push = PushNotification.init({
-    //     "android": {
-    //         "senderID": "836033005549"
-    //     },
-    //     "browser": {},
-    //     "ios": {
-    //         "sound": true,
-    //         "vibration": true,
-    //         "badge": true
-    //     },
-    //     "windows": {}
-    // });
+    var push = PushNotification.init({
+        "android": {
+            "senderID": "836033005549"
+        },
+        "browser": {},
+        "ios": {
+            "sound": true,
+            "vibration": true,
+            "badge": true
+        },
+        "windows": {}
+    });
 
-    // push.on('registration', function(data) {
-    //     oldPushId = Lockr.get('push_key');
-    //     if (oldPushId !== data.registrationId) {
-    //         Lockr.set('push_key', data.registrationId);
-    //         // Save new registration ID
-    //         // localStorage.setItem('registrationId', data.registrationId);
-    //         // Post registrationId to your app server as the value has changed
-    //     }
-    // });
+    push.on('registration', function(data) {
+        oldPushId = Lockr.get('push_key');
+        if (oldPushId !== data.registrationId) {
+            Lockr.set('push_key', data.registrationId);
+            // Save new registration ID
+            // localStorage.setItem('registrationId', data.registrationId);
+            // Post registrationId to your app server as the value has changed
+        }
+    });
 
-    // push.on('error', function(e) {
-    //     // myApp.alert("push error = " + e.message);
-    // });
+    push.on('error', function(e) {
+        // myApp.alert("push error = " + e.message);
+    });
 
-    // push.on('notification', function(data) {
-    //     myApp.alert(JSON.stringify(data));
-    //     // myApp.alert(data.title + ': ' + data.message);
-    // });
+    push.on('notification', function(data) {
+        myApp.alert(JSON.stringify(data));
+        // myApp.alert(data.title + ': ' + data.message);
+    });
 
     user_data = token;
     if (token === undefined) {
@@ -700,6 +700,7 @@ function register_business() {
     var confirm_password = 'pass';
     var city_id = $('#business_register-city_select').val().trim();
     var address = $('#business_register-address').val().trim();
+    var profile_image = profile_image_link;
     var business_category = '';
     var new_category = '';
 
@@ -765,6 +766,11 @@ function register_business() {
         return false;
     }
 
+    if (!profile_image) {
+        myApp.alert('Please provide profile picture.');
+        return false;
+    }
+
     // business_category = business_category.slice(0, -1);
 
     myApp.showIndicator();
@@ -787,6 +793,7 @@ function register_business() {
             user_type: 'Business',
             phone: phone,
             new_category: new_category,
+            profile_image: profile_image,
         },
     }).done(function(res) {
         myApp.hideIndicator();
@@ -1631,9 +1638,9 @@ function loadUsersPageContent(user_id) {
                                     '</a>'+
                                     '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
                                     '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
-                                    // if (value.user_id == token.id) {
+                                    if (value.user_id == token.id) {
                                         save_feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>';
-                                    // }
+                                    }
                     save_feeds_html += '</div>'+
                                     '</div>';
                 }
@@ -1646,9 +1653,9 @@ function loadUsersPageContent(user_id) {
                                     '</a>'+
                                     '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
                                     '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
-                                    // if (value.user_id == token.id) {
+                                    if (value.user_id == token.id) {
                                         save_feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>';
-                                    // }
+                                    }
                     save_feeds_html += '</div>'+
                                     '</div>';
                 }
