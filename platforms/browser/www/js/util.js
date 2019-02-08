@@ -1155,6 +1155,36 @@ function feedLikeStatusChng() {
     chngLikeStatus(feed_id);
 }
 
+function findParentLikeStatusChng(feed_id) {
+    chngLikeStatusFindP(feed_id);
+}
+
+function chngLikeStatusFindP(feed_id) {
+    $.ajax({
+        url: base_url+'like_feeds',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: token.id,
+            feed_id: feed_id,
+            feed_type: "Find Parent",
+        },
+    }).done(function(res) {
+        if (res.status == 'Success') {
+            if (res.response.like_status == 0) {
+                $(".like_block_chng_active"+res.response.category_id).html('<i class="material-icons white_heart color_8ac640 findParentLike" onclick="findParentLikeStatusChng('+res.response.category_id+')" data-feed_id="'+res.response.category_id+'">favorite_border</i>');
+            } else {
+                $(".like_block_chng_active"+res.response.category_id).html('<i class="material-icons white_heart white_heart_active findParentLike" onclick="findParentLikeStatusChng('+res.response.category_id+')" data-feed_id="'+res.response.category_id+'">favorite</i>');
+            }
+        } else {
+            myApp.alert(res.api_msg);
+        }
+    }).error(function(res) {
+        myApp.alert("Some error occured, please try again later!");
+    }).always(function(res) {
+    })
+}
+
 function chngLikeStatus(feed_id) {
     $.ajax({
         url: base_url+'like_feeds',
@@ -2615,12 +2645,17 @@ function loadFindParentContent(user_id) {
                             '<div class="card-content">'+
                                 '<div class="card-content-inner">'+
                                     '<p>'+value.description+'</p>'+
-                                    '<p class="color-gray">Likes: 112</p>'+
+                                    '<p class="color-gray">Likes: '+value.count_fp+'</p>'+
                                 '</div>'+
                             '</div>'+
-                            '<div class="card-footer">'+
-                                '<a href="#" class="link"><i class="material-icons color_8ac640">favorite_border</i></a>'+
-                                '<a href="#" class="link"><i class="material-icons color_8ac640" data-accountid="'+value.find_parent_id+'">share</i></a>'+
+                            '<div class="card-footer">';
+                            if (value.like_status == "1") {
+                                html += '<a href="#" class="link like_block_chng_active'+value.id+'"><i class="material-icons color_8ac640 findParentLike white_heart_active" onclick="findParentLikeStatusChng('+value.id+')" data-feed_id="'+value.id+'">favorite</i></a>';
+                            } else {
+                                html += '<a href="#" class="link like_block_chng_active'+value.id+'"><i class="material-icons color_8ac640 findParentLike" onclick="findParentLikeStatusChng('+value.id+')" data-feed_id="'+value.id+'">favorite_border</i></a>';
+                            }
+
+                            html += '<a href="#" class="link"><i class="material-icons color_8ac640" data-accountid="'+value.find_parent_id+'">share</i></a>'+
                             '</div>'+
                         '</div>';
             })
