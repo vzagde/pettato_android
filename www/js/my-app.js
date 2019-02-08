@@ -42,6 +42,8 @@ var find_parent_filter_gender = '';
 
 var sharing_image = '';
 var sharing_content = '';
+var sharing_id = '';
+var sharing_type = '';
 
 openFB.init('2106128496268926', '', window.localStorage);
 

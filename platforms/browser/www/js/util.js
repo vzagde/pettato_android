@@ -1288,6 +1288,8 @@ function load_feed_page(feed_id) {
 function sharePetProfile() {
     var title = $(".share_profileButtonhide").data('title');
     var share_image_link = $(".share_profileButtonhide").data('image_link');
+    share_feed_id = account_id;
+    share_feed_type = 'PetProfile';
 
     myApp.modal({
         title: title,
@@ -1303,7 +1305,34 @@ function sharePetProfile() {
             {
                 text: 'Share on Pettato',
                 onClick: function() {
-                    share_with_freinds(share_image_link, title);
+                    share_with_freinds(share_image_link, title, share_feed_id, share_feed_type);
+                }
+            },
+            {
+                text: 'Cancel',
+                onClick: function() {
+                    myApp.closeModal();
+                }
+            },
+        ]
+    })
+}
+
+function shareFindParent(id) {
+    var title = $(".checkShareContent"+id).data('sharecontent');
+    var share_image_link = '';
+    share_feed_id = id;
+    share_feed_type = 'Find Parent';
+
+    myApp.modal({
+        title: title,
+        text: '<img src="'+share_image_link+'" width="100%;">',
+        verticalButtons: true,
+        buttons: [
+            {
+                text: 'Share on Pettato',
+                onClick: function() {
+                    share_with_freinds(share_image_link, title, share_feed_id, share_feed_type);
                 }
             },
             {
@@ -1317,16 +1346,19 @@ function sharePetProfile() {
 }
 
 function feedShareStatusChng(id) {
-    var title, share_image_link = '';
+    var title, share_feed_id, share_feed_type, share_image_link = '';
     if (id == 0) {
         title = $(".feedDetailsShare").data('title');
         share_image_link = $(".feedDetailsShare").data('image_link');
+        share_feed_id = $(".feedDetailsShare").data('feed_id');
     } else {
         title = $(".share_feeds_"+id).data('title')+'...';
         share_image_link = $(".share_feeds_"+id).data('image_link');
+        share_feed_id = id;
     }
 
     var share_link = 'http://pettato.com';
+    share_feed_type = 'Feed';
 
     myApp.modal({
         title: title,
@@ -1343,7 +1375,7 @@ function feedShareStatusChng(id) {
             {
                 text: 'Share on Pettato',
                 onClick: function() {
-                    share_with_freinds(share_image_link, title);
+                    share_with_freinds(share_image_link, title, share_feed_id, share_feed_type);
                 }
             },
             {
@@ -1356,9 +1388,11 @@ function feedShareStatusChng(id) {
     })
 }
 
-function share_with_freinds(share_image_link, title) {
+function share_with_freinds(share_image_link, title, share_feed_id, share_feed_type) {
     sharing_image = share_image_link;
     sharing_content = title;
+    sharing_id = share_feed_id;
+    sharing_type = share_feed_type;
     // myApp.alert("Shared with your friends!");
     mainView.router.load({
         url: 'share_with_freinds.html',
@@ -2599,9 +2633,14 @@ function loadFindParentContentFilteredContent(user_id) {
                                     '<p class="color-gray">Likes: 112</p>'+
                                 '</div>'+
                             '</div>'+
-                            '<div class="card-footer">'+
-                                '<a href="#" class="link"><i class="material-icons color_8ac640">favorite_border</i></a>'+
-                                '<a href="#" class="link"><i class="material-icons color_8ac640" data-accountid="'+value.find_parent_id+'">share</i></a>'+
+                            '<div class="card-footer">';
+                            if (value.like_status == "1") {
+                                html += '<a href="#" class="link like_block_chng_active'+value.id+'"><i class="material-icons color_8ac640 findParentLike white_heart_active" onclick="findParentLikeStatusChng('+value.id+')" data-feed_id="'+value.id+'">favorite</i></a>';
+                            } else {
+                                html += '<a href="#" class="link like_block_chng_active'+value.id+'"><i class="material-icons color_8ac640 findParentLike" onclick="findParentLikeStatusChng('+value.id+')" data-feed_id="'+value.id+'">favorite_border</i></a>';
+                            }
+
+                            html += '<a href="#" class="link"><i class="material-icons color_8ac640 checkShareContent'+value.find_parent_id+'" onclick="shareFindParent('+value.find_parent_id+')" data-sharecontent="'+value.description+'" data-accountid="'+value.find_parent_id+'">share</i></a>'+
                             '</div>'+
                         '</div>';
             })
@@ -2655,7 +2694,7 @@ function loadFindParentContent(user_id) {
                                 html += '<a href="#" class="link like_block_chng_active'+value.id+'"><i class="material-icons color_8ac640 findParentLike" onclick="findParentLikeStatusChng('+value.id+')" data-feed_id="'+value.id+'">favorite_border</i></a>';
                             }
 
-                            html += '<a href="#" class="link"><i class="material-icons color_8ac640" data-accountid="'+value.find_parent_id+'">share</i></a>'+
+                            html += '<a href="#" class="link"><i class="material-icons color_8ac640 checkShareContent'+value.find_parent_id+'" onclick="shareFindParent('+value.find_parent_id+')" data-sharecontent="'+value.description+'" data-accountid="'+value.find_parent_id+'">share</i></a>'+
                             '</div>'+
                         '</div>';
             })
@@ -3104,6 +3143,10 @@ function loadChatMessages(user_id) {
                     additional_content = '<a href="javascript:void(0)" onclick="goto_becomeParentDetails('+value.message_page_id+')">View More</a>';
                 } else if (value.message_type == 'Profile') {
                     additional_content = '<a href="javascript:void(0)" onclick="goto_profile_shopper_pet('+value.message_page_id+')">View More</a>';
+                } else if (value.message_type == 'Feed') {
+                    additional_content = '<a href="javascript:void(0)" onclick="load_feed_page('+value.message_page_id+')">View More</a>';
+                } else if (value.message_type == 'PetProfile') {
+                    additional_content = '<a href="javascript:void(0)" onclick="goto_profile_shopper_pet('+value.message_page_id+')">View More</a>';
                 } else {
                     additional_content = '';
                 }
@@ -3124,7 +3167,7 @@ function loadChatMessages(user_id) {
                 } else {
                     if (value.image) {
                         html += '<div class="message message-received">'+
-                                    '<div class="message-text"><img src="'+value.image+'" width="100%">'+value.messages+' '+additional_content+'</div>'+
+                                    '<div class="message-text"><img src="'+value.image+'" width="100%" onclick="goto_user_page('+value.receiver_id+')">'+value.messages+' '+additional_content+'</div>'+
                                     '<div style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
                                 '</div>';
                     } else {
@@ -4019,7 +4062,6 @@ function load_friends_profiles(param, calback) {
 }
 
 function shareContent() {
-    console.log($("#share_with_freinds-freinds").val());
     if (!$("#share_with_freinds-freinds").val()) {
         myApp.alert('Please select list of people to share the content!');
         return false;
@@ -4037,6 +4079,8 @@ function shareContent() {
             share_user_id: $("#share_with_freinds-freinds").val(),
             sharing_image: sharing_image,
             sharing_content: sharing_content,
+            sharing_id: sharing_id, 
+            sharing_type: sharing_type, 
         }
     }).done(function(res){
         if (res.status == 'Success') {
@@ -4085,7 +4129,7 @@ function addToInterestedList() {
         dataType: 'json',
         crossDomain: true,
         data: { pet_id: account_id, user_id: token.id, }
-    }).done(function(res){
+    }).done(function(res) {
         if (res.status == 'Success') {
             myApp.alert(res.api_msg);
         } else {
