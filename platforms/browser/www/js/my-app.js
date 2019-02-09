@@ -137,7 +137,7 @@ myApp.onPageInit('profile_shopper', function(page) {
 
 // users account profile
 myApp.onPageInit('profile_shopper_sub', function(page) {
-    loadUsersPageContent(static_account_id);
+    loadUsersSubPageContent(static_account_id);
 });
 
 // business account profile
