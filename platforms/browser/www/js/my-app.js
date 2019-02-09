@@ -392,7 +392,7 @@ myApp.onPageInit('notifications', function(page) {
 
 // Dating page
 myApp.onPageInit('pet_dating', function(page) {
-    load_dating_profiles(pet_static_account_id;
+    load_dating_profiles(pet_static_account_id);
 });
 
 // Dating page

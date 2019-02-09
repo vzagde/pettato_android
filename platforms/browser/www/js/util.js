@@ -44,7 +44,7 @@ function onDeviceReady() {
             url: base_url+ 'store_push_key',
             type: 'POST',
             crossDomain: true,
-            data: { user_id: user_data.id, push_id: Lockr.get('push_key'), },
+            data: { user_id: token.id, push_id: Lockr.get('push_key'), },
         }).done(function(res){
             if (res.status == 'Success') {
             } else {
