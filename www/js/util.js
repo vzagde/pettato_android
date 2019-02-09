@@ -98,14 +98,14 @@ function j2s(json) {
 function goto_page(page) {
     mainView.router.load({
         url: page,
-        ignoreCache: false,
+        ignoreCache: true,
     });
 }
 
 function goto_before_add_account() {
     mainView.router.load({
         url: 'before_add_account.html',
-        ignoreCache: false,
+        ignoreCache: true,
     });
 }
 
@@ -476,12 +476,12 @@ function continue_btn_signin() {
                 user_data = res.data;
                 mainView.router.load({
                     url: 'feeds.html',
-                    ignoreCache: false,
+                    ignoreCache: true,
                 });
             } else {
                 mainView.router.load({
                     url: 'login.html',
-                    ignoreCache: false,
+                    ignoreCache: true,
                 });
             }
         }).fail(function(err) {
@@ -492,7 +492,7 @@ function continue_btn_signin() {
         myApp.hideIndicator();
         mainView.router.load({
             url: 'login.html',
-            ignoreCache: false,
+            ignoreCache: true,
         });
     }
 }
@@ -539,12 +539,12 @@ function goto_register(type) {
     if (type == 'shopper') {
         mainView.router.load({
             url: 'shopper_register.html',
-            ignoreCache: false,
+            ignoreCache: true,
         });
     } else {
         mainView.router.load({
             url: 'business_register_add.html',
-            ignoreCache: false,
+            ignoreCache: true,
         });
     }
 }
@@ -582,7 +582,7 @@ function login() {
             account_default_id = user_data.id;
             mainView.router.load({
                 url: 'feeds.html',
-                ignoreCache: false,
+                ignoreCache: true,
             });
         } else {
             myApp.alert(res.api_msg);
@@ -675,7 +675,7 @@ function register_shopper() {
             account_default_id = user_data.id;
             mainView.router.load({
                 url: 'feeds.html',
-                ignoreCache: false,
+                ignoreCache: true,
                 query: {
                     register: true
                 },
@@ -802,7 +802,7 @@ function register_business() {
             business_static_account_id = res.response.id;
             mainView.router.load({
                 url: 'feeds.html',
-                ignoreCache: false,
+                ignoreCache: true,
                 query: {
                     register: true
                 },
@@ -1283,7 +1283,7 @@ function load_feed_page(feed_id) {
     feed_details_fetch_id = feed_id;
     mainView.router.load({
         url: 'feed.html',
-        ignoreCache: false,
+        ignoreCache: true,
     });
 }
 
@@ -1398,7 +1398,7 @@ function share_with_freinds(share_image_link, title, share_feed_id, share_feed_t
     // myApp.alert("Shared with your friends!");
     mainView.router.load({
         url: 'share_with_freinds.html',
-        ignoreCache: false,
+        ignoreCache: true,
     });
 }
 
@@ -1575,7 +1575,7 @@ function create_feed(post_create_id, feed_image, description, location_id) {
         if (res.status == 'Success') {
             mainView.router.load({
                 url: 'feeds.html',
-                ignoreCache: false,
+                ignoreCache: true,
             });
         } else {
             myApp.alert('Please provide all the details!');
@@ -1595,7 +1595,7 @@ function goto_profile() {
             query: {
                 id: token
             },
-            ignoreCache: false,
+            ignoreCache: true,
         });
     } else {
         mainView.router.load({
@@ -1603,7 +1603,7 @@ function goto_profile() {
             query: {
                 id: token
             },
-            ignoreCache: false,
+            ignoreCache: true,
         });
     }
 }
@@ -2192,14 +2192,14 @@ function goto_profile_shopper_pet(pet_id) {
     pet_static_account_id = pet_id;
     mainView.router.load({
         url: 'profile_shopper_pet.html',
-        ignoreCache: false,
+        ignoreCache: true,
     });
 }
 
 function goto_business_page(business_id) {
     mainView.router.load({
         url: 'profile_business_sub.html',
-        ignoreCache: false,
+        ignoreCache: true,
         query: {
             id: business_id
         },
@@ -2315,7 +2315,7 @@ function add_to_become_parent() {
         if (res.status == 'Success') {
             mainView.router.load({
                 url: 'find_parent_list.html',
-                ignoreCache: false,
+                ignoreCache: true,
             });
         } else {
             myApp.alert('Please provide all the details!');
@@ -2410,7 +2410,7 @@ function add_to_find_parent() {
         if (res.status == 'Success') {
             mainView.router.load({
                 url: 'become_parent_list.html',
-                ignoreCache: false,
+                ignoreCache: true,
             });
         } else {
             myApp.alert('Please provide all the details!');
@@ -2643,7 +2643,7 @@ function goto_becomeParentDetails(adoption_id) {
     pet_static_account_id = adoption_id;
     mainView.router.load({
         url: 'become_parent_disp.html',
-        ignoreCache: false,
+        ignoreCache: true,
     });
 }
 
@@ -2846,7 +2846,7 @@ function goto_profile_list(account_type) {
     profile_list_type = account_type;
     mainView.router.load({
         url: 'profiles.html',
-        ignoreCache: false,
+        ignoreCache: true,
     });
 }
 
@@ -2854,7 +2854,7 @@ function goto_profile_list_follow(type) {
     profile_list_type = type;
     mainView.router.load({
         url: 'profiles.html',
-        ignoreCache: false,
+        ignoreCache: true,
     });
 }
 
@@ -3056,7 +3056,7 @@ function goto_user_page(user_id) {
     static_account_id = user_id;
     mainView.router.load({
         url: 'profile_shopper_sub.html',
-        ignoreCache: false,
+        ignoreCache: true,
     });
 }
 
@@ -3146,7 +3146,7 @@ function goto_chat_inner(user_id) {
     static_account_id = user_id;
     mainView.router.load({
         url: 'chat.html',
-        ignoreCache: false,
+        ignoreCache: true,
     });
 }
 
@@ -3815,7 +3815,7 @@ function filter_find_parent() {
 
     mainView.router.load({
         url: 'become_parent_list_filtered.html',
-        ignoreCache: false,
+        ignoreCache: true,
     });
 }
 
@@ -3849,7 +3849,7 @@ function filter_become_parent() {
 
     mainView.router.load({
         url: 'find_parent_list_filtered.html',
-        ignoreCache: false,
+        ignoreCache: true,
     });
 }
 
