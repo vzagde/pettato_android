@@ -33,6 +33,9 @@ var new_chat_time = null;
 var feed_details_fetch_id = 0;
 var account_default_id = 0;
 var account_id = 0;
+var pet_static_account_id = 0;
+var business_static_account_id = 0;
+var static_account_id = 0;
 var profile_list_type = 0;
 var edit_profile_id = 0;
 var find_parent_filter_pettype = '';
@@ -129,32 +132,30 @@ myApp.onPageInit('feed', function(page) {
 
 // users account profile
 myApp.onPageInit('profile_shopper', function(page) {
-    console.log(account_default_id);
     loadUsersPageContent(account_default_id);
 });
 
 // users account profile
 myApp.onPageInit('profile_shopper_sub', function(page) {
-    console.log(account_id);
-    loadUsersPageContent(account_id);
+    loadUsersPageContent(static_account_id);
 });
 
 // business account profile
 myApp.onPageInit('profile_business', function(page) {
     // console.log("Business: "+account_default_id);
-    account_id = page.query.id;
-    loadBusinessPageContent(account_default_id);
+    business_static_account_id = page.query.id;
+    loadBusinessPageContent(business_static_account_id);
 });
 
 // pet profile
 myApp.onPageInit('profile_shopper_pet', function(page) {
-    loadPetPageContent(account_id);
+    loadPetPageContent(pet_static_account_id);
 });
 
 // business page sub profile
 myApp.onPageInit('profile_business_sub', function(page) {
-    account_id = page.query.id;
-    loadBusinessPageContentSub(account_id);
+    business_static_account_id = page.query.id;
+    loadBusinessPageContentSub(business_static_account_id);
 
     $("#addBusinessReview1").click(function(e){
         e.preventDefault();
@@ -205,7 +206,7 @@ myApp.onPageInit('become_parent_list_filtered', function(page) {
 
 // become a parent list
 myApp.onPageInit('become_parent_disp', function(page) {
-    loadBecomeParentDetails(account_id);
+    loadBecomeParentDetails(pet_static_account_id);
 });
 
 // find parent upload details
@@ -316,7 +317,7 @@ myApp.onPageInit('ambulance', function(page) {
 
 // lost and found listing page
 myApp.onPageInit('lost_and_found', function(page) {
-    loadLostFoundContent(account_default_id);
+    loadLostFoundContent(token.id);
 });
 
 // lost and found listing page
@@ -336,9 +337,9 @@ myApp.onPageInit('chats', function(page) {
 
 // chats listing page
 myApp.onPageInit('chat', function(page) {
-    loadChatMessages(account_id);
+    loadChatMessages(static_account_id);
 
-    var chatroom_id = account_id;
+    var chatroom_id = static_account_id;
 
     setInterval(function(){
         $.ajax({
@@ -370,7 +371,7 @@ myApp.onPageInit('chat', function(page) {
 
 // edit business details page
 myApp.onPageInit('edit_profile_business', function(page) {
-    load_edit_profile_business(account_id);
+    load_edit_profile_business(business_static_account_id);
 });
 
 // edit users details page
@@ -380,18 +381,18 @@ myApp.onPageInit('edit_profile_shopper', function(page) {
 
 // edit pet details page
 myApp.onPageInit('edit_profile_pet', function(page) {
-    load_edit_profile_pet(account_id);
+    load_edit_profile_pet(pet_static_account_id);
 });
 
 
 // edit pet details page
 myApp.onPageInit('notifications', function(page) {
-    load_edit_profile_pet(account_id);
+    load_edit_profile_pet(token.id);
 });
 
 // Dating page
 myApp.onPageInit('pet_dating', function(page) {
-    load_dating_profiles(account_id);
+    load_dating_profiles(pet_static_account_id;
 });
 
 // Dating page

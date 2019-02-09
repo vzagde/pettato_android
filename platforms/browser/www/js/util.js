@@ -799,6 +799,7 @@ function register_business() {
         myApp.hideIndicator();
         if (res.status == 'success') {
             account_id = res.response.id;
+            business_static_account_id = res.response.id;
             mainView.router.load({
                 url: 'feeds.html',
                 ignoreCache: false,
@@ -929,6 +930,7 @@ function register_pet() {
     }).done(function(res){
         if (res.status == 'Success') {
             account_id = res.response;
+            pet_static_account_id = res.response.id;
             goto_page('profile_shopper_pet.html');
         } else {
             myApp.alert(res.api_msg);
@@ -1240,7 +1242,7 @@ function chngSaveStatusBecomeParent() {
         crossDomain: true,
         data: {
             user_id: token.id,
-            feed_id: account_id,
+            feed_id: pet_static_account_id,
             feed_type: "Become Parent",
         },
     }).done(function(res) {
@@ -1288,7 +1290,7 @@ function load_feed_page(feed_id) {
 function sharePetProfile() {
     var title = $(".share_profileButtonhide").data('title');
     var share_image_link = $(".share_profileButtonhide").data('image_link');
-    share_feed_id = account_id;
+    share_feed_id = pet_static_account_id;
     share_feed_type = 'PetProfile';
 
     myApp.modal({
@@ -1586,14 +1588,14 @@ function create_feed(post_create_id, feed_image, description, location_id) {
 }
 
 function goto_profile() {
-    account_id = token.id;
+    account_default_id = token.id;
     if (token.user_type == 'User') {
         mainView.router.load({
             url: 'profile_shopper.html',
             query: {
                 id: token
             },
-            ignoreCache: true,
+            ignoreCache: false,
         });
     } else {
         mainView.router.load({
@@ -1601,7 +1603,7 @@ function goto_profile() {
             query: {
                 id: token
             },
-            ignoreCache: true,
+            ignoreCache: false,
         });
     }
 }
@@ -2187,7 +2189,7 @@ function loadBusinessPageContentSub(user_id) {
 }
 
 function goto_profile_shopper_pet(pet_id) {
-    account_id = pet_id;
+    pet_static_account_id = pet_id;
     mainView.router.load({
         url: 'profile_shopper_pet.html',
         ignoreCache: false,
@@ -2638,7 +2640,7 @@ function loadBecomeParentContent(user_id) {
 }
 
 function goto_becomeParentDetails(adoption_id) {
-    account_id = adoption_id;
+    pet_static_account_id = adoption_id;
     mainView.router.load({
         url: 'become_parent_disp.html',
         ignoreCache: false,
@@ -3051,7 +3053,7 @@ function loadSearchList() {
 }
 
 function goto_user_page(user_id) {
-    account_id = user_id;
+    static_account_id = user_id;
     mainView.router.load({
         url: 'profile_shopper_sub.html',
         ignoreCache: false,
@@ -3141,7 +3143,7 @@ function loadChatsList() {
 }
 
 function goto_chat_inner(user_id) {
-    account_id = user_id;
+    static_account_id = user_id;
     mainView.router.load({
         url: 'chat.html',
         ignoreCache: false,
@@ -3991,7 +3993,7 @@ function add_to_adoption() {
         dataType: 'json',
         crossDomain: true,
         data: {
-            pet_id: account_id,
+            pet_id: pet_static_account_id,
             user_id: token.id
         }
     }).done(function(res){
@@ -4014,7 +4016,7 @@ function add_lostfound() {
         dataType: 'json',
         crossDomain: true,
         data: {
-            pet_id: account_id,
+            pet_id: pet_static_account_id,
             user_id: token.id
         }
     }).done(function(res){
@@ -4038,7 +4040,7 @@ function remove_lostfound() {
         dataType: 'json',
         crossDomain: true,
         data: {
-            pet_id: account_id,
+            pet_id: pet_static_account_id,
             user_id: token.id
         }
     }).done(function(res){
@@ -4202,7 +4204,7 @@ function addToInterestedList() {
         type: 'POST',
         dataType: 'json',
         crossDomain: true,
-        data: { pet_id: account_id, user_id: token.id, }
+        data: { pet_id: pet_static_account_id, user_id: token.id, }
     }).done(function(res) {
         if (res.status == 'Success') {
             myApp.alert(res.api_msg);
