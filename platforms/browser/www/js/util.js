@@ -1614,8 +1614,8 @@ function loadUsersSubPageContent(user_id) {
     $(".user_sub_profie_image").attr("src", image_url+'profile_dummy.jpg');
     $(".p_name_business_sub").html('');
     $(".p_name1_business_sub").html('');
-    $(".followers").text('0');
-    $(".followings").text('0');
+    $(".user_sub_followers").text('0');
+    $(".user_sub_followings").text('0');
     $(".unfollow, .follow, .chat").hide();
 
     $.ajax({
@@ -1632,10 +1632,11 @@ function loadUsersSubPageContent(user_id) {
 
             $(".user_sub_cover_image").attr("src", image_url+res.response.user_details.cover_pic);
             $(".user_sub_profie_image").attr("src", image_url+res.response.user_details.profile_image);
-            $('.followers').text(res.followers);
-            $('.followings').text(res.followings);
+            $('.user_sub_followers').text(res.followers);
+            $('.user_sub_followings').text(res.followings);
             $('.p_name').html(res.response.user_details.first_name);
             $('.p_name').attr('data-business_id', res.response.user_details.id);
+            $('.userssubfollowersfollowingaccid').attr('data-userssubfollowersfollowingaccid', res.response.user_details.id);
             $('.make_unfollow, .make_follow, .make_chat').attr('data-userid', res.response.user_details.id);
 
             $("#pets_and_business_profiles_list").html('');
@@ -1778,8 +1779,8 @@ function loadUsersPageContent(user_id) {
     $(".profie_image").attr("src", image_url+'profile_dummy.jpg');
     $(".p_name_business_sub").html('');
     $(".p_name1_business_sub").html('');
-    $(".followers").text('0');
-    $(".followings").text('0');
+    $(".user_follwers").text('0');
+    $(".user_followings").text('0');
     $(".unfollow, .follow, .chat").hide();
 
     $.ajax({
@@ -1796,10 +1797,11 @@ function loadUsersPageContent(user_id) {
 
             $(".cover_image").attr("src", image_url+res.response.user_details.cover_pic);
             $(".profie_image").attr("src", image_url+res.response.user_details.profile_image);
-            $('.followers').text(res.followers);
-            $('.followings').text(res.followings);
+            $('.user_follwers').text(res.followers);
+            $('.user_followings').text(res.followings);
             $('.p_name').html(res.response.user_details.first_name);
             $('.p_name').attr('data-business_id', res.response.user_details.id);
+            $('.usersfollowersfollowingaccid').attr('data-usersfollowersfollowingaccid', res.response.user_details.id);
             $('.make_unfollow, .make_follow, .make_chat').attr('data-userid', res.response.user_details.id);
 
             $("#pets_and_business_profiles_list").html('');
@@ -2049,8 +2051,8 @@ function loadBusinessPageContent(user_id) {
     $(".business_profie_image").attr("src", image_url+'profile_dummy.jpg');
     $(".p_name_business_sub").html('');
     $(".p_name1_business_sub").html('');
-    $(".followers").text('0');
-    $(".followings").text('0');
+    $(".business_followers").text('0');
+    $(".business_followings").text('0');
     $(".unfollow, .follow, .chat").hide();
 
     $.ajax({
@@ -2072,8 +2074,10 @@ function loadBusinessPageContent(user_id) {
 
             $('.cover_image_btn').show();
 
-            $('.followers').text(res.followers);
-            $('.followings').text(res.followings);
+            $('.business_followers').text(res.followers);
+            $('.business_followings').text(res.followings);
+
+            $('.businessfollowersfollowingaccid').attr('data-businessfollowersfollowingaccid', res.response.user_details.id);
 
             var stars_html = '';
             var stars_count = Math.round(res.response.stars_count);
@@ -2204,8 +2208,8 @@ function loadBusinessPageContentSub(user_id) {
     $(".business_profie_image").attr("src", image_url+'profile_dummy.jpg');
     $(".p_name_business_sub").html('');
     $(".p_name1_business_sub").html('');
-    $(".followers").text('0');
-    $(".followings").text('0');
+    $(".business_sub_followers").text('0');
+    $(".business_sub_followings").text('0');
     $(".unfollow, .follow, .chat").hide();
 
     $.ajax({
@@ -2227,8 +2231,10 @@ function loadBusinessPageContentSub(user_id) {
 
             $('.cover_image_btn').show();
 
-            $('.followers').text(res.followers);
-            $('.followings').text(res.followings);
+            $('.business_sub_followers').text(res.followers);
+            $('.business_sub_followings').text(res.followings);
+
+            $('.businessfollowersfollowingaccid').attr('data-businessfollowersfollowingaccid', res.response.user_details.id);
 
             var stars_html = '';
             var stars_count = Math.round(res.response.stars_count);
@@ -3014,7 +3020,14 @@ function goto_profile_list(account_type) {
     });
 }
 
-function goto_profile_list_follow(type) {
+function goto_profile_list_follow(type, user_cat) {
+    if (user_cat == 'users_sub') {
+        account_id = static_account_id;
+    } else if (user_cat == 'users') {
+        account_id = token.id;
+    } else if (user_cat == 'business') {
+        account_id = business_static_account_id;
+    }
     profile_list_type = type;
     mainView.router.load({
         url: 'profiles.html',
