@@ -193,6 +193,11 @@ myApp.onPageInit('mylist_find_parent', function(page) {
     loadFindParentMyList(account_default_id);
 });
 
+// Find a parent list
+myApp.onPageInit('mylist_become_parent', function(page) {
+    loadBecomeParentMyList(account_default_id);
+});
+
 // become a parent list
 myApp.onPageInit('become_parent_list_filtered', function(page) {
     loadBecomeParentFilteredContent(account_default_id);

@@ -2470,6 +2470,80 @@ function loadBecomeParentFilteredContent(user_id) {
     });
 }
 
+function deleteFindParent(feed_id) {
+    myApp.prompt('This will erase the details from your profile, Do you realy want to delete?', function (value) {
+        $.ajax({
+            url: base_url+'remove_find_parent_id',
+            type: 'POST',
+            dataType: 'json',
+            crossDomain: true,
+            data: {
+                feed_id: feed_id,
+                user_id: token.id
+            }
+        }).done(function(res){
+            if (res.status == 'Success') {
+                myApp.alert(res.api_msg);
+                goto_profile();
+            } else {
+                myApp.alert(res.api_msg);
+            }
+        }).error(function(err) {
+            myApp.hideIndicator();
+            myApp.alert('Somthing went wrong, Please try again later!');
+        }).always(function(){
+        });
+    })
+}
+
+function loadBecomeParentMyList(user_id) {
+    $.ajax({
+        url: base_url+'get_find_parent_my_list',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            user_id: user_id,
+        }
+    }).done(function(res){
+        if (res.status == 'Success') {
+            var html = '';
+            $.each(res.response, function(index, value){
+                if (value.user_id == token.id) {
+                    html += '<div class="card facebook-card">'+
+                                '<div class="card-header">'+
+                                    '<div class="facebook-avatar"><img src="'+image_url+value.profile_pic+'" width="50" height="50"></div>'+
+                                    '<div class="facebook-name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>'+
+                                    '<div class="facebook-date">@'+value.username+'</div>'+
+                                '</div>'+
+                                '<div class="card-content">'+
+                                    '<div class="card-content-inner">'+
+                                        '<p>'+value.description+'</p>'+
+                                        '<p class="color-gray">Likes: '+value.count_fp+'</p>'+
+                                    '</div>'+
+                                '</div>'+
+                                '<div class="card-footer">'+
+                                    '<a href="#" class="link" onclick="deleteFindParent('+value.id+');"><i class="material-icons color_8ac640 findParentLike white_heart_active" onclick="findParentLikeStatusChng('+value.id+')" data-feed_id="'+value.id+'">delete</i> DELETE</a>'+
+                                '</div>'+
+                            '</div>';
+                }
+            })
+
+            $("#find_parent_mylistDyn").html(html);
+
+            myApp.hideIndicator();
+        } else {
+            myApp.hideIndicator();
+            var html = '<p style="text-align: center;">'+res.api_msg+'</p>';
+            $("#find_parent_mylistDyn").html(html);
+        }
+    }).error(function(res){
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function(){
+    });
+}
+
 function loadFindParentMyList(user_id) {
     myApp.showIndicator();
 
@@ -3167,13 +3241,13 @@ function loadChatMessages(user_id) {
                 } else {
                     if (value.image) {
                         html += '<div class="message message-received">'+
-                                    '<div class="message-text"><img src="'+value.image+'" width="100%" onclick="goto_user_page('+value.receiver_id+')">'+value.messages+' '+additional_content+'</div>'+
-                                    '<div style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
+                                    '<div class="message-text"><img src="'+value.image+'" width="100%"">'+value.messages+' '+additional_content+'</div>'+
+                                    '<div onclick="goto_user_page('+value.sender_id+')" style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
                                 '</div>';
                     } else {
                         html += '<div class="message message-received">'+
                                     '<div class="message-text">'+value.messages+' '+additional_content+'</div>'+
-                                    '<div style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
+                                    '<div onclick="goto_user_page('+value.sender_id+')" style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
                                 '</div>';
                     }
                 }
