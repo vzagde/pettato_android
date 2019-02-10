@@ -361,11 +361,14 @@ myApp.onPageInit('chat', function(page) {
                             '</div>';
                 })
 
-                $("#messages_box_dyn").append(html);
+                if (html) {
+                    $("#messages_box_dyn").append(html);
 
-                var myMessages = myApp.messages('.messages', {
-                    scrollMessages: true,
-                });
+                    var myMessages = myApp.messages('.messages', {
+                        scrollMessages: true,
+                    });
+                }
+
             } else {
             }
         }).error(function(res){
