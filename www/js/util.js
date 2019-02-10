@@ -1302,7 +1302,7 @@ function sharePetProfile() {
                 text: 'Share on Social Media',
                 onClick: function() {
                     // window.plugins.socialsharing.share(title, title, share_image_link, '');
-                    window.plugins.socialsharing.share(title, title, share_image_link, '', 'Pettato', 'com.huzaifrangila.pettato');
+                    window.plugins.socialsharing.share(title, title, share_image_link, 'https://play.google.com/store/apps/details?id=com.huzaifrangila.pettato', 'Pettato', 'com.huzaifrangila.pettato');
                 }
             },
             {
@@ -1336,7 +1336,7 @@ function shareFindParent(id) {
                 text: 'Share on Social Media',
                 onClick: function() {
                     // window.plugins.socialsharing.share(title, title, share_image_link, '');
-                    window.plugins.socialsharing.share(title, title, share_image_link, '', 'Pettato', 'com.huzaifrangila.pettato');
+                    window.plugins.socialsharing.share(title, title, share_image_link, 'https://play.google.com/store/apps/details?id=com.huzaifrangila.pettato', 'Pettato', 'com.huzaifrangila.pettato');
                 }
             },
             {
@@ -1379,7 +1379,7 @@ function feedShareStatusChng(id) {
                 text: 'Share on Social Media',
                 onClick: function() {
                     // window.plugins.socialsharing.share(title, title, share_image_link, '');
-                    window.plugins.socialsharing.share(title, title, share_image_link, '', 'Pettato', 'com.huzaifrangila.pettato');
+                    window.plugins.socialsharing.share(title, title, share_image_link, 'https://play.google.com/store/apps/details?id=com.huzaifrangila.pettato', 'Pettato', 'com.huzaifrangila.pettato');
                 }
             },
             {
