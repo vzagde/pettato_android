@@ -1298,12 +1298,13 @@ function sharePetProfile() {
         text: '<img src="'+share_image_link+'" width="100%;">',
         verticalButtons: true,
         buttons: [
-            // {
-            //     text: 'Share on Social Media',
-            //     onClick: function() {
-            //         window.plugins.socialsharing.share(title, title, share_image_link, '');
-            //     }
-            // },
+            {
+                text: 'Share on Social Media',
+                onClick: function() {
+                    // window.plugins.socialsharing.share(title, title, share_image_link, '');
+                    window.plugins.socialsharing.share('Message, subject, image and link', 'The subject', 'https://www.google.nl/images/srpr/logo4w.png', 'http://www.x-services.nl');
+                }
+            },
             {
                 text: 'Share on Pettato',
                 onClick: function() {
