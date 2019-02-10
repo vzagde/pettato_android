@@ -1302,7 +1302,7 @@ function sharePetProfile() {
                 text: 'Share on Social Media',
                 onClick: function() {
                     // window.plugins.socialsharing.share(title, title, share_image_link, '');
-                    window.plugins.socialsharing.share('Message, subject, image and link', 'The subject', 'https://www.google.nl/images/srpr/logo4w.png', 'http://www.x-services.nl');
+                    window.plugins.socialsharing.share(title, title, share_image_link, 'http://www.pettato.com');
                 }
             },
             {
@@ -1332,6 +1332,13 @@ function shareFindParent(id) {
         text: '<img src="'+share_image_link+'" width="100%;">',
         verticalButtons: true,
         buttons: [
+            {
+                text: 'Share on Social Media',
+                onClick: function() {
+                    // window.plugins.socialsharing.share(title, title, share_image_link, '');
+                    window.plugins.socialsharing.share(title, title, share_image_link, 'http://www.pettato.com');
+                }
+            },
             {
                 text: 'Share on Pettato',
                 onClick: function() {
@@ -1368,13 +1375,13 @@ function feedShareStatusChng(id) {
         text: '<img src="'+share_image_link+'" width="100%;">',
         verticalButtons: true,
         buttons: [
-            // {
-            //     text: 'Share on Social Media',
-            //     onClick: function() {
-            //         window.plugins.socialsharing.share('Message and image', null, 'https://www.google.nl/images/srpr/logo4w.png', null);
-            //         // window.plugins.socialsharing.share(title, title, share_image_link, share_link);
-            //     }
-            // },
+            {
+                text: 'Share on Social Media',
+                onClick: function() {
+                    // window.plugins.socialsharing.share(title, title, share_image_link, '');
+                    window.plugins.socialsharing.share(title, title, share_image_link, 'http://www.pettato.com');
+                }
+            },
             {
                 text: 'Share on Pettato',
                 onClick: function() {
