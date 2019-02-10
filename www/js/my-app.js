@@ -362,6 +362,10 @@ myApp.onPageInit('chat', function(page) {
                 })
 
                 $("#messages_box_dyn").append(html);
+
+                var myMessages = myApp.messages('.messages', {
+                    scrollMessages: true,
+                });
             } else {
             }
         }).error(function(res){

@@ -3352,6 +3352,10 @@ function send_chat() {
                         '</div>';
                 $("#messages_box_dyn").append(html);
 
+                var myMessages = myApp.messages('.messages', {
+                    scrollMessages: true,
+                });
+
                 $("#mesage_sent").val('');
             } else {
                 myApp.hideIndicator();
@@ -3468,6 +3472,10 @@ function loadChatMessages(user_id) {
             })
 
             $("#messages_box_dyn").html(html);
+
+            var myMessages = myApp.messages('.messages', {
+                scrollMessages: true,
+            });
         }
         
         myApp.hideIndicator();
