@@ -3269,7 +3269,7 @@ function loadChatsList() {
                                         '<div class="item-title">'+value.first_name+'<span class="time-text">'+timechng+'</span>'+
                                         '</div>'+
                                     '</div>'+
-                                    '<div class="item-subtitle">'+value.messages+'</div>'+
+                                    '<div class="item-subtitle">'+decodeURI(value.messages)+'</div>'+
                                 '</div>'+
                             '</div>'+
                             '<div class="swipeout-actions-right">'+
@@ -3341,13 +3341,13 @@ function send_chat() {
             type: 'POST',
             crossDomain: true,
             data: {
-                user_id: user_id, acc_id: acc_id, message: message,
+                user_id: user_id, acc_id: acc_id, message: encodeURI(message),
             }
         }).done(function(res){
             if (res.status == 'Success') {
                 myApp.hideIndicator();
                 html = '<div class="message message-sent">'+
-                            '<div class="message-text">'+message+'</div>'+
+                            '<div class="message-text">'+decodeURI(message)+'</div>'+
                             '<div style="background-image:url('+image_url+token.profile_image+')" class="message-avatar"></div>'+
                         '</div>';
                 $("#messages_box_dyn").append(html);
@@ -3412,24 +3412,24 @@ function loadChatMessages(user_id) {
 
                     if (value.image) {
                         html += '<div class="message message-sent">'+
-                                    '<div class="message-text"><img src="'+value.image+'" width="100%">'+value.messages+' '+additional_content+'</div>'+
+                                    '<div class="message-text"><img src="'+value.image+'" width="100%">'+decodeURI(value.messages)+' '+additional_content+'</div>'+
                                     '<div style="background-image:url('+image_url+value.sender_profile_image+')" class="message-avatar"></div>'+
                                 '</div>';
                     } else {
                         html += '<div class="message message-sent">'+
-                                    '<div class="message-text">'+value.messages+' '+additional_content+'</div>'+
+                                    '<div class="message-text">'+decodeURI(value.messages)+' '+additional_content+'</div>'+
                                     '<div style="background-image:url('+image_url+value.sender_profile_image+')" class="message-avatar"></div>'+
                                 '</div>';
                     }
                 } else {
                     if (value.image) {
                         html += '<div class="message message-received">'+
-                                    '<div class="message-text"><img src="'+value.image+'" width="100%"">'+value.messages+' '+additional_content+'</div>'+
+                                    '<div class="message-text"><img src="'+value.image+'" width="100%"">'+decodeURI(value.messages)+' '+additional_content+'</div>'+
                                     '<div onclick="goto_user_page('+value.sender_id+')" style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
                                 '</div>';
                     } else {
                         html += '<div class="message message-received">'+
-                                    '<div class="message-text">'+value.messages+' '+additional_content+'</div>'+
+                                    '<div class="message-text">'+decodeURI(value.messages)+' '+additional_content+'</div>'+
                                     '<div onclick="goto_user_page('+value.sender_id+')" style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
                                 '</div>';
                     }
@@ -4339,7 +4339,7 @@ function shareContent() {
             user_id: token.id,
             share_user_id: $("#share_with_freinds-freinds").val(),
             sharing_image: sharing_image,
-            sharing_content: sharing_content,
+            sharing_content: encodeURI(sharing_content),
             sharing_id: sharing_id, 
             sharing_type: sharing_type, 
         }

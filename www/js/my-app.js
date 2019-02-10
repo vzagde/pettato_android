@@ -356,7 +356,7 @@ myApp.onPageInit('chat', function(page) {
                 $.each(res.response, function(index, value){
                     var receiver_profile = $(".chat_reviever_img").attr('src');
                     html += '<div class="message message-received">'+
-                                '<div class="message-text">'+value.messages+'</div>'+
+                                '<div class="message-text">'+decodeURI(value.messages)+'</div>'+
                                 '<div style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
                             '</div>';
                 })
