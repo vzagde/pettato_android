@@ -1087,14 +1087,14 @@ function loadFeeds() {
                 } else {
                     html += '<div class="ks-facebook-name pro_name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>';
                 }
-                html += '<div class="ks-facebook-date pro_tag">'+share_image_title+'</div>'+
+                html += '<div class="ks-facebook-date pro_tag">'+decodeURI(share_image_title)+'</div>'+
                         '<div class="ks-facebook-date pro_tag">'+value.feed_comment_count+' Comments '+value.likes_count+' Likes</div>'+
                         '</a>'+
                         '<a class="card-content" onclick="load_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
                         '<img data-src="'+share_image_link+'" src="'+share_image_link+'" width="100%" class="lazy lazy-fadein">'+
                         '</a>'+
                         '<div class="card-footer no-border like_share">'+
-                        '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+share_image_title+'" data-image_link="'+share_image_link+'" class="share_feeds_'+value.feed_id+' material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>';
+                        '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+decodeURI(share_image_title)+'" data-image_link="'+share_image_link+'" class="share_feeds_'+value.feed_id+' material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>';
 
                 if (value.user_type == 'User') {
                     html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="goto_chat_inner('+value.user_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>';
@@ -1444,7 +1444,7 @@ function loadFeedsDetails() {
             }
 
             $(".feed_comment_like").html(res.feed_comment_count+' Comments '+res.likes_count+' Likes');
-            $(".feed_desc").html(res.response.feeds_content);
+            $(".feed_desc").html(decodeURI(res.response.feeds_content));
             // $("#feedDetailsMessagesContainer").html('');
 
             var comments = '';
@@ -1452,7 +1452,7 @@ function loadFeedsDetails() {
             $.each(res.comments_response, function(index, value){
                 comments += '<div class="message message-with-avatar message-received"> '+
                                 '<div class="message-name">'+value.first_name+'</div>'+
-                                '<div class="message-text-new">'+value.comment+'</div>'+
+                                '<div class="message-text-new">'+decodeURI(value.comment)+'</div>'+
                             '</div>';
             })
 
@@ -1460,7 +1460,7 @@ function loadFeedsDetails() {
 
             $(".feedDetailsLike").attr('data-feed_id', res.response.feed_id);
             $(".feedDetailsShare").attr('data-feed_id', res.response.feed_id);
-            $(".feedDetailsShare").attr('data-title', res.response.feeds_content.substring(0, 50));
+            $(".feedDetailsShare").attr('data-title', decodeURI(res.response.feeds_content.substring(0, 50)));
             $(".feedDetailsShare").attr('data-image_link', image_url+res.response.image);
             $(".feedDetailsSave").attr('data-feed_id', res.response.feed_id);
 
@@ -1492,7 +1492,7 @@ function add_comment_feed() {
         data: {
             user_id: token.id,
             feed_id: $(".feedDetailsLike").data('feed_id'),
-            comment: $("#feed_comment").val(),
+            comment: encodeURI($("#feed_comment").val()),
         }
     }).done(function(res){
         if (res.status == 'Success') {
@@ -1515,7 +1515,7 @@ function add_comment_feed() {
 
 function add_feed() {
     var feed_image = feed_image_upload.trim();
-    var description = $('#create_feed-description').val().trim();
+    var description = encodeURI($('#create_feed-description').val().trim());
     var location_id = '1';
     var post_create_id = 0;
 
@@ -2032,7 +2032,7 @@ function add_review_business() {
         data: {
             business_id: $(".p_name_business_sub").data('business_id'),
             user_id: token.id,
-            comment: $("#review_comments").val(),
+            comment: encodeURI($("#review_comments").val()),
             review: html_count
         }
     }).done(function(res) {
@@ -2171,7 +2171,7 @@ function loadBusinessPageContent(user_id) {
                 reviews_html += '<div class="card">'+
                                     '<div class="card-header">'+value.first_name+'</div>'+
                                     '<div class="card-content">'+
-                                        '<div class="card-content-inner text-left">'+value.comments+'</div>'+
+                                        '<div class="card-content-inner text-left">'+decodeURI(value.comments)+'</div>'+
                                     '</div>'+
                                     '<div class="card-footer">'+
                                     '<p class="reviews_star">';
@@ -2327,7 +2327,7 @@ function loadBusinessPageContentSub(user_id) {
                 reviews_html += '<div class="card">'+
                                     '<div class="card-header">'+value.first_name+'</div>'+
                                     '<div class="card-content">'+
-                                        '<div class="card-content-inner text-left">'+value.comments+'</div>'+
+                                        '<div class="card-content-inner text-left">'+decodeURI(value.comments)+'</div>'+
                                     '</div>'+
                                     '<div class="card-footer">'+
                                     '<p class="reviews_star">';
@@ -2486,7 +2486,7 @@ function add_to_become_parent() {
         data: {
             pettype: pettype,
             age: age,
-            description: description,
+            description: encodeURI(description),
             user_id: token.id
         }
     }).done(function(res){
@@ -2577,7 +2577,7 @@ function add_to_find_parent() {
             pettype: pettype,
             breed: breed,
             age: age,
-            description: description,
+            description: encodeURI(description),
             gender: gender,
             profile_btn: profile_btn,
             cover_btn: cover_btn,
@@ -2843,7 +2843,7 @@ function loadBecomeParentDetails(account_id) {
             $(".becomeParentDetailsImage").attr("src", image_url+res.response.profile_pic);
             $(".becomeParentDetailsName").html(res.response.pet_name);
             $(".becomeParentDetailsInfo").html('Breed: '+res.response.breed+', '+res.response.pet_type+' Age: '+res.response.age);
-            $(".becomeParentDetailsContent").html(res.response.description);
+            $(".becomeParentDetailsContent").html(decodeURI(res.response.description));
         } else {
             $(".becomeParentDetailsImage").attr('src', image_url+'cover_pic.jpg');
             $(".becomeParentDetailsName").html('');
@@ -2883,7 +2883,7 @@ function loadFindParentContentFilteredContent(user_id) {
                             '</div>'+
                             '<div class="card-content">'+
                                 '<div class="card-content-inner">'+
-                                    '<p>'+value.description+'</p>'+
+                                    '<p>'+decodeURI(value.description)+'</p>'+
                                     '<p class="color-gray">Likes: 112</p>'+
                                 '</div>'+
                             '</div>'+
@@ -2937,7 +2937,7 @@ function loadFindParentContent(user_id) {
                             '</div>'+
                             '<div class="card-content">'+
                                 '<div class="card-content-inner">'+
-                                    '<p>'+value.description+'</p>'+
+                                    '<p>'+decodeURI(value.description)+'</p>'+
                                     '<p class="color-gray">Likes: '+value.count_fp+'</p>'+
                                 '</div>'+
                             '</div>'+
@@ -2989,7 +2989,7 @@ function loadLostFoundContent(user_id) {
                                 '<div class="card-content-inner">'+
                                     '<h2 class="mrg0">'+value.first_name+', '+value.breed_name+', '+value.age+'</h2>'+
                                     '<p class="color-gray mrg0">Posted By @'+value.parent_username+'</p>'+
-                                    '<p class="text_expand text_expand_'+index+'">'+value.description+'</p>'+
+                                    '<p class="text_expand text_expand_'+index+'">'+decodeURI(value.description)+'</p>'+
                                 '</div>'+
                             '</div>'+
                             '<div class="card-footer">'+
@@ -3205,7 +3205,7 @@ function loadSearchList() {
                                             '<img src="'+image_url+value.profile_image+'" width="34" height="34">'+
                                         '</div>'+
                                         '<div class="ks-facebook-name pro_name item-title">'+value.first_name+'</div>'+
-                                        '<div class="ks-facebook-date pro_tag item-title">'+value.feeds_content.substring(0, 50)+'</div>'+
+                                        '<div class="ks-facebook-date pro_tag item-title">'+decodeURI(value.feeds_content.substring(0, 50))+'</div>'+
                                         '<div class="ks-facebook-date pro_tag">0 Comments 0 Likes</div>'+
                                     '</a>'+
                                     '<a class="card-content" onclick="load_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
@@ -4203,6 +4203,11 @@ function add_to_adoption() {
 }
 
 function add_lostfound() {
+    if (!$("#lost_found_content").val()) {
+        myApp.alert("Please enter description!");
+        return false;
+    }
+
     $.ajax({
         url: base_url+'add_to_lostandfound',
         type: 'POST',
@@ -4210,7 +4215,8 @@ function add_lostfound() {
         crossDomain: true,
         data: {
             pet_id: pet_static_account_id,
-            user_id: token.id
+            user_id: token.id,
+            description: encodeURI($("#lost_found_content").val()),
         }
     }).done(function(res){
         if (res.status == 'Success') {
