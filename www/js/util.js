@@ -134,6 +134,7 @@ function sendEmail() {
 }
 
 function locatioRoute() {
+    directions.navigateTo("51.50722", "-0.12750");
     // window.open('email:' + $(".business_email_to").html());
     // directions.navigateTo($(".business_email_to").data('businesslat'), $(".business_email_to").data('businesslong'));
 }
