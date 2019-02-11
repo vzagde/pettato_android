@@ -263,7 +263,7 @@
 }
 
 .f_box{
-    margin: 0 0 32px 0 !important;
+    margin: 0 0 10px 0 !important;
     padding:0 !important;
 }
 
@@ -932,7 +932,7 @@
     border-radius: 2px 2px 2px 0;
     padding: 2% 0;
     margin-left: 8px !important;
-    color: rgba(0, 0, 0, 0.51) !important;
+    color: #929292 !important;
 }
 
 .message-name, .message-text-new {
@@ -1108,7 +1108,7 @@ label.label-radio input[type=checkbox]:checked+.item-media i.icon-form-radio:aft
 
 #feed-container .desc {
     padding: 5% 4% !important;
-    color: rgba(0, 0, 0, 0.51) !important;
+    color: #333333 !important;
 }
 
 .form_button {
@@ -1332,7 +1332,7 @@ label.label-radio input[type=checkbox]:checked+.item-media i.icon-form-radio:aft
 }
 
 .pet_details_profile_tb .pet_details_profile_tb_row {
-    margin: 10px;
+    margin: 10px 10px 35px;
 }
 
 .pet_details_profile_tb_row .row {
@@ -1481,4 +1481,17 @@ label.label-radio input[type=checkbox]:checked+.item-media i.icon-form-radio:aft
 
 .profile-save-feed-container {
     padding: 0 10px;
+}
+
+.nostyle {
+    list-style: none;
+}
+
+.font_weight300 {
+    font-weight: 300 !important;
+    font-family: 'CooperHewitt-Light' !important;
+}
+
+.nostyle i {
+    float: right;
 }

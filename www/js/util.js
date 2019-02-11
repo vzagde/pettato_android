@@ -2523,7 +2523,7 @@ function add_to_find_parent() {
         gender = 'Female';
     }
 
-    var profile_btn = profile_image_link;
+    var profile_btn = profile_cover_image_link;
     var cover_btn = profile_cover_image_link;
 
     if (!name) {
@@ -2699,7 +2699,7 @@ function loadBecomeParentMyList(user_id) {
                                 '</div>'+
                                 '<div class="card-content">'+
                                     '<div class="card-content-inner">'+
-                                        '<p>'+value.description+'</p>'+
+                                        '<p>'+decodeURI(value.description)+'</p>'+
                                         '<p class="color-gray">Likes: '+value.count_fp+'</p>'+
                                     '</div>'+
                                 '</div>'+
@@ -2990,7 +2990,7 @@ function loadLostFoundContent(user_id) {
                                 '<div class="card-content-inner">'+
                                     '<h2 class="mrg0">'+value.first_name+', '+value.breed_name+', '+value.age+'</h2>'+
                                     '<p class="color-gray mrg0">Posted By @'+value.parent_username+'</p>'+
-                                    '<p class="text_expand text_expand_'+index+'">'+decodeURI(value.description)+'</p>'+
+                                    '<p class="text_expand text_expand_'+index+'">'+decodeURI(value.lost_description)+'</p>'+
                                 '</div>'+
                             '</div>'+
                             '<div class="card-footer">'+
