@@ -1095,7 +1095,7 @@ function loadFeeds() {
                         '<img data-src="'+share_image_link+'" src="'+share_image_link+'" width="100%" class="lazy lazy-fadein">'+
                         '</a>'+
                         '<div class="card-footer no-border like_share">'+
-                        '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+decodeURI(share_image_title)+'" data-image_link="'+share_image_link+'" class="share_feeds_'+value.feed_id+' material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>';
+                        '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+share_image_title+'" data-image_link="'+share_image_link+'" class="share_feeds_'+value.feed_id+' material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>';
 
                 if (value.user_type == 'User') {
                     html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="goto_chat_inner('+value.user_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>';
@@ -1461,7 +1461,7 @@ function loadFeedsDetails() {
 
             $(".feedDetailsLike").attr('data-feed_id', res.response.feed_id);
             $(".feedDetailsShare").attr('data-feed_id', res.response.feed_id);
-            $(".feedDetailsShare").attr('data-title', decodeURI(res.response.feeds_content.substring(0, 50)));
+            $(".feedDetailsShare").attr('data-title', decodeURI(res.response.feeds_content).substring(0, 50));
             $(".feedDetailsShare").attr('data-image_link', image_url+res.response.image);
             $(".feedDetailsSave").attr('data-feed_id', res.response.feed_id);
 
@@ -3206,7 +3206,7 @@ function loadSearchList() {
                                             '<img src="'+image_url+value.profile_image+'" width="34" height="34">'+
                                         '</div>'+
                                         '<div class="ks-facebook-name pro_name item-title">'+value.first_name+'</div>'+
-                                        '<div class="ks-facebook-date pro_tag item-title">'+decodeURI(value.feeds_content.substring(0, 50))+'</div>'+
+                                        '<div class="ks-facebook-date pro_tag item-title">'+decodeURI(value.feeds_content).substring(0, 50)+'</div>'+
                                         '<div class="ks-facebook-date pro_tag">0 Comments 0 Likes</div>'+
                                     '</a>'+
                                     '<a class="card-content" onclick="load_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
