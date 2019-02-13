@@ -1583,10 +1583,12 @@ function create_feed(post_create_id, feed_image, description, location_id) {
     }).done(function(res) {
         myApp.hideIndicator();
         if (res.status == 'Success') {
+            $(".CNGDynImg").attr('src', 'img/lazyload.jpg');
             mainView.router.load({
                 url: 'feeds.html',
                 ignoreCache: true,
             });
+
         } else {
             myApp.alert('Please provide all the details!');
         }
