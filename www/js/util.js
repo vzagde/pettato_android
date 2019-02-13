@@ -1074,9 +1074,9 @@ function loadFeeds() {
         var feed_type = 'Feeds';
 
         if (res.status == 'Success') {
-            $.each(res.response, function(index, value){
+            $.each(res.response, function(index, value) {
                 var share_image_link = image_url+value.image;
-                var share_image_title = value.feeds_content.substring(0, 50);
+                var share_image_title = decodeURI(value.feeds_content).substring(0, 50);
                 html += '<div class="card c_ard ks-facebook-card">'+
                         '<div class="black_overlay"></div>'+
                         '<a href="#" class="card-header no-border pro_view">'+
@@ -1088,7 +1088,7 @@ function loadFeeds() {
                 } else {
                     html += '<div class="ks-facebook-name pro_name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>';
                 }
-                html += '<div class="ks-facebook-date pro_tag">'+decodeURI(share_image_title)+'</div>'+
+                html += '<div class="ks-facebook-date pro_tag">'+share_image_title+'</div>'+
                         '<div class="ks-facebook-date pro_tag">'+value.feed_comment_count+' Comments '+value.likes_count+' Likes</div>'+
                         '</a>'+
                         '<a class="card-content" onclick="load_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
