@@ -443,6 +443,7 @@ function shopper_register_onSuccess_file(res) {
             profile_cover_image_link = uploaded_image;
         } else {
             feed_image_upload = uploaded_image;
+            $(".CNGDynImg").attr('src', image_url+feed_image_upload);
         }
 
         myApp.alert("Image Uploaded Successfully");

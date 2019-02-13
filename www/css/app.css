@@ -448,11 +448,11 @@
 }
 
 .create_feed_pic {
-    height: 300px;
+    height: auto;
     background: transparent;
-    width: 300px;
     margin: 0 auto;
-    padding: 25% 0 !important;
+    padding: 0 !important;
+    width: 100%;
 }
 
 .first_tab {
