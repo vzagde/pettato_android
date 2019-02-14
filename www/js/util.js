@@ -3,6 +3,8 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
     myApp.showIndicator();
 
+    cordova.plugins.backgroundMode.setEnabled(true);
+
     var push = PushNotification.init({
         "android": {
             "senderID": "836033005549"
