@@ -50,6 +50,7 @@
     position: fixed !important;
     bottom: 0 !important;
     top: initial !important;
+    -webkit-overflow-scrolling: touch !important;
 }
 
 .color_dark {
