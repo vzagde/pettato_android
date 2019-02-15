@@ -7,6 +7,14 @@
             <!-- <div class="right"><a href="#" class="open-panel link icon-only"><i class="icon icon-bars"></i></a></div> -->
         </div>
     </div>
+    <div class="toolbar messagebar">
+        <div class="toolbar-inner">
+            <textarea placeholder="Comments" id="feed_comment" data-id=""></textarea>
+            <a href="#" class="link" onclick="add_comment_feed()">
+                <i class="material-icons">send</i>
+            </a>
+        </div>
+    </div>
     <div class="page-content padt0">
         <div class="content-block f_box" id="feed-container">
             <div class="card facebook-card mrg0">
@@ -31,14 +39,6 @@
             </div>
         </div>
         <div style="position:relative; margin-top: 0 !important" class="content-block pad0">
-            <div class="toolbar messagebar">
-                <div class="toolbar-inner">
-                    <textarea placeholder="Comments" id="feed_comment" data-id=""></textarea>
-                    <a href="#" class="link" onclick="add_comment_feed()">
-                        <i class="material-icons">send</i>
-                    </a>
-                </div>
-            </div>
             <div class="page-content messages-content">
                 <div class="messages feed_comments_container" id="feedDetailsMessagesContainer">
                     <div class="message message-with-avatar message-received"> 
