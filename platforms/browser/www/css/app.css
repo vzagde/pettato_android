@@ -49,6 +49,7 @@
 .tabbar {
     position: fixed !important;
     bottom: 0 !important;
+    top: auto !important;
     z-index: 5501 !important;
     -webkit-overflow-scrolling: touch !important;
 }

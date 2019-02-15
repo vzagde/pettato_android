@@ -3,41 +3,41 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
     myApp.showIndicator();
 
-    var push = PushNotification.init({
-        "android": {
-            "senderID": "836033005549"
-        },
-        "browser": {},
-        "ios": {
-            "sound": true,
-            "vibration": true,
-            "badge": true
-        },
-        "windows": {}
-    });
+    // var push = PushNotification.init({
+    //     "android": {
+    //         "senderID": "836033005549"
+    //     },
+    //     "browser": {},
+    //     "ios": {
+    //         "sound": true,
+    //         "vibration": true,
+    //         "badge": true
+    //     },
+    //     "windows": {}
+    // });
 
-    push.on('registration', function(data) {
-        oldPushId = Lockr.get('push_key');
-        if (oldPushId !== data.registrationId) {
-            Lockr.set('push_key', data.registrationId);
-            // Save new registration ID
-            // localStorage.setItem('registrationId', data.registrationId);
-            // Post registrationId to your app server as the value has changed
-        }
-    });
+    // push.on('registration', function(data) {
+    //     oldPushId = Lockr.get('push_key');
+    //     if (oldPushId !== data.registrationId) {
+    //         Lockr.set('push_key', data.registrationId);
+    //         // Save new registration ID
+    //         // localStorage.setItem('registrationId', data.registrationId);
+    //         // Post registrationId to your app server as the value has changed
+    //     }
+    // });
 
-    push.on('error', function(e) {
-        console.log(e);
-        // myApp.alert("push error = " + e.message);
-    });
+    // push.on('error', function(e) {
+    //     console.log(e);
+    //     // myApp.alert("push error = " + e.message);
+    // });
 
-    push.on('notification', function(data) {
-        console.log(JSON.stringify(data));
-        // myApp.alert(JSON.stringify(data));
-        // myApp.alert(data.title + ': ' + data.message);
-    });
+    // push.on('notification', function(data) {
+    //     console.log(JSON.stringify(data));
+    //     // myApp.alert(JSON.stringify(data));
+    //     // myApp.alert(data.title + ': ' + data.message);
+    // });
 
-    window.BackgroundService.start();
+    // window.BackgroundService.start();
         // function(fn) { dosometing(), fn && fn() },
         // function() { console.log('err') }
     // )
