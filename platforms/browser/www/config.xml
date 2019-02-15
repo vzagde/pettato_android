@@ -18,7 +18,6 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-    <gap:plugin name="pushbots-cordova-plugin" source="npm" spec="1.6.x" />
     <preference name="phonegap-version" value="cli-7.0.1" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="15" />
