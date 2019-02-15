@@ -37,7 +37,12 @@ function onDeviceReady() {
         // myApp.alert(data.title + ': ' + data.message);
     });
 
-    cordova.plugins.backgroundMode.enable();
+    window.BackgroundService.start();
+        // function(fn) { dosometing(), fn && fn() },
+        // function() { console.log('err') }
+    // )
+
+    // cordova.plugins.backgroundMode.enable();
 
     // window.plugins.PushbotsPlugin.initialize("5c657b160540a312147d5764", {"android":{"sender_id":"836033005549"}});
 
