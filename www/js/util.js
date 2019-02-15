@@ -37,6 +37,8 @@ function onDeviceReady() {
         // myApp.alert(data.title + ': ' + data.message);
     });
 
+    cordova.plugins.backgroundMode.enable();
+
     // window.plugins.PushbotsPlugin.initialize("5c657b160540a312147d5764", {"android":{"sender_id":"836033005549"}});
 
     // Only with First time registration
