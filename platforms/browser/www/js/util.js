@@ -37,7 +37,7 @@ function onDeviceReady() {
         // myApp.alert(data.title + ': ' + data.message);
     });
 
-    window.BackgroundService.start();
+    // window.BackgroundService.start();
         // function(fn) { dosometing(), fn && fn() },
         // function() { console.log('err') }
     // )
@@ -1722,7 +1722,7 @@ function loadUsersSubPageContent(user_id) {
                                 '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
                                 '</a>'+
                                 '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
-                                '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
+                                '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.id+'">share</i></a>';
                                 if (value.user_id == token.id) {
                                     feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
                                 }
@@ -1887,7 +1887,7 @@ function loadUsersPageContent(user_id) {
                                 '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
                                 '</a>'+
                                 '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
-                                '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
+                                '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.id+'">share</i></a>';
                                 if (value.user_id == token.id) {
                                     feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
                                 }
@@ -2926,7 +2926,7 @@ function loadFindParentContentFilteredContent(user_id) {
                                 html += '<a href="#" class="link like_block_chng_active'+value.id+'"><i class="material-icons color_8ac640 findParentLike" onclick="findParentLikeStatusChng('+value.id+')" data-feed_id="'+value.id+'">favorite_border</i></a>';
                             }
 
-                            html += '<a href="#" class="link"><i class="material-icons color_8ac640 checkShareContent'+value.find_parent_id+'" onclick="shareFindParent('+value.find_parent_id+')" data-sharecontent="'+value.description+'" data-accountid="'+value.find_parent_id+'">share</i></a>'+
+                            html += '<a href="#" class="link"><i class="material-icons color_8ac640 checkShareContent'+value.find_parent_id+'" onclick="shareFindParent('+value.find_parent_id+')" data-sharecontent="'+decodeURI(value.description)+'" data-accountid="'+value.find_parent_id+'">share</i></a>'+
                             '</div>'+
                         '</div>';
             })
@@ -2980,7 +2980,7 @@ function loadFindParentContent(user_id) {
                                 html += '<a href="#" class="link like_block_chng_active'+value.id+'"><i class="material-icons color_8ac640 findParentLike" onclick="findParentLikeStatusChng('+value.id+')" data-feed_id="'+value.id+'">favorite_border</i></a>';
                             }
 
-                            html += '<a href="#" class="link"><i class="material-icons color_8ac640 checkShareContent'+value.find_parent_id+'" onclick="shareFindParent('+value.find_parent_id+')" data-sharecontent="'+value.description+'" data-accountid="'+value.find_parent_id+'">share</i></a>'+
+                            html += '<a href="#" class="link"><i class="material-icons color_8ac640 checkShareContent'+value.find_parent_id+'" onclick="shareFindParent('+value.find_parent_id+')" data-sharecontent="'+decodeURI(value.description)+'" data-accountid="'+value.find_parent_id+'">share</i></a>'+
                             '</div>'+
                         '</div>';
             })

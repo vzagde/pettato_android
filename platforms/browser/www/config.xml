@@ -23,4 +23,5 @@
     <preference name="android-minSdkVersion" value="15" />
     <preference name="android-targetSdkVersion" value="26" />
     <preference name="orientation" value="portrait" />
+    <preference name="StatusBarStyle" value="default" />
 </widget>
