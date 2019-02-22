@@ -32,7 +32,9 @@ function onDeviceReady() {
     });
 
     push.on('notification', function(data) {
+        console.log(data);
         console.log(JSON.stringify(data));
+        console.log(data.additionalData);
         // myApp.alert(JSON.stringify(data));
         // myApp.alert(data.title + ': ' + data.message);
     });
