@@ -32,9 +32,34 @@ function onDeviceReady() {
     });
 
     push.on('notification', function(data) {
-        console.log(data);
-        console.log(JSON.stringify(data));
-        console.log(data.additionalData);
+        if (!data.additionalData.foreground) {
+            if (data.additionalData.notification_for == 'Profile') {
+                if (data.additionalData.related_user_id == token.id) {
+                    goto_profile();
+                } else {
+                    goto_user_page(data.additionalData.feed_id);
+                }
+            } else if (data.additionalData.notification_for == 'Feed') {
+                load_feed_page(data.additionalData.feed_id);
+            } else if (data.additionalData.notification_for == 'Become Parent') {
+                goto_becomeParentDetails(data.additionalData.feed_id);
+            } else if (data.additionalData.notification_for == 'Find Parent') {
+                goto_chat_inner(data.additionalData.user_id);
+            } else if (data.additionalData.notification_for == 'Business Profile') {
+                goto_business_page(data.additionalData.feed_id);
+            } else if (data.additionalData.notification_for == 'Pet Profile') {
+                goto_profile_shopper_pet(data.additionalData.feed_id);
+            } else if (data.additionalData.notification_for == 'Lost and Found') {
+                goto_chat_inner(data.additionalData.user_id);
+            } else if (data.additionalData.notification_for == 'Mating') {
+                goto_chat_inner(data.additionalData.user_id);
+            } else if (data.additionalData.notification_for == 'Adoption') {
+                goto_chat_inner(data.additionalData.user_id);
+            }
+        }
+        // console.log(data);
+        // console.log(JSON.stringify(data));
+        // console.log(data.additionalData);
         // myApp.alert(JSON.stringify(data));
         // myApp.alert(data.title + ': ' + data.message);
     });
