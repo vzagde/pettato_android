@@ -1144,7 +1144,8 @@ function loadFeeds() {
                         '<div class="ks-facebook-date pro_tag">'+value.feed_comment_count+' Comments '+value.likes_count+' Likes</div>'+
                         '</a>'+
                         '<a class="card-content" onclick="load_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
-                        '<img data-src="'+share_image_link+'" src="'+share_image_link+'" width="100%" class="lazy lazy-fadein lazy-fade-in">'+
+                        '<img data-src="'+share_image_link+'" width="100%" class="feedImg lazy lazy-fadeIn lazy-fadein" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEXCwsK592mkAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==">'+
+                        // '<img data-src="'+share_image_link+'" width="100%" class="lazy lazy-fadeIn">'+
                         '</a>'+
                         '<div class="card-footer no-border like_share">'+
                         '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+share_image_title+'" data-image_link="'+share_image_link+'" class="share_feeds_'+value.feed_id+' material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>';
@@ -1167,9 +1168,10 @@ function loadFeeds() {
                         '</div>';
             });
 
+
             $("#feeds-container").append(html);
 
-            $('img.lazy').trigger('lazy');
+            $(".feedImg").lazy();
 
             $(".add_clk").click(function(e) {
                 e.preventDefault();
@@ -1197,6 +1199,10 @@ function loadFeeds() {
                     $(".shr_lnk").animate({opacity: 0, top: '0px'});
                 }
             });
+
+            // $(".feedImg").each(function(){
+            //     $(this).attr('src', $(this).data('src'));
+            // })
 
             myApp.hideIndicator();
         } else {
@@ -1357,7 +1363,7 @@ function sharePetProfile() {
                 text: 'Share on Social Media',
                 onClick: function() {
                     // window.plugins.socialsharing.share(title, title, share_image_link, '');
-                    window.plugins.socialsharing.share(title, title, share_image_link, 'https://play.google.com/store/apps/details?id=com.huzaifrangila.pettato', 'Pettato', 'com.huzaifrangila.pettato');
+                    window.plugins.socialsharing.share(title, title, share_image_link, '', 'Pettato', 'pettato://');
                 }
             },
             {
@@ -1391,7 +1397,7 @@ function shareFindParent(id) {
                 text: 'Share on Social Media',
                 onClick: function() {
                     // window.plugins.socialsharing.share(title, title, share_image_link, '');
-                    window.plugins.socialsharing.share(title, title, share_image_link, 'https://play.google.com/store/apps/details?id=com.huzaifrangila.pettato', 'Pettato', 'com.huzaifrangila.pettato');
+                    window.plugins.socialsharing.share(title, title, share_image_link, '', 'Pettato', 'pettato://');
                 }
             },
             {
@@ -1434,7 +1440,7 @@ function feedShareStatusChng(id) {
                 text: 'Share on Social Media',
                 onClick: function() {
                     // window.plugins.socialsharing.share(title, title, share_image_link, '');
-                    window.plugins.socialsharing.share(title, title, share_image_link, 'https://play.google.com/store/apps/details?id=com.huzaifrangila.pettato', 'Pettato', 'com.huzaifrangila.pettato');
+                    window.plugins.socialsharing.share(title, title, share_image_link, '', 'Pettato', 'pettato://');
                 }
             },
             {
