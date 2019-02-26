@@ -18,7 +18,8 @@
     width:100%;
 }
 
-.statusbar {
+
+.statusbar-overlay {
     background: #539642 !important;
 }
 

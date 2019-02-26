@@ -58,10 +58,6 @@ function onDeviceReady() {
             }
         }
         // console.log(data);
-        // console.log(JSON.stringify(data));
-        // console.log(data.additionalData);
-        // myApp.alert(JSON.stringify(data));
-        // myApp.alert(data.title + ': ' + data.message);
     });
 
     // window.BackgroundService.start();
@@ -3355,6 +3351,7 @@ function loadChatsList() {
                             '</div>'+
                             '<div class="swipeout-actions-right">'+
                                 '<a href="#" data-messageid="'+value.id+'" class="action1 change_message_read_status">Mark Read</a>'+
+                                '<a href="#" data-profileaccid="'+value.user_id+'" class="action1 delete_message">Delete</a>'+
                             '</div>'+
                         '</li>';
             })
@@ -3379,6 +3376,27 @@ function loadChatsList() {
                 }).done(function(res){
                     if (res.status == 'Success') {
                         $(chng_status_clas).removeClass('read_active');
+                    } else {
+                        myApp.alert('Some error occured while updating the status!');
+                    }
+                }).error(function(res){
+                    myApp.alert('Some error occured while updating the status!');
+                })
+            })
+
+            $(".delete_message").click(function(e){
+                e.preventDefault();
+                $.ajax({
+                    url: base_url+'delete_chats',
+                    type: 'POST',
+                    crossDomain: true,
+                    data: {
+                        acc_id: token.id,
+                        profile_acc_id: $(this).data('profileaccid'),
+                    }
+                }).done(function(res){
+                    if (res.status == 'Success') {
+                        goto_page('feeds.html');
                     } else {
                         myApp.alert('Some error occured while updating the status!');
                     }
