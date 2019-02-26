@@ -18,6 +18,10 @@
     width:100%;
 }
 
+.statusbar {
+    background: #539642 !important;
+}
+
 .hide{
     display:none;
 }
