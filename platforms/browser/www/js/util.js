@@ -987,7 +987,7 @@ function register_pet() {
     }).done(function(res){
         if (res.status == 'Success') {
             account_id = res.response;
-            pet_static_account_id = res.response.id;
+            pet_static_account_id = res.response;
             goto_page('profile_shopper_pet.html');
         } else {
             myApp.alert(res.api_msg);
@@ -1137,7 +1137,7 @@ function loadFeeds() {
                         '<div class="black_overlay"></div>'+
                         '<a href="#" class="card-header no-border pro_view">'+
                         '<div class="ks-facebook-avatar pro_pic">'+
-                        '<img src="'+image_url+value.profile_image+'" width="34" height="34">'+
+                        '<img src="'+image_url+value.profile_image+'" width="34" height="34" class="lazy lazy-fadeIn">'+
                         '</div>';
                 if (value.user_type == 'Business') {
                     html += '<div class="ks-facebook-name pro_name" onclick="goto_business_page('+value.user_id+')">'+value.first_name+'</div>';
@@ -1148,7 +1148,7 @@ function loadFeeds() {
                         '<div class="ks-facebook-date pro_tag">'+value.feed_comment_count+' Comments '+value.likes_count+' Likes</div>'+
                         '</a>'+
                         '<a class="card-content" onclick="load_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
-                        '<img data-src="'+share_image_link+'" src="'+share_image_link+'" width="100%" class="lazy lazy-fadein">'+
+                        '<img data-src="'+share_image_link+'" src="'+share_image_link+'" width="100%" class="lazy lazy-fadein lazy-fade-in">'+
                         '</a>'+
                         '<div class="card-footer no-border like_share">'+
                         '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+share_image_title+'" data-image_link="'+share_image_link+'" class="share_feeds_'+value.feed_id+' material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>';
@@ -1172,6 +1172,8 @@ function loadFeeds() {
             });
 
             $("#feeds-container").append(html);
+
+            $('img.lazy').trigger('lazy');
 
             $(".add_clk").click(function(e) {
                 e.preventDefault();
@@ -2758,6 +2760,8 @@ function loadBecomeParentMyList(user_id) {
                                 '<div class="card-content">'+
                                     '<div class="card-content-inner">'+
                                         '<p>'+decodeURI(value.description)+'</p>'+
+                                        '<p>Type of pet: '+value.pet_type+'</p>'+
+                                        '<p>Age: '+value.age+'</p>'+
                                         '<p class="color-gray">Likes: '+value.count_fp+'</p>'+
                                     '</div>'+
                                 '</div>'+
@@ -2943,7 +2947,9 @@ function loadFindParentContentFilteredContent(user_id) {
                             '<div class="card-content">'+
                                 '<div class="card-content-inner">'+
                                     '<p>'+decodeURI(value.description)+'</p>'+
-                                    '<p class="color-gray">Likes: 112</p>'+
+                                    '<p>Type of pet: '+value.pet_type+'</p>'+
+                                    '<p>Age: '+value.age+'</p>'+
+                                    '<p class="color-gray">Likes: '+value.count_fp+'</p>'+
                                 '</div>'+
                             '</div>'+
                             '<div class="card-footer">';
@@ -2997,6 +3003,8 @@ function loadFindParentContent(user_id) {
                             '<div class="card-content">'+
                                 '<div class="card-content-inner">'+
                                     '<p>'+decodeURI(value.description)+'</p>'+
+                                    '<p>Type of pet: '+value.pet_type+'</p>'+
+                                    '<p>Age: '+value.age+'</p>'+
                                     '<p class="color-gray">Likes: '+value.count_fp+'</p>'+
                                 '</div>'+
                             '</div>'+
@@ -3455,13 +3463,11 @@ function loadChatMessages(user_id) {
         $("#messages_box_dyn").html('');
 
         if (res.status == 'Success') {
-            var receiver_name = res.users_details.first_name;
-            var receiver_profile = image_url+res.users_details.profile_image;
-
-            $(".chat_reviever_img").attr('src', receiver_profile);
-            $(".chat_reviever_name").html(receiver_name);
+            var profile_receiver_id = '';
 
             $.each(res.response, function(index, value) {
+                profile_receiver_id = value.sender_id;
+
                 var additional_content = '';
                 if (value.message_type == 'Adoption') {
                     additional_content = '<a href="javascript:void(0)" onclick="goto_becomeParentDetails('+value.message_page_id+')">View More</a>';
@@ -3539,6 +3545,12 @@ function loadChatMessages(user_id) {
             })
 
             $("#messages_box_dyn").html(html);
+
+            var receiver_name = '<span onclick="goto_user_page('+profile_receiver_id+')">'+res.users_details.first_name+'</span>';
+            var receiver_profile = image_url+res.users_details.profile_image;
+
+            $(".chat_reviever_img").attr('src', receiver_profile);
+            $(".chat_reviever_name").html(receiver_name);
 
             var myMessages = myApp.messages('.messages', {
                 scrollMessages: true,
