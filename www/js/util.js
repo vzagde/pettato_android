@@ -2198,7 +2198,8 @@ function loadBusinessPageContent(user_id) {
                 make_call($(this).data('businessnumber'));
             })
 
-            var feeds_html, reviews_html = '';
+            var feeds_html = '';
+            var reviews_html = '';
 
             $(".profile-feed-container").html('Loading Feeds...');
             $(".profile-reviews_container").html('Loading Reviews...');
@@ -2221,6 +2222,8 @@ function loadBusinessPageContent(user_id) {
                 feeds_html += '</div>'+
                                 '</div>';
             })
+
+            console.log(feeds_html);
 
             if (feeds_html) {
                 $(".profile-feed-container").html(feeds_html);
@@ -2354,7 +2357,8 @@ function loadBusinessPageContentSub(user_id) {
                 make_call($(this).data('businessnumber'));
             })
 
-            var feeds_html, reviews_html = '';
+            var feeds_html = '';
+            var reviews_html = '';
 
             $(".profile-feed-container").html('Loading Feeds...');
             $(".profile-reviews_container").html('Loading Reviews...');
@@ -2376,6 +2380,7 @@ function loadBusinessPageContentSub(user_id) {
                                 }
                 feeds_html += '</div>'+
                                 '</div>';
+
             })
 
             if (feeds_html) {
