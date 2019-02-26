@@ -3197,6 +3197,7 @@ function loadProfilesList(account_id, profile_list_type) {
                 }).done(function(res) {
                     myApp.hideIndicator();
                     myApp.alert(res.api_msg);
+                    goto_profile();
                 }).error(function(res) {
                     myApp.hideIndicator();
                     myApp.alert("Something went wrong, Please try again later!");
