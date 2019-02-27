@@ -1372,8 +1372,28 @@ function sharePetProfile() {
             {
                 text: 'Share on Social Media',
                 onClick: function() {
-                    // window.plugins.socialsharing.share(title, title, share_image_link, '');
-                    window.plugins.socialsharing.share(title, title, share_image_link, '<a href="pettato://somepath?foo=bar">View More</a>', 'Pettato', 'pettato://');
+                    var options = {
+                        message: title,
+                        subject: title,
+                        files: [share_image_link],
+                        url: 'pettato://somepath?foo=bar',
+                        chooserTitle: title,
+                        appPackageName: 'com.huzaifrangila.pettato'
+                    };
+
+                    var onSuccess = function(result) {
+                        // console.log("Share completed? " + result.completed);
+                        // console.log("Shared to app: " + result.app);
+                    };
+
+                    var onError = function(msg) {
+                        // console.log("Sharing failed with message: " + msg);
+                        myApp.alert("Sharing failed with message: " + msg);
+                    };
+
+                    window.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
+
+                    // window.plugins.socialsharing.share(title, title, share_image_link, '<a href="pettato://somepath?foo=bar">View More</a>', 'Pettato', 'pettato://');
                 }
             },
             {
