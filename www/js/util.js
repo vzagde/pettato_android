@@ -1376,12 +1376,15 @@ function sharePetProfile() {
                         message: title,
                         subject: title,
                         files: [share_image_link],
-                        url: 'pettato://somepath?foo=bar',
+                        url: 'http://pettato.com/?foo=bar',
                         chooserTitle: title,
                         appPackageName: 'com.huzaifrangila.pettato'
                     };
 
+                    console.log(option);
+
                     var onSuccess = function(result) {
+                        console.log(result);
                         // console.log("Share completed? " + result.completed);
                         // console.log("Shared to app: " + result.app);
                     };
@@ -1426,8 +1429,17 @@ function shareFindParent(id) {
             {
                 text: 'Share on Social Media',
                 onClick: function() {
+                    // var options = {
+                    //     message: title,
+                    //     subject: title,
+                    //     files: [share_image_link],
+                    //     url: 'http://pettato.com/?foo=bar',
+                    //     chooserTitle: title,
+                    //     appPackageName: 'com.huzaifrangila.pettato'
+                    // };
+                    window.plugins.socialsharing.share(title, title, share_image_link, 'http://pettato.com/?foo=bar', 'Pettato', 'com.huzaifrangila.pettato');
                     // window.plugins.socialsharing.share(title, title, share_image_link, '');
-                    window.plugins.socialsharing.share(title, title, share_image_link, '<a href="pettato://somepath?foo=bar">View More</a>', 'Pettato', 'pettato://');
+                    // window.plugins.socialsharing.share(title, title, share_image_link, '<a href="pettato://somepath?foo=bar">View More</a>', 'Pettato', 'pettato://');
                 }
             },
             {
@@ -1470,7 +1482,8 @@ function feedShareStatusChng(id) {
                 text: 'Share on Social Media',
                 onClick: function() {
                     // window.plugins.socialsharing.share(title, title, share_image_link, '');
-                    window.plugins.socialsharing.share(title, title, share_image_link, '<a href="pettato://somepath?foo=bar">View More</a>', 'Pettato', 'pettato://');
+                    window.plugins.socialsharing.share(title, title, share_image_link, 'http://pettato.com/?foo=bar', 'Pettato', 'com.huzaifrangila.pettato');
+                    // window.plugins.socialsharing.share(title, title, share_image_link, '<a href="pettato://somepath?foo=bar">View More</a>', 'Pettato', 'pettato://');
                 }
             },
             {
