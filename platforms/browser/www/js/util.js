@@ -7,8 +7,6 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
     myApp.showIndicator();
 
-    console.log(launchmyapp);
-
     triggerOpenURL();
 
     var push = PushNotification.init({
