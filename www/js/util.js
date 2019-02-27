@@ -1373,7 +1373,7 @@ function sharePetProfile() {
                 text: 'Share on Social Media',
                 onClick: function() {
                     // window.plugins.socialsharing.share(title, title, share_image_link, '');
-                    window.plugins.socialsharing.share(title, title, share_image_link, '', 'Pettato', 'pettato://');
+                    window.plugins.socialsharing.share(title, title, share_image_link, '<a href="pettato://somepath?foo=bar">View More</a>', 'Pettato', 'pettato://');
                 }
             },
             {
