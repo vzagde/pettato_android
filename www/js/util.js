@@ -3435,23 +3435,26 @@ function loadChatsList() {
 
             $(".delete_message").click(function(e){
                 e.preventDefault();
-                $.ajax({
-                    url: base_url+'delete_chats',
-                    type: 'POST',
-                    crossDomain: true,
-                    data: {
-                        acc_id: token.id,
-                        profile_acc_id: $(this).data('profileaccid'),
-                    }
-                }).done(function(res){
-                    if (res.status == 'Success') {
-                        goto_page('feeds.html');
-                    } else {
+
+                myApp.confirm('would you like to delete all the messages?', function() {
+                    $.ajax({
+                        url: base_url+'delete_chats',
+                        type: 'POST',
+                        crossDomain: true,
+                        data: {
+                            acc_id: token.id,
+                            profile_acc_id: $(this).data('profileaccid'),
+                        }
+                    }).done(function(res){
+                        if (res.status == 'Success') {
+                            goto_page('feeds.html');
+                        } else {
+                            myApp.alert('Some error occured while updating the status!');
+                        }
+                    }).error(function(res){
                         myApp.alert('Some error occured while updating the status!');
-                    }
-                }).error(function(res){
-                    myApp.alert('Some error occured while updating the status!');
-                })
+                    })
+                });
             })
 
             myApp.hideIndicator();
