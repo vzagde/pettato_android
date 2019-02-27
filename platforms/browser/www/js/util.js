@@ -7,7 +7,11 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
     myApp.showIndicator();
 
-    triggerOpenURL();
+    // triggerOpenURL();
+
+    function handleOpenURL(url) {
+        console.log("received url: " + url);
+    }
 
     var push = PushNotification.init({
         "android": {
