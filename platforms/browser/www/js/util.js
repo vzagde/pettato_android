@@ -42,6 +42,7 @@ function onDeviceReady() {
     });
 
     push.on('notification', function(data) {
+        console.log(data);
         if (!data.additionalData.foreground) {
             if (data.additionalData.notification_for == 'Profile') {
                 if (data.additionalData.related_user_id == token.id) {
@@ -67,7 +68,6 @@ function onDeviceReady() {
                 goto_chat_inner(data.additionalData.user_id);
             }
         }
-        // console.log(data);
     });
 
     // window.BackgroundService.start();
