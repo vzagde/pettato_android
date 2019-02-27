@@ -19,7 +19,7 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <gap:plugin name="cordova-plugin-customurlscheme" source="npm">
-        <param name="URL_SCHEME" value="http://pettato.com" />
+        <param name="URL_SCHEME" value="pettatoapp" />
     </gap:plugin>
     <preference name="phonegap-version" value="cli-7.0.1" />
     <preference name="DisallowOverscroll" value="true" />

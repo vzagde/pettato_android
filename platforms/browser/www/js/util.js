@@ -1437,7 +1437,7 @@ function shareFindParent(id) {
                     //     chooserTitle: title,
                     //     appPackageName: 'com.huzaifrangila.pettato'
                     // };
-                    window.plugins.socialsharing.share(title, title, share_image_link, 'http://pettato.com?foo=bar', 'Pettato', 'com.huzaifrangila.pettato');
+                    window.plugins.socialsharing.share(title, title, share_image_link, 'pettatoapp://pettato', 'Pettato', 'com.huzaifrangila.pettato');
                     // window.plugins.socialsharing.share(title, title, share_image_link, '');
                     // window.plugins.socialsharing.share(title, title, share_image_link, '<a href="pettato://somepath?foo=bar">View More</a>', 'Pettato', 'pettato://');
                 }
@@ -1482,7 +1482,7 @@ function feedShareStatusChng(id) {
                 text: 'Share on Social Media',
                 onClick: function() {
                     // window.plugins.socialsharing.share(title, title, share_image_link, '');
-                    window.plugins.socialsharing.share(title, title, share_image_link, 'http://pettato.com?foo=bar', 'Pettato', 'com.huzaifrangila.pettato');
+                    window.plugins.socialsharing.share(title, title, share_image_link, 'pettatoapp://pettato', 'Pettato', 'com.huzaifrangila.pettato');
                     // window.plugins.socialsharing.share(title, title, share_image_link, '<a href="pettato://somepath?foo=bar">View More</a>', 'Pettato', 'pettato://');
                 }
             },
