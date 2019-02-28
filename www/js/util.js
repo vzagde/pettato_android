@@ -3433,31 +3433,6 @@ function loadChatsList() {
                 })
             })
 
-            function deleteMessages(user_id) {
-                myApp.confirm('would you like to delete all the messages?', function() {
-                    myApp.showIndicator();
-                    $.ajax({
-                        url: base_url+'delete_chats',
-                        type: 'POST',
-                        crossDomain: true,
-                        data: {
-                            acc_id: token.id,
-                            profile_acc_id: $(this).data('profileaccid'),
-                        }
-                    }).done(function(res){
-                        myApp.hideIndicator();
-                        if (res.status == 'Success') {
-                            goto_page('feeds.html');
-                        } else {
-                            myApp.alert('Some error occured while updating the status!');
-                        }
-                    }).error(function(res){
-                        myApp.hideIndicator();
-                        myApp.alert('Some error occured while updating the status!');
-                    })
-                });
-            }
-
             myApp.hideIndicator();
         } else {
             myApp.alert(res.api_msg);
@@ -3469,6 +3444,31 @@ function loadChatsList() {
     }).always(function(res){
         myApp.hideIndicator();
     })
+}
+
+function deleteMessages(user_id) {
+    myApp.confirm('would you like to delete all the messages?', function() {
+        myApp.showIndicator();
+        $.ajax({
+            url: base_url+'delete_chats',
+            type: 'POST',
+            crossDomain: true,
+            data: {
+                acc_id: token.id,
+                profile_acc_id: user_id,
+            }
+        }).done(function(res){
+            myApp.hideIndicator();
+            if (res.status == 'Success') {
+                goto_page('feeds.html');
+            } else {
+                myApp.alert('Some error occured while updating the status!');
+            }
+        }).error(function(res){
+            myApp.hideIndicator();
+            myApp.alert('Some error occured while updating the status!');
+        })
+    });
 }
 
 function goto_chat_inner(user_id) {
