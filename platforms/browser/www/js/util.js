@@ -9,10 +9,10 @@ function onDeviceReady() {
 
     // triggerOpenURL();
 
-    // universalLinks.subscribe('handleOnLoadEvents', function (eventData) {
-    //     console.log(eventData.url);
-    //     console.log('Did launch application from the link: ' + eventData.url);
-    // });
+    universalLinks.subscribe('handleOnLoadEvents', function (eventData) {
+        console.log(eventData.url);
+        console.log('Did launch application from the link: ' + eventData.url);
+    });
 
     // function handleOnLoadEvents(url) {
     //     console.log("received url: " + url);
