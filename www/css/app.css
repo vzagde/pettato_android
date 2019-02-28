@@ -21,6 +21,8 @@
 
 .statusbar-overlay {
     background: #539642 !important;
+    -webkit-transition: 400ms;
+    transition: 400ms;
 }
 
 .hide{
