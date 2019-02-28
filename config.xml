@@ -136,7 +136,7 @@
         <param name="url" value="https://github.com/EddyVerbruggen/Custom-URL-scheme.git" />
         <variable name="URL_SCHEME" value="pettato.com" />
     </feature>  -->
-    <plugin name="cordova-plugin-deeplinks" spec="1.2.1" />
+    <plugin name="cordova-plugin-deeplinks" spec="1.1.0" />
     <universal-links>
         <host name="example.com" scheme="https" event="handleOnLoadEvents">
             <path url="*" />
