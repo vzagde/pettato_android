@@ -1555,7 +1555,7 @@ function loadFeedsDetails() {
 
             $.each(res.comments_response, function(index, value){
                 comments += '<div class="message message-with-avatar message-received"> '+
-                                '<div class="message-name">'+value.first_name+'</div>'+
+                                '<div class="message-name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>'+
                                 '<div class="message-text-new">'+decodeURI(value.comment)+'</div>'+
                             '</div>';
             })
