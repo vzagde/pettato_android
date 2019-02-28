@@ -3400,7 +3400,7 @@ function loadChatsList() {
                             '</div>'+
                             '<div class="swipeout-actions-right">'+
                                 '<a href="#" data-messageid="'+value.id+'" class="action1 change_message_read_status">Mark Read</a>'+
-                                '<a href="#" data-profileaccid="'+value.user_id+'" class="action1 delete_message">Delete</a>'+
+                                '<a href="#" data-profileaccid="'+value.user_id+'" onclick="deleteMessages('+value.user_id+')" class="action1 delete_message">Delete</a>'+
                             '</div>'+
                         '</li>';
             })
@@ -3433,10 +3433,9 @@ function loadChatsList() {
                 })
             })
 
-            $(".delete_message").click(function(e){
-                e.preventDefault();
-
+            function deleteMessages(user_id) {
                 myApp.confirm('would you like to delete all the messages?', function() {
+                    myApp.showIndicator();
                     $.ajax({
                         url: base_url+'delete_chats',
                         type: 'POST',
@@ -3446,16 +3445,18 @@ function loadChatsList() {
                             profile_acc_id: $(this).data('profileaccid'),
                         }
                     }).done(function(res){
+                        myApp.hideIndicator();
                         if (res.status == 'Success') {
                             goto_page('feeds.html');
                         } else {
                             myApp.alert('Some error occured while updating the status!');
                         }
                     }).error(function(res){
+                        myApp.hideIndicator();
                         myApp.alert('Some error occured while updating the status!');
                     })
                 });
-            })
+            }
 
             myApp.hideIndicator();
         } else {
