@@ -9,10 +9,10 @@ function onDeviceReady() {
 
     // triggerOpenURL();
 
-    universalLinks.subscribe('handleOnLoadEvents', function (eventData) {
-        console.log(eventData.url);
-        console.log('Did launch application from the link: ' + eventData.url);
-    });
+    // universalLinks.subscribe('handleOnLoadEvents', function (eventData) {
+    //     console.log(eventData.url);
+    //     console.log('Did launch application from the link: ' + eventData.url);
+    // });
 
     // function handleOnLoadEvents(url) {
     //     console.log("received url: " + url);
@@ -3547,6 +3547,8 @@ function loadChatMessages(user_id) {
         if (res.status == 'Success') {
             var profile_receiver_id = '';
 
+            var receiver_profile = image_url+res.users_details.profile_image;
+
             $.each(res.response, function(index, value) {
                 profile_receiver_id = value.sender_id;
 
@@ -3629,7 +3631,6 @@ function loadChatMessages(user_id) {
             $("#messages_box_dyn").html(html);
 
             var receiver_name = '<span onclick="goto_user_page('+profile_receiver_id+')">'+res.users_details.first_name+'</span>';
-            var receiver_profile = image_url+res.users_details.profile_image;
 
             $(".chat_reviever_img").attr('src', receiver_profile);
             $(".chat_reviever_name").html(receiver_name);
