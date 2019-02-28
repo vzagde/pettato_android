@@ -9,9 +9,14 @@ function onDeviceReady() {
 
     // triggerOpenURL();
 
-    function handleOpenURL(url) {
-        console.log("received url: " + url);
-    }
+    universalLinks.subscribe('handleOnLoadEvents', function (eventData) {
+        console.log(eventData.url);
+        console.log('Did launch application from the link: ' + eventData.url);
+    });
+
+    // function handleOnLoadEvents(url) {
+    //     console.log("received url: " + url);
+    // }
 
     var push = PushNotification.init({
         "android": {
