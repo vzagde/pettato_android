@@ -120,14 +120,10 @@
     <platform name="android">
         <config-file target="AndroidManifest.xml" parent="/manifest">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter android:label="@string/app_name">
+                <data android:scheme="pettato.com" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:host="pettato.com" android:scheme="http" />
             </intent-filter>
         </config-file>
     </platform>
@@ -138,7 +134,7 @@
     </feature>  -->
     <plugin name="cordova-plugin-deeplinks" spec="1.1.0" />
     <universal-links>
-        <host name="pettato.com" scheme="http" event="handleOnLoadEvents">
+        <host name="pettatoapp://pettato.com" scheme="http" event="handleOnLoadEvents">
             <path url="*" />
         </host>
     </universal-links>
