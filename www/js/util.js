@@ -7,12 +7,18 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
     myApp.showIndicator();
 
-    // triggerOpenURL();
 
-    universalLinks.subscribe('handleOnLoadEvents', function (eventData) {
-        console.log(eventData.url);
-        console.log('Did launch application from the link: ' + eventData.url);
+    window.plugins.intent.getCordovaIntent(function (Intent) {
+        console.log(Intent);
+    }, function () {
+        console.log('Error');
     });
+
+
+   // universalLinks.subscribe('handleOnLoadEvents', function (eventData) {
+    //     console.log(eventData.url);
+    //     console.log('Did launch application from the link: ' + eventData.url);
+    // });
 
     // function handleOnLoadEvents(url) {
     //     console.log("received url: " + url);
@@ -75,10 +81,10 @@ function onDeviceReady() {
         }
     });
 
-    // window.BackgroundService.start();
-        // function(fn) { dosometing(), fn && fn() },
-        // function() { console.log('err') }
-    // )
+    window.BackgroundService.start(
+        function(fn) { console.log(fn) },
+        function() { console.log('err') }
+    );
 
     // cordova.plugins.backgroundMode.enable();
 
