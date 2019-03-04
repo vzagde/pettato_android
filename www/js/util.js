@@ -91,7 +91,6 @@ function onDeviceReady() {
             }
         }).done(function(res){
             if (res.status == 'Success') {
-                console.log(res.response);
                 if (res.response.chat_count < 1) {
                     $(".dynamic_messagecount").html('');
                 } else {
