@@ -8,11 +8,11 @@ function onDeviceReady() {
     myApp.showIndicator();
 
 
-    window.plugins.intent.getCordovaIntent(function (Intent) {
-        console.log(Intent);
-    }, function () {
-        console.log('Error');
-    });
+    // window.plugins.intent.getCordovaIntent(function (Intent) {
+    //     console.log(Intent);
+    // }, function () {
+    //     console.log('Error');
+    // });
 
 
    // universalLinks.subscribe('handleOnLoadEvents', function (eventData) {
@@ -81,10 +81,40 @@ function onDeviceReady() {
         }
     });
 
-    window.BackgroundService.start(
-        function(fn) { console.log(fn) },
-        function() { console.log('err') }
-    );
+    setInterval(function(){
+        $.ajax({
+            url: base_url + 'get_counts',
+            type: 'POST',
+            crossDomain: true,
+            data: {
+                user_id: token.id,
+            }
+        }).done(function(res){
+            if (res.status == 'Success') {
+                console.log(res.response);
+                if (res.response.chat_count < 1) {
+                    $(".dynamic_messagecount").html('');
+                } else {
+                    $(".dynamic_messagecount").html(res.response.chat_count);
+                }
+
+                if (res.response.notification_count < 1) {
+                    $(".dynamic_notificationcount").html('');
+                } else {
+                    $(".dynamic_notificationcount").html(res.response.notification_count);
+                }
+
+            } else {
+                $(".dynamic_messagecount").html('');
+            }
+        }).error(function(res){
+        })
+    }, 1000);
+
+    // window.BackgroundService.start(
+    //     function(fn) { console.log(fn) },
+    //     function() { console.log('err') }
+    // );
 
     // cordova.plugins.backgroundMode.enable();
 
@@ -1189,8 +1219,11 @@ function loadFeeds() {
                         '</div>';
             });
 
-
             $("#feeds-container").append(html);
+
+            $.each($(".feedImg"), function(){
+                $(this).attr('src', $(this).data('src'));
+            })
 
             $(".feedImg").lazy();
 
