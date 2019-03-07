@@ -8,6 +8,7 @@ function onDeviceReady() {
     myApp.showIndicator();
 
     myApp.alert(StatusBar);
+    StatusBar.backgroundColorByName('green');
 
     // window.plugins.intent.getCordovaIntent(function (Intent) {
     //     console.log(Intent);
