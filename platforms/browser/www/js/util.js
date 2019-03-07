@@ -4624,14 +4624,40 @@ function loadNotificationsList() {
                 var time = new Date(value.created_date);
                 var timechng = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
 
-                html += '<li class="swipeout item-content read_active">'+
+                var onClickHtml = '';
+
+                if (value.notification_for == 'Profile') {
+                    if (value.related_user_id == token.id) {
+                        onClickHtml = 'goto_profile()';
+                    } else {
+                        onClickHtml = 'goto_user_page('+value.related_user_id+')';
+                    }
+                } else if (value.notification_for == 'Feed') {
+                    onClickHtml = 'load_feed_page('+value.feed_id+')';
+                } else if (value.notification_for == 'Become Parent') {
+                    onClickHtml = 'goto_becomeParentDetails('+value.feed_id+')';
+                } else if (value.notification_for == 'Find Parent') {
+                    onClickHtml = 'goto_chat_inner('+value.user_id+')';
+                } else if (value.notification_for == 'Business Profile') {
+                    onClickHtml = 'goto_business_page('+value.feed_id+')';
+                } else if (value.notification_for == 'Pet Profile') {
+                    onClickHtml = 'goto_profile_shopper_pet('+value.feed_id+')';
+                } else if (value.notification_for == 'Lost and Found') {
+                    onClickHtml = 'goto_chat_inner('+value.user_id+')';
+                } else if (value.notification_for == 'Mating') {
+                    onClickHtml = 'goto_chat_inner('+value.user_id+')';
+                } else if (value.notification_for == 'Adoption') {
+                    onClickHtml = 'goto_chat_inner('+value.user_id+')';
+                }
+
+                html += '<li class="swipeout item-content read_active" onclick="'+onClickHtml+'">'+
                             '<div class="swipeout-content item-content">'+
                                 '<div class="item-media pad0">'+
                                     '<img src="'+image_url+value.profile_image+'" width="75" height="75">'+
                                 '</div>'+
                                 '<div class="item-inner">'+
                                     '<div class="item-title-row">'+
-                                        '<div class="item-title" onClick="goto_user_page('+value.user_id+');">'+value.first_name+'<span class="time-text">'+timechng+'</span>'+
+                                        '<div class="item-title"><span onClick="goto_user_page('+value.user_id+');">'+value.first_name+'</span><span class="time-text">'+timechng+'</span>'+
                                         '</div>'+
                                     '</div>'+
                                     '<div class="item-subtitle">'+value.notification_text+'</div>'+
