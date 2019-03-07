@@ -24,6 +24,11 @@
     -webkit-transition: 400ms;
     transition: 400ms;
 }
+ 
+/* Change Status bar background when panel opened */
+body.with-panel-left-cover .statusbar-overlay {
+    background: #222;
+}
 
 .hide{
     display:none;
