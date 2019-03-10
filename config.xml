@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.huzaifrangila.pettato" version="2.24.97" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" versionCode="10">
+<widget id="com.huzaifrangila.pettato" version="2.25.97" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" versionCode="10">
     <name>Pettato</name>
     <description>
         Social and Business Connectivity platform for pet owners and Pet Businesses
@@ -15,8 +15,9 @@
     <preference name="android-targetSdkVersion" value="26"/>
     <preference name="orientation" value="portrait" />
     <preference name="StatusBarOverlaysWebView" value="true" />
-    <preference name="StatusBarBackgroundColor" value="#000000" />
+    <preference name="StatusBarBackgroundColor" value="#BE1912" />
     <preference name="AndroidLaunchMode" value="singleInstance" />
+    <preference name="StatusBarStyle" value="lightcontent" />
     <icon src="app_icon.png" />
     <platform name="android">
         <icon density="hdpi" src="www/res/icon/android/drawable-hdpi-icon.png" />

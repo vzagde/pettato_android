@@ -6,7 +6,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
     myApp.showIndicator();
-    StatusBar.backgroundColorByName('red');
+    StatusBar.backgroundColorByHexString('#3399FF');
 
     // window.plugins.intent.getCordovaIntent(function (Intent) {
     //     console.log(Intent);
