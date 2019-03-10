@@ -6,7 +6,9 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
     myApp.showIndicator();
+    StatusBar.overlaysWebView(false);
     StatusBar.backgroundColorByHexString('#3399FF');
+    StatusBar.styleLightContent();
 
     // window.plugins.intent.getCordovaIntent(function (Intent) {
     //     console.log(Intent);
@@ -1784,6 +1786,7 @@ function loadUsersSubPageContent(user_id) {
             user_id: user_id, token_profile_id: token.id,
         },
     }).done(function(res) {
+        myApp.alert(res.status);
         if (res.status == 'Success') {
             $('.cover_image_btn').show();
 
@@ -1798,6 +1801,8 @@ function loadUsersSubPageContent(user_id) {
 
             $("#pets_and_business_profiles_list").html('');
             var profiles_list = '';
+
+            myApp.alert('Profile Data Loaded');
 
             $.each(res.response.pet_list, function(index, value){
                 if (value.user_type == 'Pet') {
@@ -1822,6 +1827,8 @@ function loadUsersSubPageContent(user_id) {
 
 
             $("#pets_and_business_profiles_list").html(profiles_list);
+
+            myApp.alert('Profiles loaded');
 
             var feeds_html = '';
             var save_feeds_html = '';
@@ -1884,16 +1891,6 @@ function loadUsersSubPageContent(user_id) {
                                     '</div>';
                 }
 
-                // if (value.feed_type == 'Find Parent') {
-                //     save_feeds_html += '<div class="card facebook-card own_feed">'+
-                //                             '<div class="card-content">'+
-                //                                 '<div class="card-content-inner">'+
-                //                                     '<p>'+value.feed_desc+'</p>'+
-                //                                 '</div>'+
-                //                             '</div>'+
-                //                         '</div>';
-                // }
-
             })
 
             save_feeds_html += '<span style="min-height: 40px; width: 100%;" class="card c_ard ks-facebook-card own_feed"></span>';
@@ -1911,6 +1908,8 @@ function loadUsersSubPageContent(user_id) {
             } else {
                 $(".profile-save-feed-container").html('There are no feeds created by this account!');
             }
+
+            myApp.alert('Bottom Html Loaded');
 
             if (token.id !== res.response.user_details.id) {
                 if (res.response.follower_status == 'Unfollow') {
