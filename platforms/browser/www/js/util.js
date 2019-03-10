@@ -1786,7 +1786,7 @@ function loadUsersSubPageContent(user_id) {
             user_id: user_id, token_profile_id: token.id,
         },
     }).done(function(res) {
-        myApp.alert(res.status);
+        console.log(res.status);
         if (res.status == 'Success') {
             $('.cover_image_btn').show();
 
@@ -1802,7 +1802,7 @@ function loadUsersSubPageContent(user_id) {
             $("#pets_and_business_profiles_list").html('');
             var profiles_list = '';
 
-            myApp.alert('Profile Data Loaded');
+            console.log('Profile Data Loaded');
 
             $.each(res.response.pet_list, function(index, value){
                 if (value.user_type == 'Pet') {
@@ -1828,7 +1828,7 @@ function loadUsersSubPageContent(user_id) {
 
             $("#pets_and_business_profiles_list").html(profiles_list);
 
-            myApp.alert('Profiles loaded');
+            console.log('Profiles loaded');
 
             var feeds_html = '';
             var save_feeds_html = '';
@@ -1909,7 +1909,7 @@ function loadUsersSubPageContent(user_id) {
                 $(".profile-save-feed-container").html('There are no feeds created by this account!');
             }
 
-            myApp.alert('Bottom Html Loaded');
+            console.log('Bottom Html Loaded');
 
             if (token.id !== res.response.user_details.id) {
                 if (res.response.follower_status == 'Unfollow') {
@@ -1920,8 +1920,12 @@ function loadUsersSubPageContent(user_id) {
 
                 $(".chat").show();
             }
+
+            myApp.hideIndicator();
+        } else {
+            myApp.hideIndicator();
+            myApp.alert("Unable to load data, Please try again later!");
         }
-        myApp.hideIndicator();
     }).fail(function(err) {
         myApp.hideIndicator();
         myApp.alert('Somthing went wrong, Please try again later!');
