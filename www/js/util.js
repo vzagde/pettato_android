@@ -26,62 +26,62 @@ function onDeviceReady() {
     //     console.log("received url: " + url);
     // }
 
-    var push = PushNotification.init({
-        "android": {
-            "senderID": "836033005549"
-        },
-        "browser": {},
-        "ios": {
-            "sound": true,
-            "vibration": true,
-            "badge": true
-        },
-        "windows": {}
-    });
+    // var push = PushNotification.init({
+    //     "android": {
+    //         "senderID": "836033005549"
+    //     },
+    //     "browser": {},
+    //     "ios": {
+    //         "sound": true,
+    //         "vibration": true,
+    //         "badge": true
+    //     },
+    //     "windows": {}
+    // });
 
-    push.on('registration', function(data) {
-        oldPushId = Lockr.get('push_key');
-        if (oldPushId !== data.registrationId) {
-            Lockr.set('push_key', data.registrationId);
-            // Save new registration ID
-            // localStorage.setItem('registrationId', data.registrationId);
-            // Post registrationId to your app server as the value has changed
-        }
-    });
+    // push.on('registration', function(data) {
+    //     oldPushId = Lockr.get('push_key');
+    //     if (oldPushId !== data.registrationId) {
+    //         Lockr.set('push_key', data.registrationId);
+    //         // Save new registration ID
+    //         // localStorage.setItem('registrationId', data.registrationId);
+    //         // Post registrationId to your app server as the value has changed
+    //     }
+    // });
 
-    push.on('error', function(e) {
-        console.log(e);
-        // myApp.alert("push error = " + e.message);
-    });
+    // push.on('error', function(e) {
+    //     console.log(e);
+    //     // myApp.alert("push error = " + e.message);
+    // });
 
-    push.on('notification', function(data) {
-        console.log(data);
-        if (!data.additionalData.foreground) {
-            if (data.additionalData.notification_for == 'Profile') {
-                if (data.additionalData.related_user_id == token.id) {
-                    goto_profile();
-                } else {
-                    goto_user_page(data.additionalData.feed_id);
-                }
-            } else if (data.additionalData.notification_for == 'Feed') {
-                load_feed_page(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Become Parent') {
-                goto_becomeParentDetails(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Find Parent') {
-                goto_chat_inner(data.additionalData.user_id);
-            } else if (data.additionalData.notification_for == 'Business Profile') {
-                goto_business_page(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Pet Profile') {
-                goto_profile_shopper_pet(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Lost and Found') {
-                goto_chat_inner(data.additionalData.user_id);
-            } else if (data.additionalData.notification_for == 'Mating') {
-                goto_chat_inner(data.additionalData.user_id);
-            } else if (data.additionalData.notification_for == 'Adoption') {
-                goto_chat_inner(data.additionalData.user_id);
-            }
-        }
-    });
+    // push.on('notification', function(data) {
+    //     console.log(data);
+    //     if (!data.additionalData.foreground) {
+    //         if (data.additionalData.notification_for == 'Profile') {
+    //             if (data.additionalData.related_user_id == token.id) {
+    //                 goto_profile();
+    //             } else {
+    //                 goto_user_page(data.additionalData.feed_id);
+    //             }
+    //         } else if (data.additionalData.notification_for == 'Feed') {
+    //             load_feed_page(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Become Parent') {
+    //             goto_becomeParentDetails(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Find Parent') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         } else if (data.additionalData.notification_for == 'Business Profile') {
+    //             goto_business_page(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Pet Profile') {
+    //             goto_profile_shopper_pet(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Lost and Found') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         } else if (data.additionalData.notification_for == 'Mating') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         } else if (data.additionalData.notification_for == 'Adoption') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         }
+    //     }
+    // });
 
     setInterval(function(){
         $.ajax({
@@ -1426,10 +1426,7 @@ function sharePetProfile() {
                         appPackageName: 'com.huzaifrangila.pettato'
                     };
 
-                    console.log(options);
-
                     var onSuccess = function(result) {
-                        console.log(result);
                         // console.log("Share completed? " + result.completed);
                         // console.log("Shared to app: " + result.app);
                     };
@@ -1786,7 +1783,7 @@ function loadUsersSubPageContent(user_id) {
             user_id: user_id, token_profile_id: token.id,
         },
     }).done(function(res) {
-        console.log(res.status);
+        // console.log(res.status);
         if (res.status == 'Success') {
             $('.cover_image_btn').show();
 
@@ -1802,7 +1799,7 @@ function loadUsersSubPageContent(user_id) {
             $("#pets_and_business_profiles_list").html('');
             var profiles_list = '';
 
-            console.log('Profile Data Loaded');
+            // console.log('Profile Data Loaded');
 
             $.each(res.response.pet_list, function(index, value){
                 if (value.user_type == 'Pet') {
@@ -1828,7 +1825,7 @@ function loadUsersSubPageContent(user_id) {
 
             $("#pets_and_business_profiles_list").html(profiles_list);
 
-            console.log('Profiles loaded');
+            // console.log('Profiles loaded');
 
             var feeds_html = '';
             var save_feeds_html = '';
@@ -1909,7 +1906,7 @@ function loadUsersSubPageContent(user_id) {
                 $(".profile-save-feed-container").html('There are no feeds created by this account!');
             }
 
-            console.log('Bottom Html Loaded');
+            // console.log('Bottom Html Loaded');
 
             if (token.id !== res.response.user_details.id) {
                 if (res.response.follower_status == 'Unfollow') {
