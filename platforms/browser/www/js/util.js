@@ -2234,7 +2234,7 @@ function loadBusinessPageContent(user_id) {
             $('.cover_image_btn').show();
 
             $('.business_followers').text(res.followers);
-            $('.business_followings').text(res.followings);
+            // $('.business_followings').text(res.followings);
 
             $('.businessfollowersfollowingaccid').attr('data-businessfollowersfollowingaccid', res.response.user_details.id);
 
@@ -2394,7 +2394,7 @@ function loadBusinessPageContentSub(user_id) {
             $('.cover_image_btn').show();
 
             $('.business_sub_followers').text(res.followers);
-            $('.business_sub_followings').text(res.followings);
+            // $('.business_sub_followings').text(res.followings);
 
             $('.businessfollowersfollowingaccid').attr('data-businessfollowersfollowingaccid', res.response.user_details.id);
 
