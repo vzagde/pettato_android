@@ -1196,7 +1196,7 @@ function loadFeeds() {
                         '<div class="ks-facebook-date pro_tag">'+value.feed_comment_count+' Comments '+value.likes_count+' Likes</div>'+
                         '</a>'+
                         '<a class="card-content" onclick="load_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
-                        '<img data-src="'+share_image_link+'" width="100%" class="feedImg lazy lazy-fadeIn lazy-fadein" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEXCwsK592mkAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==">'+
+                        '<img data-src="'+share_image_link+'" width="100%" class="feedImg lazy lazy-fadeIn lazy-fadein" src="img/lazyload.jpg">'+
                         // '<img data-src="'+share_image_link+'" width="100%" class="lazy lazy-fadeIn">'+
                         '</a>'+
                         '<div class="card-footer no-border like_share">'+
@@ -1222,11 +1222,7 @@ function loadFeeds() {
 
             $("#feeds-container").append(html);
 
-            $.each($(".feedImg"), function(){
-                $(this).attr('src', $(this).data('src'));
-            })
-
-            $(".feedImg").lazy();
+            // $('.feedImg').trigger('lazy');
 
             $(".add_clk").click(function(e) {
                 e.preventDefault();
@@ -1258,6 +1254,12 @@ function loadFeeds() {
             // $(".feedImg").each(function(){
             //     $(this).attr('src', $(this).data('src'));
             // })
+
+            $.each($(".feedImg"), function(){
+                $(this).attr('src', $(this).data('src'));
+            })
+
+            $(".feedImg").lazy();
 
             myApp.hideIndicator();
         } else {
