@@ -184,7 +184,7 @@ function onDeviceReady() {
         myApp.hideIndicator();
         image_from_device = '';
         if (page.name == "feeds" || page.name == "index") {
-            myApp.confirm('would you like to exit app.', function() {
+            myApp.confirm('Are you sure you want to exit the app?', function() {
                 navigator.app.clearHistory();
                 navigator.app.exitApp();
             });
@@ -839,7 +839,7 @@ function register_business() {
         return false;
     }
     if (phone == '') {
-        myApp.alert('Please provide email id.');
+        myApp.alert('Please enter phone number.');
         return false;
     }
     if (!phone.match(phone_regex)) {
@@ -1162,6 +1162,200 @@ function upload_business() {
     });
 }
 
+function loadIssueFeeds() {
+    myApp.showIndicator();
+
+    console.log('Function Actionables');
+
+    var tabs_active = 0;
+
+    $.ajax({
+        url: base_url+'abuses',
+        type: 'POST',
+        data: {
+            user_id: token.id,
+        },
+    }).done(function(res){
+        var html = '';
+        var feed_type = 'Feeds';
+
+        if (res.status == 'Success') {
+            $.each(res.response, function(index, value) {
+                var share_image_link = image_url+value.image;
+                var share_image_title = decodeURI(value.feeds_content).substring(0, 50);
+                html += '<div class="card c_ard ks-facebook-card">'+
+                        '<div class="black_overlay"></div>'+
+                        '<a href="#" class="card-header no-border pro_view">'+
+                        '<div class="ks-facebook-avatar pro_pic">'+
+                        '<img src="'+image_url+value.profile_image+'" width="34" height="34" class="lazy lazy-fadeIn">'+
+                        '</div>';
+                if (value.user_type == 'Business') {
+                    html += '<div class="ks-facebook-name pro_name" onclick="goto_business_page('+value.user_id+')">'+value.first_name+'</div>';
+                } else {
+                    html += '<div class="ks-facebook-name pro_name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>';
+                }
+                html += '<div class="ks-facebook-date pro_tag">'+share_image_title+'</div>'+
+                        '<div class="ks-facebook-date pro_tag">'+value.feed_comment_count+' Comments</div>'+
+                        '</a>'+
+                        '<a class="card-content" onclick="load_abuse_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
+                        '<img data-src="'+share_image_link+'" width="100%" class="feedImg lazy lazy-fadeIn lazy-fadein" src="img/lazyload.jpg">'+
+                        // '<img data-src="'+share_image_link+'" width="100%" class="lazy lazy-fadeIn">'+
+                        '</a>'+
+                        '<div class="card-footer no-border like_share" style="width: 17%">'+
+                        '<a href="javascript:void(0);"><i onclick="issueFeedShareStatusChng('+value.feed_id+')" data-title="'+share_image_title+'" data-image_link="'+share_image_link+'" class="share_feeds_'+value.feed_id+' material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>';
+
+                // if (value.user_type == 'User') {
+                //     html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="goto_chat_inner('+value.user_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>';
+                // } else {
+                //     html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="goto_chat_inner('+value.linked_acc_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>';
+                // }
+                // html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="chngSaveStatus('+value.feed_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren3" style="font-size:20px !important;">save</i></a>'+
+                //         '<a href="javascript:void(0);" class="add_clk" style="z-index: 999"><i class="material-icons white_heart">add_circle</i></a>';
+
+                // if (value.like_status == 1) {
+                //     html += '<a href="javascript:void(0);" data-liked="0" onclick="chngLikeStatus('+value.feed_id+');" class="like_block_chng_active'+value.feed_id+'"><i class="material-icons white_heart white_heart_active">favorite</i></a>';
+                // } else {
+                //     html += '<a href="javascript:void(0);" data-liked="0" onclick="chngLikeStatus('+value.feed_id+');" class="like_block_chng_active'+value.feed_id+'"><i class="material-icons white_heart white_heart_active">favorite_border</i></a>';
+                // }
+
+                html += '</div>'+
+                        '</div>';
+            });
+
+            $("#issues_feeds-container").append(html);
+
+            // $('.feedImg').trigger('lazy');
+
+            $(".add_clk").click(function(e) {
+                e.preventDefault();
+                if (tabs_active == 0) {
+                    tabs_active = 1;
+                    $(".shr_lnk").css('opacity', 0);
+                    $(".shr_lnk").css('top', 0);
+
+                    $(this).prev(".shr_lnk").animate({
+                        top: '-=65%',
+                        opacity: 1,
+                    });
+
+                    $(this).prev(".shr_lnk").prev(".shr_lnk").animate({
+                        top: '-=145%',
+                        opacity: 1,
+                    });
+
+                    $(this).prev(".shr_lnk").prev(".shr_lnk").prev(".shr_lnk").animate({
+                        top: '-=230%',
+                        opacity: 1,
+                    });
+                } else {
+                    tabs_active = 0;
+                    $(".shr_lnk").animate({opacity: 0, top: '0px'});
+                }
+            });
+
+            // $(".feedImg").each(function(){
+            //     $(this).attr('src', $(this).data('src'));
+            // })
+
+            $.each($(".feedImg"), function(){
+                $(this).attr('src', $(this).data('src'));
+            })
+
+            $(".feedImg").lazy();
+
+            myApp.hideIndicator();
+        } else {
+            myApp.hideIndicator();
+        }
+    }).error(function(res){
+        myApp.hideIndicator();
+    })
+}
+
+function add_abuse_feed() {
+    var feed_image = feed_image_upload.trim();
+    var description = encodeURI($('#create_abuse_feed-description').val().trim());
+    var location_id = '1';
+    var post_create_id = 0;
+
+    if (feed_image == '') {
+        myApp.alert('Please upload image.');
+        return false;
+    }
+    if (description == '') {
+        myApp.alert('Please provide description.');
+        return false;
+    }
+    if (!location_id) {
+        myApp.alert('Please select location.');
+        return false;
+    }
+
+    myApp.showIndicator();
+    $.ajax({
+        url: base_url+'get_users_business_acc',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            user_id: token.id,
+        }
+    }).done(function(res){
+        var json_data = [];
+        if (res.status == 'Success') {
+            $.each(res.response, function(index, value){
+                post_create_id = value.id;
+                json_data.push({text: '@'+value.username, onClick: function() { create_abuse_feed(value.id, feed_image, description, location_id); }});
+            })
+
+            myApp.hideIndicator();
+
+            myApp.modal({
+                verticalButtons: true,
+                buttons: json_data
+            })
+        } else {
+            myApp.hideIndicator();
+            myApp.alert("Unable to fetch user's list!");
+        }
+    }).error(function(res){
+        myApp.hideIndicator();
+        myApp.alert("Unable to fetch user's list!");
+    })
+}
+
+function create_abuse_feed(post_create_id, feed_image, description, location_id) {
+    myApp.showIndicator();
+    $.ajax({
+        url: base_url + 'create_abuse_feed',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            user_id: post_create_id,
+            description: description,
+            image: feed_image,
+            location: location_id,
+        },
+    }).done(function(res) {
+        myApp.hideIndicator();
+        if (res.status == 'Success') {
+            $(".CNGDynImg").attr('src', 'img/lazyload.jpg');
+            mainView.router.load({
+                url: 'feeds.html',
+                ignoreCache: true,
+            });
+
+        } else {
+            myApp.alert('Please provide all the details!');
+        }
+    }).fail(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function(){
+    });
+}
+
 function loadFeeds() {
     myApp.showIndicator();
 
@@ -1405,6 +1599,14 @@ function load_feed_page(feed_id) {
     });
 }
 
+function load_abuse_feed_page(feed_id) {
+    feed_details_fetch_id = feed_id;
+    mainView.router.load({
+        url: 'issue_feed.html',
+        ignoreCache: true,
+    });
+}
+
 function sharePetProfile() {
     var title = $(".share_profileButtonhide").data('title');
     var share_image_link = $(".share_profileButtonhide").data('image_link');
@@ -1546,6 +1748,50 @@ function feedShareStatusChng(id) {
     })
 }
 
+function issueFeedShareStatusChng(id) {
+    var title, share_feed_id, share_feed_type, share_image_link = '';
+    if (id == 0) {
+        title = $(".feedDetailsShare").data('title');
+        share_image_link = $(".feedDetailsShare").data('image_link');
+        share_feed_id = $(".feedDetailsShare").data('feed_id');
+    } else {
+        title = $(".share_feeds_"+id).data('title')+'...';
+        share_image_link = $(".share_feeds_"+id).data('image_link');
+        share_feed_id = id;
+    }
+
+    var share_link = 'http://pettato.com';
+    share_feed_type = 'Abuse Feed';
+
+    myApp.modal({
+        title: title,
+        text: '<img src="'+share_image_link+'" width="100%;">',
+        verticalButtons: true,
+        buttons: [
+            {
+                text: 'Share on Social Media',
+                onClick: function() {
+                    // window.plugins.socialsharing.share(title, title, share_image_link, '');
+                    window.plugins.socialsharing.share(title, title, share_image_link, 'pettatoapp://pettato', 'Pettato', 'com.huzaifrangila.pettato');
+                    // window.plugins.socialsharing.share(title, title, share_image_link, '<a href="pettato://somepath?foo=bar">View More</a>', 'Pettato', 'pettato://');
+                }
+            },
+            {
+                text: 'Share on Pettato',
+                onClick: function() {
+                    share_with_freinds(share_image_link, title, share_feed_id, share_feed_type);
+                }
+            },
+            {
+                text: 'Cancel',
+                onClick: function() {
+                    myApp.closeModal();
+                }
+            },
+        ]
+    })
+}
+
 function share_with_freinds(share_image_link, title, share_feed_id, share_feed_type) {
     sharing_image = share_image_link;
     sharing_content = title;
@@ -1561,6 +1807,69 @@ function share_with_freinds(share_image_link, title, share_feed_id, share_feed_t
 function feedSaveStatusChng() {
     var feed_id = $('.feedDetailsSave').data('feed_id');
     chngSaveStatus(feed_id);
+}
+
+function loadIssueFeedsDetails() {
+    $(".feed_image").attr("src", image_url+'cover_pic.jpg');
+    $(".inner_pro_pic").attr("src", image_url+'profile_dummy.jpg');
+    $(".feed_creator").html('');
+    $(".feed_comment_like").html('');
+    $(".feed_desc").html('');
+    $(".feed_comments_container").html('');
+
+    $.ajax({
+        url: base_url+'get_abuse_data',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            feed_id: feed_details_fetch_id,
+            user_id: token.id,
+        },
+    }).done(function(res) {
+        if (res.status == 'Success') {
+            $(".feed_image").attr("src", image_url+res.response.image);
+            $(".inner_pro_pic").attr("src", image_url+res.response.profile_image);
+
+            if (res.response.user_type == 'Business') {
+                $(".feed_creator").html('<span onclick="goto_business_page('+res.response.user_id+')">'+res.response.first_name+'</span>');
+            } else {
+                $(".feed_creator").html('<span onclick="goto_user_page('+res.response.user_id+')">'+res.response.first_name+'</span>');
+            }
+
+            $(".feed_comment_like").html(res.feed_comment_count+' Comments');
+            $(".feed_desc").html(decodeURI(res.response.feeds_content));
+
+            var comments = '';
+
+            $.each(res.comments_response, function(index, value){
+                comments += '<div class="message message-with-avatar message-received"> '+
+                                '<div class="message-name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>'+
+                                '<div class="message-text-new">'+decodeURI(value.comment)+'</div>'+
+                            '</div>';
+            })
+
+            $("#feedDetailsMessagesContainer").html(comments);
+
+            $(".feedDetailsLike").attr('data-feed_id', res.response.feed_id);
+            $(".feedDetailsShare").attr('data-feed_id', res.response.feed_id);
+            $(".feedDetailsShare").attr('data-title', decodeURI(res.response.feeds_content).substring(0, 50));
+            $(".feedDetailsShare").attr('data-image_link', image_url+res.response.image);
+            $(".feedDetailsSave").attr('data-feed_id', res.response.feed_id);
+
+            if (res.like_save_response.like_status == 1) {
+                $(".feedDetailsLike").html('<i class="material-icons white_heart white_heart_active">favorite</i>');
+            } else {
+                $(".feedDetailsLike").html('<i class="material-icons white_heart white_heart_active">favorite_border</i>');
+            }
+        } else {
+            myApp.alert('Please provide all the details!');
+        }
+    }).fail(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function(){
+    });
 }
 
 function loadFeedsDetails() {
@@ -1625,6 +1934,40 @@ function loadFeedsDetails() {
         myApp.alert('Somthing went wrong, Please try again later!');
     }).always(function(){
     });
+}
+
+function add_comment_issue_feed() {
+    if (!$("#feed_comment").val()) {
+        myApp.alert("Please enter the comment!");
+        return false;
+    }
+
+    $.ajax({
+        url: base_url+'add_comment_abuse',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            user_id: token.id,
+            feed_id: $(".feedDetailsLike").data('feed_id'),
+            comment: encodeURI($("#feed_comment").val()),
+        }
+    }).done(function(res){
+        if (res.status == 'Success') {
+            var comments = '<div class="message message-with-avatar message-received"> '+
+                            '<div class="message-name">'+token.first_name+'</div>'+
+                            '<div class="message-text-new">'+$("#feed_comment").val()+'</div>'+
+                        '</div>';
+
+            $("#feedDetailsMessagesContainer").prepend(comments);
+
+            $("#feed_comment").val('');
+        } else {
+            myApp.alert("Unbale to upload comment, Please try again later!");
+        }
+    }).error(function(res){
+        myApp.alert("Unbale to upload comment, Please try again later!");
+    }).always(function(res){
+    })
 }
 
 function add_comment_feed() {
@@ -1820,7 +2163,7 @@ function loadUsersSubPageContent(user_id) {
             if (res.response.user_details.id == token.id) {
                 profiles_list += '<div class="change_width-20 text-center" onclick="goto_before_add_account();">'+
                                     '<img src="img/create-group-button.png" width="60%" style="border-radius: 5px; padding: 5%;">'+
-                                    '<p class="mrg0 color_757575">Add Acount</p>'+
+                                    '<p class="mrg0 color_757575">Add Profile</p>'+
                                 '</div>';
             }
 
@@ -1983,7 +2326,7 @@ function loadUsersPageContent(user_id) {
             if (res.response.user_details.id == token.id) {
                 profiles_list += '<div class="change_width-20 text-center" onclick="goto_before_add_account();">'+
                                     '<img src="img/create-group-button.png" width="60%" style="border-radius: 5px; padding: 5%;">'+
-                                    '<p class="mrg0 color_757575">Add Acount</p>'+
+                                    '<p class="mrg0 color_757575">Add Profile</p>'+
                                 '</div>';
             }
 
@@ -2263,7 +2606,7 @@ function loadBusinessPageContent(user_id) {
             $(".p_categories").html(category_list);
 
             $('.make_unfollow, .make_follow').attr('data-userid', res.response.user_details.id);
-            $('.business_sub_make_chat').attr('data-userid', res.response.user_details.linked_acc_id);
+            $('.business_sub_make_chat').attr('data-userid', res.response.user_details.id);
 
             $(".business_make_call").attr('data-businessnumber', res.response.user_details.phone);
             $(".business_email_to_text").attr('data-businessemail', res.response.user_details.email);
@@ -2410,7 +2753,7 @@ function loadBusinessPageContentSub(user_id) {
             $('.p_name_business_sub').html(append_p_name);
             $('.p_name_business_sub').attr('data-business_id', res.response.user_details.id);
             $('.business_sub_make_unfollow, .business_sub_make_follow').attr('data-userid', res.response.user_details.id);
-            $('.business_sub_make_chat').attr('data-userid', res.response.user_details.linked_acc_id);
+            $('.business_sub_make_chat').attr('data-userid', res.response.user_details.id);
 
             var category_list = '';
 
@@ -3002,6 +3345,11 @@ function loadBecomeParentDetails(account_id) {
             $(".becomeParentDetailsName").html(res.response.pet_name);
             $(".becomeParentDetailsInfo").html('Breed: '+res.response.breed+', '+res.response.pet_type+' Age: '+res.response.age);
             $(".becomeParentDetailsContent").html(decodeURI(res.response.description));
+            if (res.response.interested_status == 1) {
+                $(".DymStatusIntersted").html('<i class="material-icons white_heart_active" data-petid="">favorite</i>&nbsp;&nbsp;Interested');
+            } else {
+                $(".DymStatusIntersted").html('<i class="material-icons" data-petid="">favorite_border</i>&nbsp;&nbsp;Interested');
+            }
         } else {
             $(".becomeParentDetailsImage").attr('src', image_url+'cover_pic.jpg');
             $(".becomeParentDetailsName").html('');
@@ -3422,14 +3770,16 @@ function loadChatsList() {
             var html = '';
 
             $("#dyn_chats_list > ul").html('Loading Chat List...');
+            // $("#dyn_chats_list_business > ul").html('Loading Chat List...');
 
             $.each(res.response.chats_list, function(index, value) {
                 var time = new Date(value.created_date);
+                var receiver_id = value.user_id;
                 var timechng = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
                 if (value.read_status == 1) {
-                    html += '<li class="swipeout item-content messages_from_id_'+value.id+'" onclick="goto_chat_inner('+value.user_id+')">';
+                    html += '<li class="swipeout item-content messages_from_id_'+value.id+'" onclick="goto_chat_inner('+receiver_id+', '+token.id+')">';
                 } else {
-                    html += '<li class="swipeout item-content messages_from_id_'+value.id+' read_active" onclick="goto_chat_inner('+value.user_id+')">';
+                    html += '<li class="swipeout item-content messages_from_id_'+value.id+' read_active" onclick="goto_chat_inner('+receiver_id+', '+token.id+')">';
                 }
                     html += '<div class="swipeout-content item-content">'+
                                 '<div class="item-media pad0">'+
@@ -3437,15 +3787,15 @@ function loadChatsList() {
                                 '</div>'+
                                 '<div class="item-inner">'+
                                     '<div class="item-title-row">'+
-                                        '<div class="item-title">'+value.first_name+'<span class="time-text">'+timechng+'</span>'+
+                                        '<div class="item-title text-left">'+value.first_name+'<span class="time-text">'+timechng+'</span>'+
                                         '</div>'+
                                     '</div>'+
-                                    '<div class="item-subtitle">'+decodeURI(value.messages)+'</div>'+
+                                    '<div class="item-subtitle text-left">'+decodeURI(value.messages)+'</div>'+
                                 '</div>'+
                             '</div>'+
                             '<div class="swipeout-actions-right">'+
                                 '<a href="#" data-messageid="'+value.id+'" class="action1 change_message_read_status">Mark Read</a>'+
-                                '<a href="#" data-profileaccid="'+value.user_id+'" onclick="deleteMessages('+value.user_id+')" class="action1 delete_message">Delete</a>'+
+                                '<a href="#" data-profileaccid="'+receiver_id+'" onclick="deleteMessages('+receiver_id+')" class="action1 delete_message">Delete</a>'+
                             '</div>'+
                         '</li>';
             })
@@ -3454,6 +3804,42 @@ function loadChatsList() {
                 $("#dyn_chats_list > ul").html(html);
             } else {
                 $("#dyn_chats_list > ul").html('You do not have chat list.');
+            }
+
+            var html = '';
+
+            $.each(res.response.chats_list_business, function(index, value) {
+                var time = new Date(value.created_date);
+                var receiver_id = value.user_id;
+                var timechng = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+                if (value.read_status == 1) {
+                    html += '<li class="swipeout item-content messages_from_id_'+value.id+'" onclick="goto_chat_inner('+receiver_id+', '+value.sender_id+')">';
+                } else {
+                    html += '<li class="swipeout item-content messages_from_id_'+value.id+' read_active" onclick="goto_chat_inner('+receiver_id+', '+value.sender_id+')">';
+                }
+                    html += '<div class="swipeout-content item-content">'+
+                                '<div class="item-media pad0">'+
+                                    '<img src="'+image_url+value.profile_image+'" width="75" height="75">'+
+                                '</div>'+
+                                '<div class="item-inner">'+
+                                    '<div class="item-title-row">'+
+                                        '<div class="item-title text-left">'+value.first_name+'<span class="time-text">'+timechng+'</span>'+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<div class="item-subtitle text-left">'+decodeURI(value.messages)+'</div>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="swipeout-actions-right">'+
+                                '<a href="#" data-messageid="'+value.id+'" class="action1 change_message_read_status">Mark Read</a>'+
+                                '<a href="#" data-profileaccid="'+receiver_id+'" onclick="deleteMessages('+receiver_id+')" class="action1 delete_message">Delete</a>'+
+                            '</div>'+
+                        '</li>';
+            })
+
+            if (html) {
+                $("#dyn_chats_list_business > ul").html(html);
+            } else {
+                $("#dyn_chats_list_business > ul").html('You do not have chat list.');
             }
 
             $(".change_message_read_status").click(function(e){
@@ -3516,16 +3902,18 @@ function deleteMessages(user_id) {
     });
 }
 
-function goto_chat_inner(user_id) {
+function goto_chat_inner(user_id, receiver_id) {
     static_account_id = user_id;
+    chat_receiver_id = receiver_id;
     mainView.router.load({
         url: 'chat.html',
         ignoreCache: true,
     });
 }
 
+
 function send_chat() {
-    var user_id = token.id;
+    var user_id = chat_receiver_id;
     var acc_id = $(".chat_reviever_id").html();
     var message = $("#mesage_sent").val();
     if (!message) {
@@ -3545,7 +3933,7 @@ function send_chat() {
                 myApp.hideIndicator();
                 html = '<div class="message message-sent">'+
                             '<div class="message-text">'+decodeURI(message)+'</div>'+
-                            '<div style="background-image:url('+image_url+token.profile_image+')" class="message-avatar"></div>'+
+                            '<div style="background-image:url('+image_url+chat_image_link+')" class="message-avatar"></div>'+
                         '</div>';
                 $("#messages_box_dyn").append(html);
 
@@ -3566,7 +3954,7 @@ function send_chat() {
     }
 }
 
-function loadChatMessages(user_id) {
+function loadChatMessages(user_id, acc_id) {
     myApp.showIndicator();
 
     $(".chat_reviever_id").html(user_id);
@@ -3576,7 +3964,7 @@ function loadChatMessages(user_id) {
         type: 'POST',
         crossDomain: true,
         data: {
-            user_id: token.id,
+            user_id: acc_id,
             acc_id: user_id,
         }
     }).done(function(res){
@@ -3588,9 +3976,18 @@ function loadChatMessages(user_id) {
             var profile_receiver_id = '';
 
             var receiver_profile = image_url+res.users_details.profile_image;
+            var profile_user_type = res.users_details.user_type;
 
             $.each(res.response, function(index, value) {
                 profile_receiver_id = value.sender_id;
+                chat_image_link = value.sender_profile_image;
+                var click_trigger = '';
+
+                if (profile_user_type == 'User') {
+                    click_trigger = 'onclick="goto_user_page('+profile_receiver_id+')"';
+                } else {
+                    click_trigger = 'onclick="goto_business_page('+profile_receiver_id+')"';
+                }
 
                 var additional_content = '';
                 if (value.message_type == 'Adoption') {
@@ -3605,7 +4002,7 @@ function loadChatMessages(user_id) {
                     additional_content = '';
                 }
  
-                if (value.sender_id == token.id) {
+                if (value.sender_id == chat_receiver_id) {
 
                     if (value.image) {
                         html += '<div class="message message-sent">'+
@@ -3622,12 +4019,12 @@ function loadChatMessages(user_id) {
                     if (value.image) {
                         html += '<div class="message message-received">'+
                                     '<div class="message-text"><img src="'+value.image+'" width="100%"">'+decodeURI(value.messages)+' '+additional_content+'</div>'+
-                                    '<div onclick="goto_user_page('+value.sender_id+')" style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
+                                    '<div '+click_trigger+' style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
                                 '</div>';
                     } else {
                         html += '<div class="message message-received">'+
                                     '<div class="message-text">'+decodeURI(value.messages)+' '+additional_content+'</div>'+
-                                    '<div onclick="goto_user_page('+value.sender_id+')" style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
+                                    '<div '+click_trigger+' style="background-image:url('+receiver_profile+')" class="message-avatar"></div>'+
                                 '</div>';
                     }
                 }
@@ -3670,7 +4067,13 @@ function loadChatMessages(user_id) {
 
             $("#messages_box_dyn").html(html);
 
-            var receiver_name = '<span onclick="goto_user_page('+profile_receiver_id+')">'+res.users_details.first_name+'</span>';
+            var receiver_name = '';
+
+            if (profile_user_type == 'User') {
+                receiver_name = '<span onclick="goto_user_page('+profile_receiver_id+')">'+res.users_details.first_name+'</span>';
+            } else {
+                receiver_name = '<span onclick="goto_business_page('+profile_receiver_id+')">'+res.users_details.first_name+'</span>';
+            }
 
             $(".chat_reviever_img").attr('src', receiver_profile);
             $(".chat_reviever_name").html(receiver_name);
@@ -4650,6 +5053,8 @@ function loadNotificationsList() {
                     onClickHtml = 'goto_chat_inner('+value.user_id+')';
                 } else if (value.notification_for == 'Adoption') {
                     onClickHtml = 'goto_chat_inner('+value.user_id+')';
+                } else if (value.notification_for == 'Abuse Feed') {
+                    onClickHtml = 'load_abuse_feed_page('+value.feed_id+')';
                 }
 
                 html += '<li class="swipeout item-content read_active" onclick="'+onClickHtml+'">'+

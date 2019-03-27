@@ -26,6 +26,8 @@ var new_comment_time = null;
 var new_chat_interval = null;
 var chat_time = '';
 var chat_type = '';
+var chat_receiver_id = 0;
+var chat_image_link = '';
 var chat_post_id = '';
 var myChat = null;
 var myChatMessagebar = null;
@@ -340,7 +342,7 @@ myApp.onPageInit('chats', function(page) {
 
 // chats listing page
 myApp.onPageInit('chat', function(page) {
-    loadChatMessages(static_account_id);
+    loadChatMessages(static_account_id, chat_receiver_id);
 
     var chatroom_id = static_account_id;
 
@@ -350,7 +352,7 @@ myApp.onPageInit('chat', function(page) {
             type: 'POST',
             crossDomain: true,
             data: {
-                user_id: token.id,
+                user_id: chat_receiver_id,
                 acc_id: chatroom_id
             }
         }).done(function(res){
@@ -443,4 +445,19 @@ myApp.onPageInit('pet_cemetry', function(page) {
 // Pet Forgot Password
 myApp.onPageInit('forgot_password', function(page) {
     // 
+});
+
+// feeds listing
+myApp.onPageInit('issue_feeds', function(page) {
+    loadIssueFeeds();
+});
+
+// create feed
+myApp.onPageInit('create_issue_feed', function(page) {
+    load_city('#create_abuse_feed-location', function(){});
+});
+
+// feed detail page
+myApp.onPageInit('issue_feed', function(page) {
+    loadIssueFeedsDetails();
 });
