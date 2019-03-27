@@ -14,10 +14,10 @@
     <preference name="android-minSdkVersion" value="15" />
     <preference name="android-targetSdkVersion" value="26"/>
     <preference name="orientation" value="portrait" />
-    <preference name="StatusBarOverlaysWebView" value="true" />
+    <!-- <preference name="StatusBarOverlaysWebView" value="true" />
     <preference name="StatusBarBackgroundColor" value="#BE1912" />
     <preference name="AndroidLaunchMode" value="singleInstance" />
-    <preference name="StatusBarStyle" value="lightcontent" />
+    <preference name="StatusBarStyle" value="lightcontent" /> -->
     <icon src="app_icon.png" />
     <platform name="android">
         <icon density="hdpi" src="www/res/icon/android/drawable-hdpi-icon.png" />

@@ -330,6 +330,7 @@ myApp.onPageInit('profiles', function(page) {
     loadProfilesList(account_id, profile_list_type);
 });
 
+
 // search listing page
 myApp.onPageInit('search', function(page) {
     // loadSearchList();
@@ -460,4 +461,9 @@ myApp.onPageInit('create_issue_feed', function(page) {
 // feed detail page
 myApp.onPageInit('issue_feed', function(page) {
     loadIssueFeedsDetails();
+});
+
+// lost and found listing page
+myApp.onPageInit('business_profile_list', function(page) {
+    loadBusinessProfilesList();
 });

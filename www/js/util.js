@@ -6,9 +6,9 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
     myApp.showIndicator();
-    StatusBar.overlaysWebView(false);
-    StatusBar.backgroundColorByHexString('#3399FF');
-    StatusBar.styleLightContent();
+    // StatusBar.overlaysWebView(false);
+    // StatusBar.backgroundColorByHexString('#3399FF');
+    // StatusBar.styleLightContent();
 
     // window.plugins.intent.getCordovaIntent(function (Intent) {
     //     console.log(Intent);
@@ -26,62 +26,61 @@ function onDeviceReady() {
     //     console.log("received url: " + url);
     // }
 
-    // var push = PushNotification.init({
-    //     "android": {
-    //         "senderID": "836033005549"
-    //     },
-    //     "browser": {},
-    //     "ios": {
-    //         "sound": true,
-    //         "vibration": true,
-    //         "badge": true
-    //     },
-    //     "windows": {}
-    // });
+    var push = PushNotification.init({
+        "android": {
+            "senderID": "836033005549"
+        },
+        "browser": {},
+        "ios": {
+            "sound": true,
+            "vibration": true,
+            "badge": true
+        },
+        "windows": {}
+    });
 
-    // push.on('registration', function(data) {
-    //     oldPushId = Lockr.get('push_key');
-    //     if (oldPushId !== data.registrationId) {
-    //         Lockr.set('push_key', data.registrationId);
-    //         // Save new registration ID
-    //         // localStorage.setItem('registrationId', data.registrationId);
-    //         // Post registrationId to your app server as the value has changed
-    //     }
-    // });
+    push.on('registration', function(data) {
+        oldPushId = Lockr.get('push_key');
+        if (oldPushId !== data.registrationId) {
+            Lockr.set('push_key', data.registrationId);
+            // Save new registration ID
+            // Post registrationId to your app server as the value has changed
+        }
+    });
 
-    // push.on('error', function(e) {
-    //     console.log(e);
-    //     // myApp.alert("push error = " + e.message);
-    // });
+    push.on('error', function(e) {
+        console.log(e);
+        // myApp.alert("push error = " + e.message);
+    });
 
-    // push.on('notification', function(data) {
-    //     console.log(data);
-    //     if (!data.additionalData.foreground) {
-    //         if (data.additionalData.notification_for == 'Profile') {
-    //             if (data.additionalData.related_user_id == token.id) {
-    //                 goto_profile();
-    //             } else {
-    //                 goto_user_page(data.additionalData.feed_id);
-    //             }
-    //         } else if (data.additionalData.notification_for == 'Feed') {
-    //             load_feed_page(data.additionalData.feed_id);
-    //         } else if (data.additionalData.notification_for == 'Become Parent') {
-    //             goto_becomeParentDetails(data.additionalData.feed_id);
-    //         } else if (data.additionalData.notification_for == 'Find Parent') {
-    //             goto_chat_inner(data.additionalData.user_id);
-    //         } else if (data.additionalData.notification_for == 'Business Profile') {
-    //             goto_business_page(data.additionalData.feed_id);
-    //         } else if (data.additionalData.notification_for == 'Pet Profile') {
-    //             goto_profile_shopper_pet(data.additionalData.feed_id);
-    //         } else if (data.additionalData.notification_for == 'Lost and Found') {
-    //             goto_chat_inner(data.additionalData.user_id);
-    //         } else if (data.additionalData.notification_for == 'Mating') {
-    //             goto_chat_inner(data.additionalData.user_id);
-    //         } else if (data.additionalData.notification_for == 'Adoption') {
-    //             goto_chat_inner(data.additionalData.user_id);
-    //         }
-    //     }
-    // });
+    push.on('notification', function(data) {
+        console.log(data);
+        if (!data.additionalData.foreground) {
+            if (data.additionalData.notification_for == 'Profile') {
+                if (data.additionalData.related_user_id == token.id) {
+                    goto_profile();
+                } else {
+                    goto_user_page(data.additionalData.feed_id);
+                }
+            } else if (data.additionalData.notification_for == 'Feed') {
+                load_feed_page(data.additionalData.feed_id);
+            } else if (data.additionalData.notification_for == 'Become Parent') {
+                goto_becomeParentDetails(data.additionalData.feed_id);
+            } else if (data.additionalData.notification_for == 'Find Parent') {
+                goto_chat_inner(data.additionalData.user_id);
+            } else if (data.additionalData.notification_for == 'Business Profile') {
+                goto_business_page(data.additionalData.feed_id);
+            } else if (data.additionalData.notification_for == 'Pet Profile') {
+                goto_profile_shopper_pet(data.additionalData.feed_id);
+            } else if (data.additionalData.notification_for == 'Lost and Found') {
+                goto_chat_inner(data.additionalData.user_id);
+            } else if (data.additionalData.notification_for == 'Mating') {
+                goto_chat_inner(data.additionalData.user_id);
+            } else if (data.additionalData.notification_for == 'Adoption') {
+                goto_chat_inner(data.additionalData.user_id);
+            }
+        }
+    });
 
     setInterval(function(){
         $.ajax({
@@ -3550,6 +3549,73 @@ function goto_profile_list_follow(type, user_cat) {
     mainView.router.load({
         url: 'profiles.html',
         ignoreCache: true,
+    });
+}
+
+function loadBusinessProfilesList() {
+    myApp.showIndicator();
+
+    $.ajax({
+        url: base_url+'list_business_profiles',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            user_id: account_id,
+            account_type: profile_list_type,
+        }
+    }).done(function(res){
+        if (res.status == 'Success') {
+            var html = '';
+
+            $.each(res.response, function(index, value){
+
+                var onclick_html = '';
+
+                if (value.user_type == 'Pet') {
+                    onclick_html = 'onclick="goto_profile_shopper_pet('+value.id+');"';
+                } else if (value.user_type == 'Business') {
+                    onclick_html = 'onclick="goto_business_page('+value.id+')"';
+                } else {
+                    onclick_html = 'onclick="goto_user_page('+value.id+')"';
+                }
+
+                if (value.id == token.id || value.linked_acc_id == token.id) {
+                    html += '<li class="item-content read_active">';
+                } else {
+                    html += '<li class="item-content read_active">';
+                }
+
+                    html += '<div class="item-content">'+
+                                '<div class="item-media pad0">'+
+                                    '<img src="'+image_url+value.profile_image+'" width="75" height="75">'+
+                                '</div>'+
+                                '<div class="item-inner">'+
+                                    '<div class="item-title-row">'+
+                                        '<div class="item-title" '+onclick_html+'>'+value.first_name+'</div>'+
+                                    '</div>'+
+                                    '<div class="item-subtitle">'+value.username+'</div>'+
+                                '</div>'+
+                            '</div>';
+                html += '</li>';
+
+
+
+            })
+
+            $("#list_profiles_dynamic").html(html);
+
+            myApp.hideIndicator();
+
+        } else {
+            myApp.hideIndicator();
+            var html = '<p style="text-align: center;">'+res.api_msg+'</p>';
+            $("#list_profiles_dynamic").html(html);
+        }
+    }).error(function(err){
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function(){
     });
 }
 
