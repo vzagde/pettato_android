@@ -3595,7 +3595,7 @@ function loadBusinessProfilesList() {
 
 
                 html += '<div class="item">'+
-                            '<a class="card-content color_8ac640" onclick="goto_becomeParentDetails(25);">'+
+                            '<a class="card-content color_8ac640" '+onclick_html+'>'+
                                 '<div class="profile_photo"><img src="'+image_url+value.profile_image+'" width="100%"></div>'+
                                 '<div class="content_blocker">'+
                                     '<h3 class="mrg0" '+onclick_html+'>'+value.first_name+'</h3>'+
