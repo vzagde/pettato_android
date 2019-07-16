@@ -58,7 +58,7 @@ var days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 var months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 var myApp = new Framework7({
-    swipePanel: 'left',
+    // swipePanel: 'left',
     material: true,
     preloadPreviousPage: false,
     uniqueHistory: true,
@@ -343,6 +343,10 @@ myApp.onPageInit('chats', function(page) {
 
 // chats listing page
 myApp.onPageInit('chat', function(page) {
+    if (!chat_receiver_id) {
+        chat_receiver_id = token.id;
+    }
+
     loadChatMessages(static_account_id, chat_receiver_id);
 
     var chatroom_id = static_account_id;
@@ -418,6 +422,11 @@ myApp.onPageInit('privacy_policy', function(page) {
     // 
 });
 
+// Terms and Conditions page
+myApp.onPageInit('terms_conditions', function(page) {
+    // 
+});
+
 // Disclaimer page
 myApp.onPageInit('disclaimer', function(page) {
     // 
@@ -467,3 +476,10 @@ myApp.onPageInit('issue_feed', function(page) {
 myApp.onPageInit('business_profile_list', function(page) {
     loadBusinessProfilesList();
 });
+
+
+
+
+
+
+

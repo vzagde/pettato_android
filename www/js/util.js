@@ -83,32 +83,34 @@ function onDeviceReady() {
     });
 
     setInterval(function(){
-        $.ajax({
-            url: base_url + 'get_counts',
-            type: 'POST',
-            crossDomain: true,
-            data: {
-                user_id: token.id,
-            }
-        }).done(function(res){
-            if (res.status == 'Success') {
-                if (res.response.chat_count < 1) {
+        if (token) {
+            $.ajax({
+                url: base_url + 'get_counts',
+                type: 'POST',
+                crossDomain: true,
+                data: {
+                    user_id: token.id,
+                }
+            }).done(function(res){
+                if (res.status == 'Success') {
+                    if (res.response.chat_count < 1) {
+                        $(".dynamic_messagecount").html('');
+                    } else {
+                        $(".dynamic_messagecount").html(res.response.chat_count);
+                    }
+
+                    if (res.response.notification_count < 1) {
+                        $(".dynamic_notificationcount").html('');
+                    } else {
+                        $(".dynamic_notificationcount").html(res.response.notification_count);
+                    }
+
+                } else {
                     $(".dynamic_messagecount").html('');
-                } else {
-                    $(".dynamic_messagecount").html(res.response.chat_count);
                 }
-
-                if (res.response.notification_count < 1) {
-                    $(".dynamic_notificationcount").html('');
-                } else {
-                    $(".dynamic_notificationcount").html(res.response.notification_count);
-                }
-
-            } else {
-                $(".dynamic_messagecount").html('');
-            }
-        }).error(function(res){
-        })
+            }).error(function(res){
+            })
+        }
     }, 1000);
 
     // window.BackgroundService.start(
@@ -753,6 +755,11 @@ function register_shopper() {
         return false;
     }
 
+    if (!$("#shopper_register-tnc").is(":checked")) {
+        myApp.alert('Please agree the terms and conditions!');
+        return false;
+    }
+
     myApp.showIndicator();
     $.ajax({
         url: base_url + 'create_user',
@@ -872,6 +879,11 @@ function register_business() {
 
     if (!profile_image) {
         myApp.alert('Please provide profile picture.');
+        return false;
+    }
+
+    if (!$("#business_register-tnc").is(":checked")) {
+        myApp.alert('Please agree the terms and conditions!');
         return false;
     }
 
@@ -1164,8 +1176,6 @@ function upload_business() {
 function loadIssueFeeds() {
     myApp.showIndicator();
 
-    console.log('Function Actionables');
-
     var tabs_active = 0;
 
     $.ajax({
@@ -1180,45 +1190,48 @@ function loadIssueFeeds() {
 
         if (res.status == 'Success') {
             $.each(res.response, function(index, value) {
-                var share_image_link = image_url+value.image;
-                var share_image_title = decodeURI(value.feeds_content).substring(0, 50);
-                html += '<div class="card c_ard ks-facebook-card">'+
-                        '<div class="black_overlay"></div>'+
-                        '<a href="#" class="card-header no-border pro_view">'+
-                        '<div class="ks-facebook-avatar pro_pic">'+
-                        '<img src="'+image_url+value.profile_image+'" width="34" height="34" class="lazy lazy-fadeIn">'+
-                        '</div>';
-                if (value.user_type == 'Business') {
-                    html += '<div class="ks-facebook-name pro_name" onclick="goto_business_page('+value.user_id+')">'+value.first_name+'</div>';
-                } else {
-                    html += '<div class="ks-facebook-name pro_name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>';
+                if (value.block != 1) {
+                    var share_image_link = image_url+value.image;
+                    var share_image_title = decodeURI(value.feeds_content).substring(0, 50);
+                    html += '<div class="card c_ard ks-facebook-card">'+
+                            '<div class="black_overlay"></div>'+
+                            '<a href="#" class="card-header no-border pro_view">'+
+                            '<div class="ks-facebook-avatar pro_pic">'+
+                            '<img src="'+image_url+value.profile_image+'" width="34" height="34" class="lazy lazy-fadeIn">'+
+                            '</div>';
+                    if (value.user_type == 'Business') {
+                        html += '<div class="ks-facebook-name pro_name" onclick="goto_business_page('+value.user_id+')">'+value.first_name+'</div>';
+                    } else {
+                        html += '<div class="ks-facebook-name pro_name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>';
+                    }
+                    html += '<div class="ks-facebook-date pro_tag">'+share_image_title+'</div>'+
+                            '<div class="ks-facebook-date pro_tag">'+value.feed_comment_count+' Comments</div>'+
+                            '</a>'+
+                            '<a class="card-content" onclick="load_abuse_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
+                            '<img data-src="'+share_image_link+'" width="100%" class="feedImg lazy lazy-fadeIn lazy-fadein" src="img/lazyload.jpg">'+
+                            // '<img data-src="'+share_image_link+'" width="100%" class="lazy lazy-fadeIn">'+
+                            '</a>'+
+                            '<div class="card-footer no-border like_share" style="width: 25%">'+
+                            '<a href="javascript:void(0);"><i data-title="'+share_image_title+'" data-image_link="'+share_image_link+'" data-feedid="'+value.feed_id+'" data-userid="'+value.feed_id+'" class="report_func material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">report</i></a>'+
+                            '<a href="javascript:void(0);"><i onclick="issueFeedShareStatusChng('+value.feed_id+')" data-title="'+share_image_title+'" data-image_link="'+share_image_link+'" class="share_feeds_'+value.feed_id+' material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>';
+
+                    // if (value.user_type == 'User') {
+                    //     html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="goto_chat_inner('+value.user_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>';
+                    // } else {
+                    //     html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="goto_chat_inner('+value.linked_acc_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>';
+                    // }
+                    // html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="chngSaveStatus('+value.feed_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren3" style="font-size:20px !important;">save</i></a>'+
+                    //         '<a href="javascript:void(0);" class="add_clk" style="z-index: 999"><i class="material-icons white_heart">add_circle</i></a>';
+
+                    // if (value.like_status == 1) {
+                    //     html += '<a href="javascript:void(0);" data-liked="0" onclick="chngLikeStatus('+value.feed_id+');" class="like_block_chng_active'+value.feed_id+'"><i class="material-icons white_heart white_heart_active">favorite</i></a>';
+                    // } else {
+                    //     html += '<a href="javascript:void(0);" data-liked="0" onclick="chngLikeStatus('+value.feed_id+');" class="like_block_chng_active'+value.feed_id+'"><i class="material-icons white_heart white_heart_active">favorite_border</i></a>';
+                    // }
+
+                    html += '</div>'+
+                            '</div>';
                 }
-                html += '<div class="ks-facebook-date pro_tag">'+share_image_title+'</div>'+
-                        '<div class="ks-facebook-date pro_tag">'+value.feed_comment_count+' Comments</div>'+
-                        '</a>'+
-                        '<a class="card-content" onclick="load_abuse_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
-                        '<img data-src="'+share_image_link+'" width="100%" class="feedImg lazy lazy-fadeIn lazy-fadein" src="img/lazyload.jpg">'+
-                        // '<img data-src="'+share_image_link+'" width="100%" class="lazy lazy-fadeIn">'+
-                        '</a>'+
-                        '<div class="card-footer no-border like_share" style="width: 17%">'+
-                        '<a href="javascript:void(0);"><i onclick="issueFeedShareStatusChng('+value.feed_id+')" data-title="'+share_image_title+'" data-image_link="'+share_image_link+'" class="share_feeds_'+value.feed_id+' material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>';
-
-                // if (value.user_type == 'User') {
-                //     html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="goto_chat_inner('+value.user_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>';
-                // } else {
-                //     html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="goto_chat_inner('+value.linked_acc_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>';
-                // }
-                // html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="chngSaveStatus('+value.feed_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren3" style="font-size:20px !important;">save</i></a>'+
-                //         '<a href="javascript:void(0);" class="add_clk" style="z-index: 999"><i class="material-icons white_heart">add_circle</i></a>';
-
-                // if (value.like_status == 1) {
-                //     html += '<a href="javascript:void(0);" data-liked="0" onclick="chngLikeStatus('+value.feed_id+');" class="like_block_chng_active'+value.feed_id+'"><i class="material-icons white_heart white_heart_active">favorite</i></a>';
-                // } else {
-                //     html += '<a href="javascript:void(0);" data-liked="0" onclick="chngLikeStatus('+value.feed_id+');" class="like_block_chng_active'+value.feed_id+'"><i class="material-icons white_heart white_heart_active">favorite_border</i></a>';
-                // }
-
-                html += '</div>'+
-                        '</div>';
             });
 
             $("#issues_feeds-container").append(html);
@@ -1261,6 +1274,41 @@ function loadIssueFeeds() {
             })
 
             $(".feedImg").lazy();
+
+            $(".report_func").click(function(e){
+                var datafeedid = $(this).data('feedid');
+                var datafeeduserid = $(this).data('userid');
+
+                e.preventDefault();
+                myApp.modal({
+                    title: '',
+                    verticalButtons: true,
+                    buttons: [
+                        {
+                            text: 'Report Spam',
+                            onClick: function() {
+                                myApp.alert('Are you sure you want to Spam the Feed?', 'Confirmation!', function () {
+                                    report_spam_block('Abuse Feed', 'Spam', datafeedid);
+                                });
+                            }
+                        },
+                        {
+                            text: 'Block',
+                            onClick: function() {
+                                myApp.alert('Are you sure you want to Block the Feed?', 'Confirmation!', function () {
+                                    report_spam_block('Abuse Feed', 'Block', datafeedid);
+                                });
+                            }
+                        },
+                        {
+                            text: 'Cancel',
+                            onClick: function() {
+                                myApp.closeModal();
+                            }
+                        },
+                    ]
+                })
+            })
 
             myApp.hideIndicator();
         } else {
@@ -1372,50 +1420,88 @@ function loadFeeds() {
 
         if (res.status == 'Success') {
             $.each(res.response, function(index, value) {
-                var share_image_link = image_url+value.image;
-                var share_image_title = decodeURI(value.feeds_content).substring(0, 50);
-                html += '<div class="card c_ard ks-facebook-card">'+
-                        '<div class="black_overlay"></div>'+
-                        '<a href="#" class="card-header no-border pro_view">'+
-                        '<div class="ks-facebook-avatar pro_pic">'+
-                        '<img src="'+image_url+value.profile_image+'" width="34" height="34" class="lazy lazy-fadeIn">'+
-                        '</div>';
-                if (value.user_type == 'Business') {
-                    html += '<div class="ks-facebook-name pro_name" onclick="goto_business_page('+value.user_id+')">'+value.first_name+'</div>';
-                } else {
-                    html += '<div class="ks-facebook-name pro_name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>';
-                }
-                html += '<div class="ks-facebook-date pro_tag">'+share_image_title+'</div>'+
-                        '<div class="ks-facebook-date pro_tag">'+value.feed_comment_count+' Comments '+value.likes_count+' Likes</div>'+
-                        '</a>'+
-                        '<a class="card-content" onclick="load_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
-                        '<img data-src="'+share_image_link+'" width="100%" class="feedImg lazy lazy-fadeIn lazy-fadein" src="img/lazyload.jpg">'+
-                        // '<img data-src="'+share_image_link+'" width="100%" class="lazy lazy-fadeIn">'+
-                        '</a>'+
-                        '<div class="card-footer no-border like_share">'+
-                        '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+share_image_title+'" data-image_link="'+share_image_link+'" class="share_feeds_'+value.feed_id+' material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>';
+                if (value.block != 1) {
+                    var share_image_link = image_url+value.image;
+                    var share_image_title = decodeURI(value.feeds_content).substring(0, 50);
+                    html += '<div class="card c_ard ks-facebook-card">'+
+                            '<div class="black_overlay"></div>'+
+                            '<a href="#" class="card-header no-border pro_view">'+
+                            '<div class="ks-facebook-avatar pro_pic">'+
+                            '<img src="'+image_url+value.profile_image+'" width="34" height="34" class="lazy lazy-fadeIn">'+
+                            '</div>';
+                    if (value.user_type == 'Business') {
+                        html += '<div class="ks-facebook-name pro_name" onclick="goto_business_page('+value.user_id+')">'+value.first_name+'</div>';
+                    } else {
+                        html += '<div class="ks-facebook-name pro_name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>';
+                    }
+                    html += '<div class="ks-facebook-date pro_tag">'+share_image_title+'</div>'+
+                            '<div class="ks-facebook-date pro_tag">'+value.feed_comment_count+' Comments '+value.likes_count+' Likes</div>'+
+                            '</a>'+
+                            '<a class="card-content" onclick="load_feed_page('+value.feed_id+');" href="javascript:void(0)">'+
+                            '<img data-src="'+share_image_link+'" width="100%" class="feedImg lazy lazy-fadeIn lazy-fadein" src="img/lazyload.jpg">'+
+                            // '<img data-src="'+share_image_link+'" width="100%" class="lazy lazy-fadeIn">'+
+                            '</a>'+
+                            '<div class="card-footer no-border like_share">'+
+                            '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i class="material-icons report_func white_heart white_heart_bubble bg_grren1" data-userid="'+value.user_id+'" data-feedid="'+value.feed_id+'" style="font-size: 22px !important;">report</i></a>'+
+                            '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk"><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+share_image_title+'" data-image_link="'+share_image_link+'" class="share_feeds_'+value.feed_id+' material-icons white_heart white_heart_bubble bg_grren1" style="font-size:20px !important;">share</i></a>';
 
-                if (value.user_type == 'User') {
-                    html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="goto_chat_inner('+value.user_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>';
-                } else {
-                    html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="goto_chat_inner('+value.linked_acc_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>';
-                }
-                html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="chngSaveStatus('+value.feed_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren3" style="font-size:20px !important;">save</i></a>'+
-                        '<a href="javascript:void(0);" class="add_clk" style="z-index: 999"><i class="material-icons white_heart">add_circle</i></a>';
+                    if (value.user_type == 'User') {
+                        html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="goto_chat_inner('+value.user_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>';
+                    } else {
+                        html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="goto_chat_inner('+value.linked_acc_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren2" style="font-size:20px !important;">comment</i></a>';
+                    }
+                    html += '<a href="javascript:void(0);" style="opacity: 0;" class="shr_lnk" onclick="chngSaveStatus('+value.feed_id+');"><i class="material-icons white_heart white_heart_bubble bg_grren3" style="font-size:20px !important;">save</i></a>'+
+                            '<a href="javascript:void(0);" class="add_clk" style="z-index: 999"><i class="material-icons white_heart">add_circle</i></a>';
 
-                if (value.like_status == 1) {
-                    html += '<a href="javascript:void(0);" data-liked="0" onclick="chngLikeStatus('+value.feed_id+');" class="like_block_chng_active'+value.feed_id+'"><i class="material-icons white_heart white_heart_active">favorite</i></a>';
-                } else {
-                    html += '<a href="javascript:void(0);" data-liked="0" onclick="chngLikeStatus('+value.feed_id+');" class="like_block_chng_active'+value.feed_id+'"><i class="material-icons white_heart white_heart_active">favorite_border</i></a>';
-                }
+                    if (value.like_status == 1) {
+                        html += '<a href="javascript:void(0);" data-liked="0" onclick="chngLikeStatus('+value.feed_id+');" class="like_block_chng_active'+value.feed_id+'"><i class="material-icons white_heart white_heart_active">favorite</i></a>';
+                    } else {
+                        html += '<a href="javascript:void(0);" data-liked="0" onclick="chngLikeStatus('+value.feed_id+');" class="like_block_chng_active'+value.feed_id+'"><i class="material-icons white_heart white_heart_active">favorite_border</i></a>';
+                    }
 
-                html += '</div>'+
-                        '</div>';
+                    html += '</div>'+
+                            '</div>';
+                }
             });
 
             $("#feeds-container").append(html);
 
             // $('.feedImg').trigger('lazy');
+
+            $(".report_func").click(function(e){
+                var datafeedid = $(this).data('feedid');
+                var datafeeduserid = $(this).data('userid');
+
+                e.preventDefault();
+                myApp.modal({
+                    title: '',
+                    verticalButtons: true,
+                    buttons: [
+                        {
+                            text: 'Report Spam',
+                            onClick: function() {
+                                myApp.alert('Are you sure you want to Spam the Feed?', 'Confirmation!', function () {
+                                    report_spam_block('Feed', 'Spam', datafeedid);
+                                });
+                            }
+                        },
+                        {
+                            text: 'Block',
+                            onClick: function() {
+                                myApp.alert('Are you sure you want to Block the Feed?', 'Confirmation!', function () {
+                                    report_spam_block('Feed', 'Block', datafeedid);
+                                });
+                            }
+                        },
+                        {
+                            text: 'Cancel',
+                            onClick: function() {
+                                myApp.closeModal();
+                            }
+                        },
+                    ]
+                })
+            })
 
             $(".add_clk").click(function(e) {
                 e.preventDefault();
@@ -1436,6 +1522,11 @@ function loadFeeds() {
 
                     $(this).prev(".shr_lnk").prev(".shr_lnk").prev(".shr_lnk").animate({
                         top: '-=230%',
+                        opacity: 1,
+                    });
+
+                    $(this).prev(".shr_lnk").prev(".shr_lnk").prev(".shr_lnk").prev(".shr_lnk").animate({
+                        top: '-=312%',
                         opacity: 1,
                     });
                 } else {
@@ -2189,7 +2280,11 @@ function loadUsersSubPageContent(user_id) {
                                 '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
                                 '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.id+'">share</i></a>';
                                 if (value.user_id == token.id) {
-                                    feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    if (value.record_type == 'feeds') {
+                                        feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    } else if (value.record_type == 'abuses') {
+                                        feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_abuse('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    }
                                 }
                 feeds_html +='</div>'+
                         '</div>';
@@ -2296,7 +2391,12 @@ function loadUsersPageContent(user_id) {
         if (res.status == 'Success') {
             $('.cover_image_btn').show();
 
-            $(".cover_image").attr("src", image_url+res.response.user_details.cover_pic);
+            if (res.response.user_details.cover_pic && res.response.user_details.cover_pic !== 'cover_pic.jpg') {
+                $(".cover_image").attr("src", image_url+res.response.user_details.cover_pic);
+            } else {
+                $(".cover_image").attr("src", "img/cover_pic.png");
+            }
+
             $(".profie_image").attr("src", image_url+res.response.user_details.profile_image);
             $('.user_follwers').text(res.followers);
             $('.user_followings').text(res.followings);
@@ -2350,7 +2450,11 @@ function loadUsersPageContent(user_id) {
                                 '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
                                 '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.id+'">share</i></a>';
                                 if (value.user_id == token.id) {
-                                    feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    if (value.record_type == 'feeds') {
+                                        feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    } else if (value.record_type == 'abuses') {
+                                        feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_abuse('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    }
                                 }
                 feeds_html +='</div>'+
                         '</div>';
@@ -2654,8 +2758,6 @@ function loadBusinessPageContent(user_id) {
                 feeds_html += '</div>'+
                                 '</div>';
             })
-
-            console.log(feeds_html);
 
             if (feeds_html) {
                 $(".profile-feed-container").html(feeds_html);
@@ -3436,33 +3538,71 @@ function loadFindParentContent(user_id) {
         if (res.status == 'Success') {
             var html = '';
             $.each(res.response, function(index, value){
-                html += '<div class="card facebook-card">'+
-                            '<div class="card-header">'+
-                                '<div class="facebook-avatar"><img src="'+image_url+value.profile_pic+'" width="50" height="50"></div>'+
-                                '<div class="facebook-name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>'+
-                                '<div class="facebook-date">@'+value.username+'</div>'+
-                            '</div>'+
-                            '<div class="card-content">'+
-                                '<div class="card-content-inner">'+
-                                    '<p>'+decodeURI(value.description)+'</p>'+
-                                    '<p>Type of pet: '+value.pet_type+'</p>'+
-                                    '<p>Age: '+value.age+'</p>'+
-                                    '<p class="color-gray">Likes: '+value.count_fp+'</p>'+
+                if (value.block != 1) {
+                    html += '<div class="card facebook-card">'+
+                                '<div class="card-header">'+
+                                    '<div class="facebook-avatar"><img src="'+image_url+value.profile_pic+'" width="50" height="50"></div>'+
+                                    '<div class="facebook-name" onclick="goto_user_page('+value.user_id+')">'+value.first_name+'</div>'+
+                                    '<div class="facebook-date">@'+value.username+'</div>'+
                                 '</div>'+
-                            '</div>'+
-                            '<div class="card-footer">';
-                            if (value.like_status == "1") {
-                                html += '<a href="#" class="link like_block_chng_active'+value.id+'"><i class="material-icons color_8ac640 findParentLike white_heart_active" onclick="findParentLikeStatusChng('+value.id+')" data-feed_id="'+value.id+'">favorite</i></a>';
-                            } else {
-                                html += '<a href="#" class="link like_block_chng_active'+value.id+'"><i class="material-icons color_8ac640 findParentLike" onclick="findParentLikeStatusChng('+value.id+')" data-feed_id="'+value.id+'">favorite_border</i></a>';
-                            }
+                                '<div class="card-content">'+
+                                    '<div class="card-content-inner">'+
+                                        '<p>'+decodeURI(value.description)+'</p>'+
+                                        '<p>Type of pet: '+value.pet_type+'</p>'+
+                                        '<p>Age: '+value.age+'</p>'+
+                                        '<p class="color-gray">Likes: '+value.count_fp+'</p>'+
+                                    '</div>'+
+                                '</div>'+
+                                '<div class="card-footer">';
+                                if (value.like_status == "1") {
+                                    html += '<a href="#" class="link like_block_chng_active'+value.id+'"><i class="material-icons color_8ac640 findParentLike white_heart_active" onclick="findParentLikeStatusChng('+value.id+')" data-feed_id="'+value.id+'">favorite</i></a>';
+                                } else {
+                                    html += '<a href="#" class="link like_block_chng_active'+value.id+'"><i class="material-icons color_8ac640 findParentLike" onclick="findParentLikeStatusChng('+value.id+')" data-feed_id="'+value.id+'">favorite_border</i></a>';
+                                }
 
-                            html += '<a href="#" class="link"><i class="material-icons color_8ac640 checkShareContent'+value.find_parent_id+'" onclick="shareFindParent('+value.find_parent_id+')" data-sharecontent="'+decodeURI(value.description)+'" data-accountid="'+value.find_parent_id+'">share</i></a>'+
-                            '</div>'+
-                        '</div>';
+                                html += '<a href="#" class="link"><i class="material-icons color_8ac640 checkShareContent'+value.find_parent_id+'" onclick="shareFindParent('+value.find_parent_id+')" data-sharecontent="'+decodeURI(value.description)+'" data-accountid="'+value.find_parent_id+'">share</i></a>'+
+                                '<a href="#" class="link"><i class="material-icons color_8ac640 report_func checkShareContent'+value.find_parent_id+' " data-feedid="'+value.find_parent_id+'" data-userid="'+value.find_parent_id+'" data-sharecontent="'+decodeURI(value.description)+'" data-accountid="'+value.find_parent_id+'">report</i></a>'+
+                                '</div>'+
+                            '</div>';
+                }
             })
 
             $("#find_parent_listDyn").html(html);
+
+            $(".report_func").click(function(e){
+                var datafeedid = $(this).data('feedid');
+                var datafeeduserid = $(this).data('userid');
+
+                e.preventDefault();
+                myApp.modal({
+                    title: '',
+                    verticalButtons: true,
+                    buttons: [
+                        {
+                            text: 'Report Spam',
+                            onClick: function() {
+                                myApp.alert('Are you sure you want to Spam the Feed?', 'Confirmation!', function () {
+                                    report_spam_block('Find Parent', 'Spam', datafeedid);
+                                });
+                            }
+                        },
+                        {
+                            text: 'Block',
+                            onClick: function() {
+                                myApp.alert('Are you sure you want to Block the Feed?', 'Confirmation!', function () {
+                                    report_spam_block('Find Parent', 'Block', datafeedid);
+                                });
+                            }
+                        },
+                        {
+                            text: 'Cancel',
+                            onClick: function() {
+                                myApp.closeModal();
+                            }
+                        },
+                    ]
+                })
+            })
 
             myApp.hideIndicator();
         } else {
@@ -3580,17 +3720,11 @@ function loadBusinessProfilesList() {
                     onclick_html = 'onclick="goto_user_page('+value.id+')"';
                 }
 
-                // if (value.id == token.id || value.linked_acc_id == token.id) {
-                //     html += '<li class="read_active">';
-                // } else {
-                //     html += '<li class="read_active">';
-                // }
-
                 var stars_html = '';
                 var stars_count = Math.round(value.reviews);
 
                 for (var i = 0; i < stars_count; i++) {
-                    stars_html += '<i class="material-icons addBusinessReview_active" style="float: left; width: 30px;">star_rate</i>';
+                    stars_html += '<i class="material-icons" style="float: left; width: 30px;">star_rate</i>';
                 }
 
 
@@ -3603,23 +3737,6 @@ function loadBusinessProfilesList() {
                                 '</div>'+
                             '</a>'+
                         '</div>';
-
-
-
-                // html += '<div class="item-content">'+
-                //             '<div class="item-media pad0">'+
-                //                 '<img src="'+image_url+value.profile_image+'" width="75" height="75">'+
-                //             '</div>'+
-                //             '<div class="item-inner">'+
-                //                 '<div class="item-title-row">'+
-                //                     '<div class="item-title" '+onclick_html+'>'+value.first_name+'</div>'+
-                //                 '</div>'+
-                //                 '<div class="item-subtitle">'+value.username+'</div>'+
-                //             '</div>'+
-                //         '</div>';
-                // html += '</li>';
-
-
 
             })
 
@@ -3860,8 +3977,16 @@ function loadChatsList() {
 
             $.each(res.response.chats_list, function(index, value) {
                 var time = new Date(value.created_date);
+                var curr_time = new Date();
+                var timechng = '';
+
+                if (time < curr_time) {
+                    timechng = (time.getDate())+" "+months[time.getMonth()];
+                } else {
+                    timechng = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+                }
+
                 var receiver_id = value.user_id;
-                var timechng = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
                 if (value.read_status == 1) {
                     html += '<li class="swipeout item-content messages_from_id_'+value.id+'" onclick="goto_chat_inner('+receiver_id+', '+token.id+')">';
                 } else {
@@ -3880,7 +4005,9 @@ function loadChatsList() {
                                 '</div>'+
                             '</div>'+
                             '<div class="swipeout-actions-right">'+
-                                '<a href="#" data-messageid="'+value.id+'" class="action1 change_message_read_status">Mark Read</a>'+
+                                '<a href="#" data-messageid="'+value.id+'" class="action1">Block</a>'+
+                                '<a href="#" data-messageid="'+value.id+'" class="action1">Mute</a>'+
+                                // '<a href="#" data-messageid="'+value.id+'" class="action1 change_message_read_status">Mark Read</a>'+
                                 '<a href="#" data-profileaccid="'+receiver_id+'" onclick="deleteMessages('+receiver_id+')" class="action1 delete_message">Delete</a>'+
                             '</div>'+
                         '</li>';
@@ -3899,9 +4026,9 @@ function loadChatsList() {
                 var receiver_id = value.user_id;
                 var timechng = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
                 if (value.read_status == 1) {
-                    html += '<li class="swipeout item-content messages_from_id_'+value.id+'" onclick="goto_chat_inner('+receiver_id+', '+value.sender_id+')">';
+                    html += '<li class="swipeout item-content messages_from_id_'+value.id+'" onclick="goto_chat_inner('+receiver_id+', '+value.acc_id+')">';
                 } else {
-                    html += '<li class="swipeout item-content messages_from_id_'+value.id+' read_active" onclick="goto_chat_inner('+receiver_id+', '+value.sender_id+')">';
+                    html += '<li class="swipeout item-content messages_from_id_'+value.id+' read_active" onclick="goto_chat_inner('+receiver_id+', '+value.acc_id+')">';
                 }
                     html += '<div class="swipeout-content item-content">'+
                                 '<div class="item-media pad0">'+
@@ -3916,7 +4043,9 @@ function loadChatsList() {
                                 '</div>'+
                             '</div>'+
                             '<div class="swipeout-actions-right">'+
-                                '<a href="#" data-messageid="'+value.id+'" class="action1 change_message_read_status">Mark Read</a>'+
+                                // '<a href="#" data-messageid="'+value.id+'" class="action1 change_message_read_status">Mark Read</a>'+
+                                '<a href="#" data-messageid="'+value.id+'" class="action1">Block</a>'+
+                                '<a href="#" data-messageid="'+value.id+'" class="action1">Mute</a>'+
                                 '<a href="#" data-profileaccid="'+receiver_id+'" onclick="deleteMessages('+receiver_id+')" class="action1 delete_message">Delete</a>'+
                             '</div>'+
                         '</li>';
@@ -4028,6 +4157,9 @@ function send_chat() {
                 });
 
                 $("#mesage_sent").val('');
+            } else if (res.status == 'Failed') {
+                myApp.hideIndicator();
+                myApp.alert(res.api_msg);
             } else {
                 myApp.hideIndicator();
                 myApp.alert("Network Error Occured, Please try again later!");
@@ -4155,14 +4287,27 @@ function loadChatMessages(user_id, acc_id) {
 
             var receiver_name = '';
 
-            if (profile_user_type == 'User') {
-                receiver_name = '<span onclick="goto_user_page('+profile_receiver_id+')">'+res.users_details.first_name+'</span>';
-            } else {
-                receiver_name = '<span onclick="goto_business_page('+profile_receiver_id+')">'+res.users_details.first_name+'</span>';
-            }
+            // if (profile_user_type == 'User') {
+            receiver_name = '<span>'+res.users_details.first_name+'</span>';
+            // } else {
+            //     receiver_name = '<span onclick="goto_business_page('+profile_receiver_id+')">'+res.users_details.first_name+'</span>';
+            // }
+
+            $(".goto_profiles_inner_page").attr('data-chatid', profile_receiver_id);
+            $(".goto_profiles_inner_page").attr('data-chatprofiletype', profile_user_type);
 
             $(".chat_reviever_img").attr('src', receiver_profile);
             $(".chat_reviever_name").html(receiver_name);
+
+            $(".goto_profiles_inner_page").click(function(e){
+                e.preventDefault();
+                if ($(this).data('chatprofiletype') == 'User') {
+                    goto_user_page($(this).data('chatid'));
+                } else {
+                    goto_business_page($(this).data('chatid'));
+                }
+
+            })
 
             var myMessages = myApp.messages('.messages', {
                 scrollMessages: true,
@@ -4782,7 +4927,6 @@ function load_dating_profiles(account_id) {
                 e.preventDefault();
                 if (!pet_like_acc) {
                 } else {
-                    console.log(pet_like_acc);
                     $.ajax({
                         url: base_url+'add_to_dating',
                         type: 'post',
@@ -4829,7 +4973,6 @@ function load_profile_content(account_id) {
             var html = "";
 
             $.each(res.response, function(index, value){
-                console.log(value.profile_image);
                 html += '<div>'+
                             '<div class="card-content">'+
                                 '<div class="card-content-inner" style="padding: 0 !important">'+
@@ -4970,6 +5113,33 @@ function delete_feed(feed_id) {
     myApp.prompt('This will erase the feed from your profile, Do you realy want to delete?', function (value) {
         $.ajax({
             url: base_url+'remove_feed_id',
+            type: 'POST',
+            dataType: 'json',
+            crossDomain: true,
+            data: {
+                feed_id: feed_id,
+                user_id: token.id
+            }
+        }).done(function(res){
+            if (res.status == 'Success') {
+                myApp.alert(res.api_msg);
+                goto_profile();
+            } else {
+                myApp.alert(res.api_msg);
+            }
+        }).error(function(err) {
+            myApp.hideIndicator();
+            myApp.alert('Somthing went wrong, Please try again later!');
+        }).always(function(){
+        });
+    })
+}
+
+
+function delete_abuse(feed_id) { 
+    myApp.prompt('This will erase the feed from your profile, Do you realy want to delete?', function (value) {
+        $.ajax({
+            url: base_url+'remove_abuse_id',
             type: 'POST',
             dataType: 'json',
             crossDomain: true,
@@ -5212,3 +5382,58 @@ function forgot_password() {
         myApp.alert("Some network error occured, Please try again later!");
     })
 }
+
+
+function open_report_pop(){
+    myApp.modal({
+        title: '',
+        verticalButtons: true,
+        buttons: [
+            {
+                text: 'Report',
+                onClick: function() {
+                    myApp.alert('Are you sure you want to Spam the Profile?', 'Confirmation!', function () {
+                        report_spam_block('Profile', 'Spam', static_account_id);
+                    });
+                }
+            },
+            {
+                text: 'Block',
+                onClick: function() {
+                    myApp.alert('Are you sure you want to Block the Profile?', 'Confirmation!', function () {
+                        report_spam_block('Profile', 'Block', static_account_id);
+                    });
+                }
+            },
+            {
+                text: 'Cancel',
+                onClick: function() {
+                    myApp.closeModal();
+                }
+            },
+        ]
+    })
+}
+
+function report_spam_block(feed_profile, spam_block, feed_profile_id) {
+    $.ajax({
+        url: base_url+ 'report_spam_block',
+        type: 'POST',
+        crossDomain: true,
+        data: {
+            feed_profile: feed_profile,
+            spam_block: spam_block,
+            feed_profile_id: feed_profile_id,
+            user_id: token.id,
+        }
+    }).done(function(res){
+        // console.log(res);
+        myApp.alert(res.api_msg);
+    }).error(function(res){
+        myApp.alert(res.api_msg);
+        // console.log(res);
+    })
+}
+
+
+

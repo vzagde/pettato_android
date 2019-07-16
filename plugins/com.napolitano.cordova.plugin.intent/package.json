@@ -16,7 +16,8 @@
     "fetchSpec": "0.1.2"
   },
   "_requiredBy": [
-    "#USER"
+    "#USER",
+    "/"
   ],
   "_resolved": "https://registry.npmjs.org/cordova-plugin-intent/-/cordova-plugin-intent-0.1.2.tgz",
   "_shasum": "80bff1bf7daad248ba3e89a6b0c9e157a01a885f",
