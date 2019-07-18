@@ -7,6 +7,12 @@
     "files": {}
   },
   "installed_plugins": {
+    "com.napolitano.cordova.plugin.intent": {
+      "PACKAGE_NAME": "com.huzaifrangila.pettato"
+    },
+    "cordova-plugin-background-service": {
+      "PACKAGE_NAME": "com.huzaifrangila.pettato"
+    },
     "cordova-plugin-battery-status": {
       "PACKAGE_NAME": "com.huzaifrangila.pettato"
     },
@@ -67,21 +73,18 @@
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.huzaifrangila.pettato"
     },
-    "phonegap-plugin-push": {
-      "SENDER_ID": "836033005549",
-      "PACKAGE_NAME": "com.huzaifrangila.pettato"
-    },
     "cordova-plugin-x-socialsharing": {
       "PACKAGE_NAME": "com.huzaifrangila.pettato"
     },
-    "cordova-plugin-background-service": {
-      "PACKAGE_NAME": "com.huzaifrangila.pettato"
-    },
-    "com.napolitano.cordova.plugin.intent": {
+    "phonegap-plugin-push": {
+      "SENDER_ID": "836033005549",
       "PACKAGE_NAME": "com.huzaifrangila.pettato"
     }
   },
   "dependent_plugins": {
+    "cordova-plugin-background-fetch": {
+      "PACKAGE_NAME": "com.huzaifrangila.pettato"
+    },
     "cordova-plugin-compat": {
       "PACKAGE_NAME": "com.huzaifrangila.pettato"
     },
@@ -89,9 +92,6 @@
       "PACKAGE_NAME": "com.huzaifrangila.pettato"
     },
     "es6-promise-plugin": {
-      "PACKAGE_NAME": "com.huzaifrangila.pettato"
-    },
-    "cordova-plugin-background-fetch": {
       "PACKAGE_NAME": "com.huzaifrangila.pettato"
     }
   }
