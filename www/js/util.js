@@ -544,7 +544,7 @@ function image_camera_direct_edit() {
     //     img_width = 500;
     // }
 
-    navigator.camera.getPicture(shopper_register_onSuccess, shopper_register_onFail, {
+    navigator.camera.getPicture(shopper_register_onSuccess_direct_edit, shopper_register_onFail, {
         quality: 50,
         destinationType: Camera.DestinationType.FILE_URI,
         sourceType: Camera.PictureSourceType.CAMERA,
@@ -568,7 +568,7 @@ function image_gallery_direct_edit() {
     //     img_width = 500;
     // }
 
-    navigator.camera.getPicture(shopper_register_onSuccess, shopper_register_onFail, {
+    navigator.camera.getPicture(shopper_register_onSuccess_direct_edit, shopper_register_onFail, {
         quality: 100,
         destinationType: Camera.DestinationType.FILE_URI,
         sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
