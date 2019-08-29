@@ -655,22 +655,6 @@ function shopper_register_onSuccess_file_direct_edit(res) {
     myApp.hidePreloader();
     if (res.responseCode == 200) {
         uploaded_image = res.response.replace(/\"/g, "");
-        if (image_upload_type == 'pet_profile') {
-            profile_image_link = uploaded_image;
-        } else if (image_upload_type == 'pet_cover') {
-            profile_cover_image_link = uploaded_image;
-        } else if (image_upload_type == 'user_profile') {
-            profile_image_link = uploaded_image;
-        } else if (image_upload_type == 'user_cover') {
-            profile_cover_image_link = uploaded_image;
-        } else if (image_upload_type == 'business_profile') {
-            profile_image_link = uploaded_image;
-        } else if (image_upload_type == 'business_cover') {
-            profile_cover_image_link = uploaded_image;
-        } else {
-            feed_image_upload = uploaded_image;
-            $(".CNGDynImg").attr('src', image_url+feed_image_upload);
-        }
 
         $.ajax({
             url: base_url+'update_cover_pic',
@@ -678,7 +662,7 @@ function shopper_register_onSuccess_file_direct_edit(res) {
             crossDomain: true,
             data: {
                 user_id: token.id,
-                cover_pic: feed_image_upload,
+                cover_pic: uploaded_image,
             }
         }).done(function(res) {
             myApp.hideIndicator();
