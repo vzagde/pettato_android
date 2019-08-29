@@ -26,61 +26,62 @@ function onDeviceReady() {
     //     console.log("received url: " + url);
     // }
 
-    var push = PushNotification.init({
-        "android": {
-            "senderID": "836033005549"
-        },
-        "browser": {},
-        "ios": {
-            "sound": true,
-            "vibration": true,
-            "badge": true
-        },
-        "windows": {}
-    });
+    // Code to Uncomment
 
-    push.on('registration', function(data) {
-        oldPushId = Lockr.get('push_key');
-        if (oldPushId !== data.registrationId) {
-            Lockr.set('push_key', data.registrationId);
-            // Save new registration ID
-            // Post registrationId to your app server as the value has changed
-        }
-    });
+    // var push = PushNotification.init({
+    //     "android": {
+    //         "senderID": "836033005549"
+    //     },
+    //     "browser": {},
+    //     "ios": {
+    //         "sound": true,
+    //         "vibration": true,
+    //         "badge": true
+    //     },
+    //     "windows": {}
+    // });
 
-    push.on('error', function(e) {
-        console.log(e);
-        // myApp.alert("push error = " + e.message);
-    });
+    // push.on('registration', function(data) {
+    //     oldPushId = Lockr.get('push_key');
+    //     if (oldPushId !== data.registrationId) {
+    //         Lockr.set('push_key', data.registrationId);
+    //     }
+    // });
 
-    push.on('notification', function(data) {
-        console.log(data);
-        if (!data.additionalData.foreground) {
-            if (data.additionalData.notification_for == 'Profile') {
-                if (data.additionalData.related_user_id == token.id) {
-                    goto_profile();
-                } else {
-                    goto_user_page(data.additionalData.feed_id);
-                }
-            } else if (data.additionalData.notification_for == 'Feed') {
-                load_feed_page(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Become Parent') {
-                goto_becomeParentDetails(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Find Parent') {
-                goto_chat_inner(data.additionalData.user_id);
-            } else if (data.additionalData.notification_for == 'Business Profile') {
-                goto_business_page(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Pet Profile') {
-                goto_profile_shopper_pet(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Lost and Found') {
-                goto_chat_inner(data.additionalData.user_id);
-            } else if (data.additionalData.notification_for == 'Mating') {
-                goto_chat_inner(data.additionalData.user_id);
-            } else if (data.additionalData.notification_for == 'Adoption') {
-                goto_chat_inner(data.additionalData.user_id);
-            }
-        }
-    });
+    // push.on('error', function(e) {
+    //     console.log(e);
+    // });
+
+    // push.on('notification', function(data) {
+    //     console.log(data);
+    //     if (!data.additionalData.foreground) {
+    //         if (data.additionalData.notification_for == 'Profile') {
+    //             if (data.additionalData.related_user_id == token.id) {
+    //                 goto_profile();
+    //             } else {
+    //                 goto_user_page(data.additionalData.feed_id);
+    //             }
+    //         } else if (data.additionalData.notification_for == 'Feed') {
+    //             load_feed_page(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Become Parent') {
+    //             goto_becomeParentDetails(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Find Parent') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         } else if (data.additionalData.notification_for == 'Business Profile') {
+    //             goto_business_page(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Pet Profile') {
+    //             goto_profile_shopper_pet(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Lost and Found') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         } else if (data.additionalData.notification_for == 'Mating') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         } else if (data.additionalData.notification_for == 'Adoption') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         }
+    //     }
+    // });
+
+    // Code to Uncomment
 
     setInterval(function(){
         if (token) {
@@ -95,18 +96,22 @@ function onDeviceReady() {
                 if (res.status == 'Success') {
                     if (res.response.chat_count < 1) {
                         $(".dynamic_messagecount").html('');
+                        $(".dynamic_messagecount").removeClass('bg-red');
                     } else {
                         $(".dynamic_messagecount").html(res.response.chat_count);
+                        $(".dynamic_messagecount").addClass('bg-red');
                     }
 
                     if (res.response.notification_count < 1) {
                         $(".dynamic_notificationcount").html('');
+                        $(".dynamic_messagecount").removeClass('bg-red');
                     } else {
                         $(".dynamic_notificationcount").html(res.response.notification_count);
+                        $(".dynamic_messagecount").addClass('bg-red');
                     }
-
                 } else {
                     $(".dynamic_messagecount").html('');
+                    $(".dynamic_messagecount").removeClass('bg-red');
                 }
             }).error(function(res){
             })
@@ -453,6 +458,29 @@ function open_dialog_for_image(type) {
     myApp.actions(groups);
 }
 
+// selection for image upload type
+function open_dialog_for_image_direct_edit(type) {
+    image_upload_type = type;
+    var buttons1 = [{
+        text: 'choose source',
+        label: true
+    }, {
+        text: 'Camera',
+        bold: true,
+        onClick: image_camera_direct_edit,
+    }, {
+        text: 'Gallery',
+        bold: true,
+        onClick: image_gallery_direct_edit,
+    }];
+    var buttons2 = [{
+        text: 'Cancel',
+        color: 'red'
+    }];
+    var groups = [buttons1, buttons2];
+    myApp.actions(groups);
+}
+
 // on Selection of camera
 function image_camera() {
     // var img_width = 500;
@@ -501,8 +529,61 @@ function image_gallery() {
     });
 }
 
+// on Selection of camera
+function image_camera_direct_edit() {
+    // var img_width = 500;
+    // var img_height = 500;
+    // if (image_upload_type == 'pet_profile' || image_upload_type == 'user_profile' || image_upload_type == 'business_profile') {
+    //     img_width = 720;
+    //     img_height = 640;
+    // } else if (image_upload_type == 'feed_image') {
+    //     img_width = 500;
+    //     img_height = 500;
+    // } else {
+    //     img_width = 720;
+    //     img_width = 500;
+    // }
+
+    navigator.camera.getPicture(shopper_register_onSuccess, shopper_register_onFail, {
+        quality: 50,
+        destinationType: Camera.DestinationType.FILE_URI,
+        sourceType: Camera.PictureSourceType.CAMERA,
+        correctOrientation: true,
+        allowEdit: false,
+    });
+}
+
+// on Selection of gallery
+function image_gallery_direct_edit() {
+    // var img_width = 500;
+    // var img_height = 500;
+    // if (image_upload_type == 'pet_profile' || image_upload_type == 'user_profile' || image_upload_type == 'business_profile') {
+    //     img_width = 720;
+    //     img_height = 640;
+    // } else if (image_upload_type == 'feed_image') {
+    //     img_width = 500;
+    //     img_height = 500;
+    // } else {
+    //     img_width = 720;
+    //     img_width = 500;
+    // }
+
+    navigator.camera.getPicture(shopper_register_onSuccess, shopper_register_onFail, {
+        quality: 100,
+        destinationType: Camera.DestinationType.FILE_URI,
+        sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
+        correctOrientation: true,
+        allowEdit: false,
+    });
+}
+
 // image selection success function
 function shopper_register_onSuccess(fileURL) {
+    plugins.crop(onCropSuccess, onCropfail, fileURL, { quality: 100, targetWidth: 1000, targetHeight: 1000 });
+}
+
+// image selection success function
+function shopper_register_onSuccess_direct_edit(fileURL) {
     plugins.crop(onCropSuccess, onCropfail, fileURL, { quality: 100, targetWidth: 1000, targetHeight: 1000 });
 }
 
@@ -517,6 +598,19 @@ function onCropSuccess(fileURL) {
     };
     options.headers = headers;
     new FileTransfer().upload(fileURL, uri, shopper_register_onSuccess_file, shopper_register_onError_file, options);
+}
+
+function onCropSuccess_direct_edit(fileURL) {
+    var uri = encodeURI(base_url + "upload_user");
+    var options = new FileUploadOptions();
+    options.fileKey = "file";
+    options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
+    options.mimeType = "image/jpeg";
+    var headers = {
+        'headerParam': 'headerValue'
+    };
+    options.headers = headers;
+    new FileTransfer().upload(fileURL, uri, shopper_register_onSuccess_file_direct_edit, shopper_register_onError_file, options);
 }
 
 function onCropfail(message) {
@@ -549,6 +643,54 @@ function shopper_register_onSuccess_file(res) {
             feed_image_upload = uploaded_image;
             $(".CNGDynImg").attr('src', image_url+feed_image_upload);
         }
+
+        myApp.alert("Image Uploaded Successfully");
+    } else {
+        myApp.hidePreloader();
+        myApp.alert('Some error occurred on uploading');
+    }
+}
+
+function shopper_register_onSuccess_file_direct_edit(res) {
+    myApp.hidePreloader();
+    if (res.responseCode == 200) {
+        uploaded_image = res.response.replace(/\"/g, "");
+        if (image_upload_type == 'pet_profile') {
+            profile_image_link = uploaded_image;
+        } else if (image_upload_type == 'pet_cover') {
+            profile_cover_image_link = uploaded_image;
+        } else if (image_upload_type == 'user_profile') {
+            profile_image_link = uploaded_image;
+        } else if (image_upload_type == 'user_cover') {
+            profile_cover_image_link = uploaded_image;
+        } else if (image_upload_type == 'business_profile') {
+            profile_image_link = uploaded_image;
+        } else if (image_upload_type == 'business_cover') {
+            profile_cover_image_link = uploaded_image;
+        } else {
+            feed_image_upload = uploaded_image;
+            $(".CNGDynImg").attr('src', image_url+feed_image_upload);
+        }
+
+        $.ajax({
+            url: base_url+'update_cover_pic',
+            type: 'POST',
+            crossDomain: true,
+            data: {
+                user_id: token.id,
+                cover_pic: feed_image_upload,
+            }
+        }).done(function(res) {
+            myApp.hideIndicator();
+            if (res.status = 'success') {
+                $(".cover_image").attr('src', image_url+res.response.cover_pic);
+            } else {
+                myApp.alert(res.api_msg);
+            }
+        }).fail(function(err) {
+            myApp.hideIndicator();
+            myApp.alert('Some error occurred!');
+        }).always();
 
         myApp.alert("Image Uploaded Successfully");
     } else {
@@ -3987,7 +4129,7 @@ function loadChatsList() {
                 }
 
                 var receiver_id = value.user_id;
-                if (value.read_status == 1) {
+                if (value.receiver_read_status == 1) {
                     html += '<li class="swipeout item-content messages_from_id_'+value.id+'" onclick="goto_chat_inner('+receiver_id+', '+token.id+')">';
                 } else {
                     html += '<li class="swipeout item-content messages_from_id_'+value.id+' read_active" onclick="goto_chat_inner('+receiver_id+', '+token.id+')">';

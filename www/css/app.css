@@ -596,7 +596,7 @@ body.with-panel-left-cover .statusbar-overlay {
 }
 
 .men_u {
-    background:rgba(0,0,0,0.73);
+    background: #ffffff;
 }
 
 .comment {
@@ -613,13 +613,12 @@ body.with-panel-left-cover .statusbar-overlay {
 }
 
 .menu_a {
-    color:#fff !important;
+    color: #4f4f4f !important;
     margin: 7% !important;
     display: block;
     text-align: left;
-    font-weight: 300;
     font-size: 1.1em;
-    font-family: 'CooperHewitt-Light' !important;
+    font-family: 'CooperHewitt-Medium' !important;
     text-transform: uppercase;
     line-height: 200%;
 }
