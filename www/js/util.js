@@ -584,7 +584,7 @@ function shopper_register_onSuccess(fileURL) {
 
 // image selection success function
 function shopper_register_onSuccess_direct_edit(fileURL) {
-    plugins.crop(onCropSuccess, onCropfail, fileURL, { quality: 100, targetWidth: 1000, targetHeight: 1000 });
+    plugins.crop(onCropSuccess_direct_edit, onCropfail, fileURL, { quality: 100, targetWidth: 1000, targetHeight: 1000 });
 }
 
 function onCropSuccess(fileURL) {
