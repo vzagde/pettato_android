@@ -823,6 +823,11 @@ body.with-panel-left-cover .statusbar-overlay {
     border-radius: 0;
 }
 
+.item-media img {
+    width: 75px !important;
+    height: 75px !important;
+}
+
 #shopper_chat .item-subtitle {
     font-family: 'CooperHewitt-Light' !important;
 }
@@ -1528,3 +1533,4 @@ body{
     margin-bottom: constant(safe-area-inset-bottom);
     margin-bottom: env(safe-area-inset-bottom);
 }
+
