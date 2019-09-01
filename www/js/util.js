@@ -204,6 +204,10 @@ function j2s(json) {
     return JSON.stringify(json);
 }
 
+function toggleMenu() {
+    $(".toggleSubMenu").toggleClass('hide');
+}
+
 function goto_page(page) {
     mainView.router.load({
         url: page,
