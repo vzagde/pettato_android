@@ -309,7 +309,7 @@ myApp.onPageInit('business_register_add', function(page) {
     // initialize('19.113645', '72.869734', 'mapCanvas');
     load_category('#business_register-category', function(){});
 
-    $("#business_register-category").on('change', function(){
+    $("#business_register-category").on('change', function() {
         if ($("#business_register-category").val() == 'Type Your Own') {
             $(".category_input-register").removeClass('hideInput');
         }

@@ -28,58 +28,58 @@ function onDeviceReady() {
 
     // Code to Uncomment
 
-    var push = PushNotification.init({
-        "android": {
-            "senderID": "836033005549"
-        },
-        "browser": {},
-        "ios": {
-            "sound": true,
-            "vibration": true,
-            "badge": true
-        },
-        "windows": {}
-    });
+    // var push = PushNotification.init({
+    //     "android": {
+    //         "senderID": "836033005549"
+    //     },
+    //     "browser": {},
+    //     "ios": {
+    //         "sound": true,
+    //         "vibration": true,
+    //         "badge": true
+    //     },
+    //     "windows": {}
+    // });
 
-    push.on('registration', function(data) {
-        oldPushId = Lockr.get('push_key');
-        if (oldPushId !== data.registrationId) {
-            Lockr.set('push_key', data.registrationId);
-        }
-    });
+    // push.on('registration', function(data) {
+    //     oldPushId = Lockr.get('push_key');
+    //     if (oldPushId !== data.registrationId) {
+    //         Lockr.set('push_key', data.registrationId);
+    //     }
+    // });
 
-    push.on('error', function(e) {
-        console.log(e);
-    });
+    // push.on('error', function(e) {
+    //     console.log(e);
+    // });
 
-    push.on('notification', function(data) {
-        console.log(data);
-        if (!data.additionalData.foreground) {
-            if (data.additionalData.notification_for == 'Profile') {
-                if (data.additionalData.related_user_id == token.id) {
-                    goto_profile();
-                } else {
-                    goto_user_page(data.additionalData.feed_id);
-                }
-            } else if (data.additionalData.notification_for == 'Feed') {
-                load_feed_page(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Become Parent') {
-                goto_becomeParentDetails(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Find Parent') {
-                goto_chat_inner(data.additionalData.user_id);
-            } else if (data.additionalData.notification_for == 'Business Profile') {
-                goto_business_page(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Pet Profile') {
-                goto_profile_shopper_pet(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Lost and Found') {
-                goto_chat_inner(data.additionalData.user_id);
-            } else if (data.additionalData.notification_for == 'Mating') {
-                goto_chat_inner(data.additionalData.user_id);
-            } else if (data.additionalData.notification_for == 'Adoption') {
-                goto_chat_inner(data.additionalData.user_id);
-            }
-        }
-    });
+    // push.on('notification', function(data) {
+    //     console.log(data);
+    //     if (!data.additionalData.foreground) {
+    //         if (data.additionalData.notification_for == 'Profile') {
+    //             if (data.additionalData.related_user_id == token.id) {
+    //                 goto_profile();
+    //             } else {
+    //                 goto_user_page(data.additionalData.feed_id);
+    //             }
+    //         } else if (data.additionalData.notification_for == 'Feed') {
+    //             load_feed_page(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Become Parent') {
+    //             goto_becomeParentDetails(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Find Parent') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         } else if (data.additionalData.notification_for == 'Business Profile') {
+    //             goto_business_page(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Pet Profile') {
+    //             goto_profile_shopper_pet(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Lost and Found') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         } else if (data.additionalData.notification_for == 'Mating') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         } else if (data.additionalData.notification_for == 'Adoption') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         }
+    //     }
+    // });
 
     // Code to Uncomment
 
@@ -294,7 +294,8 @@ function load_category(selector, afterCallback) {
     .done(function(res) {
         myApp.hideIndicator();
         if (res.status == 'Success') {
-            var html = '<option value="">Select Category</option><option value="Type Your Own">Type Your Own</option>';
+            var html = '<option value="">Select Category</option>';
+            // var html = '<option value="">Select Category</option><option value="Type Your Own">Type Your Own</option>';
             $.each(res.response, function(index, val) {
                 html += '<option value="' + val.id + '" >' + val.category_name + '</option>';
             });
@@ -317,7 +318,8 @@ function load_pet_categories(dropdown_id, callBack) {
     }).done(function(res){
         var html = '';
         if (res.status == 'Success') {
-            html = '<option value="">Select Pet Type</option><option value="Type Your Own">Type Your Own</option>';
+            // html = '<option value="">Select Pet Type</option><option value="Type Your Own">Type Your Own</option>';
+            html = '<option value="">Select Pet Type</option>';
             $.each(res.response, function(index, value){
                 html += '<option value="'+value.id+'">'+value.pet_type+'</option>';
             })
@@ -341,7 +343,8 @@ function load_breed_dropdown(dropdown_value, dropdown_id, callBack) {
     }).done(function(res){
         var html = '';
         if (res.status == 'Success') {
-            html = '<option value="">Select Breed</option><option value="Type Your Own">Type Your Own</option>';
+            // html = '<option value="">Select Breed</option><option value="Type Your Own">Type Your Own</option>';
+            html = '<option value="">Select Breed</option>';
             $.each(res.response, function(index, value) {
                 html += '<option value="'+value.id+'">'+value.breed+'</option>';
             })
@@ -949,6 +952,7 @@ function register_business() {
         myApp.alert('Please provide business name.');
         return false;
     }
+
     if (!category) {
         if (!$("#business_register-categoryInput").val()) {
             myApp.alert('Please select category.');
@@ -1013,7 +1017,6 @@ function register_business() {
         return false;
     }
 
-    // business_category = business_category.slice(0, -1);
 
     myApp.showIndicator();
     $.ajax({
