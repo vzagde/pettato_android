@@ -295,7 +295,6 @@ function load_category(selector, afterCallback) {
         myApp.hideIndicator();
         if (res.status == 'Success') {
             var html = '<option value="">Select Category</option>';
-            // var html = '<option value="">Select Category</option><option value="Type Your Own">Type Your Own</option>';
             $.each(res.response, function(index, val) {
                 html += '<option value="' + val.id + '" >' + val.category_name + '</option>';
             });
