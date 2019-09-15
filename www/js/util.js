@@ -28,58 +28,58 @@ function onDeviceReady() {
 
     // Code to Uncomment
 
-    var push = PushNotification.init({
-        "android": {
-            "senderID": "836033005549"
-        },
-        "browser": {},
-        "ios": {
-            "sound": true,
-            "vibration": true,
-            "badge": true
-        },
-        "windows": {}
-    });
+    // var push = PushNotification.init({
+    //     "android": {
+    //         "senderID": "836033005549"
+    //     },
+    //     "browser": {},
+    //     "ios": {
+    //         "sound": true,
+    //         "vibration": true,
+    //         "badge": true
+    //     },
+    //     "windows": {}
+    // });
 
-    push.on('registration', function(data) {
-        oldPushId = Lockr.get('push_key');
-        if (oldPushId !== data.registrationId) {
-            Lockr.set('push_key', data.registrationId);
-        }
-    });
+    // push.on('registration', function(data) {
+    //     oldPushId = Lockr.get('push_key');
+    //     if (oldPushId !== data.registrationId) {
+    //         Lockr.set('push_key', data.registrationId);
+    //     }
+    // });
 
-    push.on('error', function(e) {
-        console.log(e);
-    });
+    // push.on('error', function(e) {
+    //     console.log(e);
+    // });
 
-    push.on('notification', function(data) {
-        console.log(data);
-        if (!data.additionalData.foreground) {
-            if (data.additionalData.notification_for == 'Profile') {
-                if (data.additionalData.related_user_id == token.id) {
-                    goto_profile();
-                } else {
-                    goto_user_page(data.additionalData.feed_id);
-                }
-            } else if (data.additionalData.notification_for == 'Feed') {
-                load_feed_page(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Become Parent') {
-                goto_becomeParentDetails(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Find Parent') {
-                goto_chat_inner(data.additionalData.user_id);
-            } else if (data.additionalData.notification_for == 'Business Profile') {
-                goto_business_page(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Pet Profile') {
-                goto_profile_shopper_pet(data.additionalData.feed_id);
-            } else if (data.additionalData.notification_for == 'Lost and Found') {
-                goto_chat_inner(data.additionalData.user_id);
-            } else if (data.additionalData.notification_for == 'Mating') {
-                goto_chat_inner(data.additionalData.user_id);
-            } else if (data.additionalData.notification_for == 'Adoption') {
-                goto_chat_inner(data.additionalData.user_id);
-            }
-        }
-    });
+    // push.on('notification', function(data) {
+    //     console.log(data);
+    //     if (!data.additionalData.foreground) {
+    //         if (data.additionalData.notification_for == 'Profile') {
+    //             if (data.additionalData.related_user_id == token.id) {
+    //                 goto_profile();
+    //             } else {
+    //                 goto_user_page(data.additionalData.feed_id);
+    //             }
+    //         } else if (data.additionalData.notification_for == 'Feed') {
+    //             load_feed_page(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Become Parent') {
+    //             goto_becomeParentDetails(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Find Parent') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         } else if (data.additionalData.notification_for == 'Business Profile') {
+    //             goto_business_page(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Pet Profile') {
+    //             goto_profile_shopper_pet(data.additionalData.feed_id);
+    //         } else if (data.additionalData.notification_for == 'Lost and Found') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         } else if (data.additionalData.notification_for == 'Mating') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         } else if (data.additionalData.notification_for == 'Adoption') {
+    //             goto_chat_inner(data.additionalData.user_id);
+    //         }
+    //     }
+    // });
 
     // Code to Uncomment
 
@@ -2579,8 +2579,8 @@ function loadUsersPageContent(user_id) {
                                 '<a class="card-content" onclick="load_feed_page('+value.id+')">'+
                                 '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
                                 '</a>'+
-                                '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
-                                '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.id+'">share</i></a>';
+                                '<div class="card-footer no-border like_share pad0" style="width: 40%;">';
+                                // '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.id+'">share</i></a>';
                                 if (value.user_id == token.id) {
                                     if (value.record_type == 'feeds') {
                                         feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
@@ -2605,8 +2605,8 @@ function loadUsersPageContent(user_id) {
                                     '<a class="card-content" onclick="load_feed_page('+value.feed_id+')">'+
                                     '<img data-src="'+image_url+value.feed_image+'" src="'+image_url+value.feed_image+'" width="100%" class="lazy lazy-fadein">'+
                                     '</a>'+
-                                    '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
-                                    '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
+                                    '<div class="card-footer no-border like_share pad0" style="width: 40%;">';
+                                    // '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
                                     if (value.user_id == token.id) {
                                         save_feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>';
                                     }
@@ -2620,8 +2620,8 @@ function loadUsersPageContent(user_id) {
                                     '<a class="card-content" onclick="goto_becomeParentDetails('+value.feed_id+')">'+
                                     '<img data-src="'+image_url+value.feed_image+'" src="'+image_url+value.feed_image+'" width="100%" class="lazy lazy-fadein">'+
                                     '</a>'+
-                                    '<div class="card-footer no-border like_share pad0" style="width: 40%;">'+
-                                    '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
+                                    '<div class="card-footer no-border like_share pad0" style="width: 40%;">';
+                                    // '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
                                     if (value.user_id == token.id) {
                                         save_feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>';
                                     }
@@ -5534,6 +5534,14 @@ function open_report_pop(){
                 onClick: function() {
                     myApp.alert('Are you sure you want to Block the Profile?', 'Confirmation!', function () {
                         report_spam_block('Profile', 'Block', static_account_id);
+                    });
+                }
+            },
+            {
+                text: 'Unblock',
+                onClick: function() {
+                    myApp.alert('Are you sure you want to Unblock the Profile?', 'Confirmation!', function () {
+                        report_spam_block('Profile', 'Unblock', static_account_id);
                     });
                 }
             },
