@@ -1573,24 +1573,24 @@ div.toolbar-inner:has(> textarea.focus-state) {
 
 .profile_banner_sec {
     background: #c2c2c2;
-    margin: 0px !important;
+    margin: -5% !important;
     padding: 0px !important;
     filter: blur(15px);
     -webkit-filter: blur(15px);
     min-height: 400px;
-    width: 100%;
+    width: 110%;
     background-size: cover !important;
     background-position: center !important;
 }
 
 .profile_business_banner_sec {
     background: #c2c2c2;
-    margin: 0px !important;
+    margin: -5% !important;
     padding: 0px !important;
     filter: blur(15px);
     -webkit-filter: blur(15px);
     min-height: 445px;
-    width: 100%;
+    width: 110%;
     background-size: cover !important;
     background-position: center !important;
 }
