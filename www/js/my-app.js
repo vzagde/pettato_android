@@ -347,6 +347,16 @@ myApp.onPageInit('chat', function(page) {
         chat_receiver_id = token.id;
     }
 
+    // $("#mesage_sent").on('focus', function(e){
+    //     e.preventDefault();
+    //     $(".toolbar.messagebar").css('bottom', '300px');
+    // })
+
+    // $("#mesage_sent").on('focusout', function(e){
+    //     e.preventDefault();
+    //     $(".toolbar.messagebar").css('bottom', '0px');
+    // })
+
     loadChatMessages(static_account_id, chat_receiver_id);
 
     var chatroom_id = static_account_id;
@@ -477,6 +487,13 @@ myApp.onPageInit('business_profile_list', function(page) {
     loadBusinessProfilesList();
 });
 
+myApp.onPageInit('profile-user', function(page) {
+    // loadChatsList();
+});
+
+myApp.onPageInit('profile-business', function(page) {
+    // loadChatsList();
+});
 
 
 

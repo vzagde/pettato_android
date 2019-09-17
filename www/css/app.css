@@ -1500,6 +1500,10 @@ label.label-radio input[type=checkbox]:checked+.item-media i.icon-form-radio:aft
     font-family: 'CooperHewitt-Light' !important;
 }
 
+.font_size20 {
+    font-size: 20px;
+}
+
 .no-style {
     background: transparent !important;
     border: transparent 0px solid !important;
@@ -1536,16 +1540,159 @@ body{
 
 .navbar .navbar-inner .left .material-icons {
     background: #ffffff;
-    padding: 10px;
-    border-radius: 90px;
+    padding: 5px;
+    border-radius: 10px;
     margin-left: 0;
-    margin-top: 7px;
+    margin-top: 0px;
+    font-size: 24px !important;
 }
 
 .content-block {
     margin: 35px 0;
 }
 
-.focus-state:parent {
-    background: #000000;
+div.toolbar-inner:has(> textarea.focus-state) {
+    bottom: 300px !important;
 }
+
+.smart-select-page i.icon.icon-back {
+    background: none !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+.smart-select-page i.icon.icon-back:after {
+    width: 24px;
+    height: 24px;
+    font-size: 13px;
+    content: 'DONE';
+}
+
+
+/* New Profile CSS */
+
+.profile_banner_sec {
+    background: #c2c2c2;
+    margin: 0px !important;
+    padding: 0px !important;
+    filter: blur(15px);
+    -webkit-filter: blur(15px);
+    min-height: 400px;
+    width: 100%;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+.profile_business_banner_sec {
+    background: #c2c2c2;
+    margin: 0px !important;
+    padding: 0px !important;
+    filter: blur(15px);
+    -webkit-filter: blur(15px);
+    min-height: 445px;
+    width: 100%;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+.profile_img_container {
+    top: 10%;
+    left: 0;
+    right: 0;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+}
+
+.profile_img_container img {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    border-radius: 20px;
+    margin: 10px;
+}
+
+.profile_name_content {
+    width: 100%;
+    text-align: center;
+}
+
+.profile_name_content h2 {
+    padding: 0 10%;
+    font-size: 18px;
+}
+
+.profile_post_follow {
+    width: 100%;
+    padding: 20px 0;
+}
+
+.profile_post_follow .content_holder {
+    width: 32.5%;
+    display: inline-block;
+    color: #ffffff;
+}
+
+.profile_call_email_locate {
+    width: 100%;
+    padding: 10px 0;
+}
+
+.profile_call_email_locate .content_holder {
+    width: 32.5%;
+    display: inline-block;
+    color: #ffffff;
+}
+
+.content_holder > i {
+    font-size: 20px !important;
+    padding: 10px 0;
+}
+
+.profile_chat_block {
+    position: absolute;
+    top: 0;
+}
+
+.profile_follow_block {
+    position: absolute;
+    top: 90px;
+}
+
+.profile_top_container2 {
+    padding: 10px;
+}
+
+.profile_pet_business_list_container {
+    padding: 10px;
+}
+
+.profile_pet_business_list_container img {
+    border-radius: 10px;
+    width: 100%;
+}
+
+.profile_page_list p {
+    font-size: 10px;
+    line-height: 15px;
+    text-align: center;
+    margin: 0;
+}
+
+.profile_pet_business_list_container > p {
+    font-size: 15px;
+    margin: 30px 0 10px;
+}
+
+.profile_top_container2 p {
+    padding: 10px 0;
+}
+
+.star_color {
+    color: #e4e445;
+}
+
+.mb-50px {
+    margin-bottom: 50px !important;
+}
+

@@ -2314,7 +2314,7 @@ function goto_profile() {
     account_default_id = token.id;
     if (token.user_type == 'User') {
         mainView.router.load({
-            url: 'profile_shopper.html',
+            url: 'profile-business.html',
             query: {
                 id: token
             },
