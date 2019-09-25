@@ -1294,7 +1294,7 @@ function upload_business() {
         myApp.hideIndicator();
         if (res.status == 'Success') {
             profile_goto_id = res.response;
-            goto_page('profile_business_sub.html');
+            goto_page('profile-business-sub.html');
         } else {
             myApp.alert(res.api_msg);
         }
@@ -2314,7 +2314,7 @@ function goto_profile() {
     account_default_id = token.id;
     if (token.user_type == 'User') {
         mainView.router.load({
-            url: 'profile-business.html',
+            url: 'profile-user.html',
             query: {
                 id: token
             },
@@ -2322,7 +2322,7 @@ function goto_profile() {
         });
     } else {
         mainView.router.load({
-            url: 'profile_business.html',
+            url: 'profile-business.html',
             query: {
                 id: token
             },
@@ -2362,6 +2362,8 @@ function loadUsersSubPageContent(user_id) {
             $('.p_name').attr('data-business_id', res.response.user_details.id);
             $('.userssubfollowersfollowingaccid').attr('data-userssubfollowersfollowingaccid', res.response.user_details.id);
             $('.make_unfollow, .make_follow, .make_chat').attr('data-userid', res.response.user_details.id);
+
+            $('.profile_chat_block, .user_sub_make_unfollow, .user_sub_make_follow').attr('data-userid', res.response.user_details.id);
 
             $("#pets_and_business_profiles_list").html('');
             var profiles_list = '';
@@ -3024,7 +3026,6 @@ function loadBusinessPageContentSub(user_id) {
             })
 
             var feeds_html = '';
-            var reviews_html = '';
 
             $(".profile-feed-container").html('Loading Feeds...');
             $(".profile-reviews_container").html('Loading Reviews...');
@@ -3054,6 +3055,8 @@ function loadBusinessPageContentSub(user_id) {
             } else {
                 $(".profile-feed-container").html('There are no feeds created by this account!');
             }
+
+            var reviews_html = '';
 
             $.each(res.response.business_reviews, function(index, value){
                 reviews_html += '<div class="card">'+
@@ -3108,7 +3111,7 @@ function goto_profile_shopper_pet(pet_id) {
 
 function goto_business_page(business_id) {
     mainView.router.load({
-        url: 'profile_business_sub.html',
+        url: 'profile-business-sub.html',
         ignoreCache: true,
         query: {
             id: business_id
@@ -4086,7 +4089,7 @@ function loadSearchList() {
 function goto_user_page(user_id) {
     static_account_id = user_id;
     mainView.router.load({
-        url: 'profile_shopper_sub.html',
+        url: 'profile-user-sub.html',
         ignoreCache: true,
     });
 }
@@ -5573,6 +5576,655 @@ function report_spam_block(feed_profile, spam_block, feed_profile_id) {
         myApp.alert(res.api_msg);
         // console.log(res);
     })
+}
+
+
+function loadProfileUserContent(user_id) {
+    myApp.showIndicator();
+    $(".profile_banner_sec_img").attr("src", '');
+    $(".profile_img_url").attr("src", '');
+    $(".profile_name_holder").html('');
+    $(".profile_address_holder").html('');
+    $(".profile_followers_count").html('0');
+    $(".profile_followings_count").html('0');
+    $(".profile_posts_count").html('0');
+    $("#pets_and_business_profiles_list").html('');
+    $(".profile_compnay_name").html('');
+    $(".profile_company_services").html('');
+
+    $.ajax({
+        url: base_url + 'get_user_profile',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            user_id: user_id, token_profile_id: token.id,
+        },
+    }).done(function(res) {
+        if (res.status == 'Success') {
+            $(".profile_banner_sec_img").attr("src", image_url+res.response.user_details.profile_image);
+            $(".profile_img_url").attr("src", image_url+res.response.user_details.profile_image);
+            $(".profile_name_holder").html(res.response.user_details.first_name);
+            $(".profile_address_holder").html('<i>'+res.response.user_details.city_name+'</i>, India');
+            $(".profile_followers_count").html(res.followers);
+            $(".profile_followings_count").html(res.followings);
+            $(".profile_posts_count").html(res.post_count);
+            $(".profile_compnay_name").html(res.response.user_details.company);
+
+            var feeds_html = '';
+            var save_feeds_html = '';
+
+            var profiles_list = '';
+
+            $.each(res.response.pet_list, function(index, value){
+                if (value.user_type == 'Pet') {
+                    profiles_list += '<div class="change_width-20 text-center" onclick="goto_profile_shopper_pet('+value.id+')">'+
+                                        '<img src="'+image_url+value.profile_image+'">'+
+                                        '<p>'+value.first_name+'</p>'+
+                                    '</div>';
+                } else {
+                    profiles_list += '<div class="change_width-20 text-center" onclick="goto_business_page('+value.id+')">'+
+                                        '<img src="'+image_url+value.profile_image+'">'+
+                                        '<p>'+value.first_name+'</p>'+
+                                    '</div>';
+                }
+            })
+
+            if (res.response.user_details.id == token.id) {
+                profiles_list += '<div class="change_width-20 text-center" onclick="goto_before_add_account();">'+
+                                    '<img src="img/create-group-button.png">'+
+                                    '<p>Add Profile</p>'+
+                                '</div>';
+            }
+
+            $("#pets_and_business_profiles_list").html(profiles_list);
+
+            $(".profile-feed-container, .profile-save-feed-container").html('Loading Feeds...');
+
+            $.each(res.response.feeds, function(index, value){
+                var title = value.description;
+                var share_image_link = image_url+value.image;
+                var share_link = 'http://pettato.com';
+
+                feeds_html += '<div class="card c_ard ks-facebook-card own_feed">'+
+                                '<div class="black_overlay"></div>'+
+                                '<a class="card-content" onclick="load_feed_page('+value.id+')">'+
+                                '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
+                                '</a>'+
+                                '<div class="card-footer no-border like_share pad0" style="width: 20%;">';
+                                if (value.user_id == token.id) {
+                                    if (value.record_type == 'feeds') {
+                                        feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    } else if (value.record_type == 'abuses') {
+                                        feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_abuse('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    }
+                                }
+                feeds_html +='</div>'+
+                        '</div>';
+            })
+
+            feeds_html += '<span style="min-height: 40px; width: 100%;" class="card c_ard ks-facebook-card own_feed"></span>';
+
+            $.each(res.response.saved_feeds, function(index, value){
+                var title = value.feed_desc;
+                var share_image_link = image_url+value.feed_image;
+                var share_link = 'http://pettato.com';
+
+                if (value.feed_type == 'Feed') {
+                    save_feeds_html += '<div class="card c_ard ks-facebook-card own_feed">'+
+                                    '<div class="black_overlay"></div>'+
+                                    '<a class="card-content" onclick="load_feed_page('+value.feed_id+')">'+
+                                    '<img data-src="'+image_url+value.feed_image+'" src="'+image_url+value.feed_image+'" width="100%" class="lazy lazy-fadein">'+
+                                    '</a>'+
+                                    '<div class="card-footer no-border like_share pad0" style="width: 20%;">';
+                                    // '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
+                                    if (value.user_id == token.id) {
+                                        save_feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    }
+                    save_feeds_html += '</div>'+
+                                    '</div>';
+                }
+
+                if (value.feed_type == 'Become Parent') {
+                    save_feeds_html += '<div class="card c_ard ks-facebook-card own_feed">'+
+                                    '<div class="black_overlay"></div>'+
+                                    '<a class="card-content" onclick="goto_becomeParentDetails('+value.feed_id+')">'+
+                                    '<img data-src="'+image_url+value.feed_image+'" src="'+image_url+value.feed_image+'" width="100%" class="lazy lazy-fadein">'+
+                                    '</a>'+
+                                    '<div class="card-footer no-border like_share pad0" style="width: 20%;">';
+                                    // '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
+                                    if (value.user_id == token.id) {
+                                        save_feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    }
+                    save_feeds_html += '</div>'+
+                                    '</div>';
+                }
+
+            })
+
+            save_feeds_html += '<span style="min-height: 40px; width: 100%;" class="card c_ard ks-facebook-card own_feed"></span>';
+
+            if (feeds_html) {
+                feeds_html += '<br><br>';
+                $(".profile-feed-container").html(feeds_html);
+            } else {
+                $(".profile-feed-container").html('There are no feeds created by this account!');
+            }
+
+            if (save_feeds_html) {
+                save_feeds_html += '<br><br>';
+                $(".profile-save-feed-container").html(save_feeds_html);
+            } else {
+                $(".profile-save-feed-container").html('There are no feeds created by this account!');
+            }
+
+        } else {
+            myApp.alert("There is some problem with loading this page, Please try again after sometime!");
+        }
+
+        myApp.hideIndicator();
+    }).fail(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function() {
+    });
+
+    myApp.hideIndicator();
+}
+
+
+function loadProfileUserSubContent(user_id) {
+    myApp.showIndicator();
+    $(".profile_banner_sec_img").attr("src", '');
+    $(".profile_img_url").attr("src", '');
+    $(".profile_name_holder").html('');
+    $(".profile_address_holder").html('');
+    $(".profile_followers_count").html('0');
+    $(".profile_followings_count").html('0');
+    $(".profile_posts_count").html('0');
+    $("#pets_and_business_profiles_list").html('');
+    $(".follow, .unfollow").hide();
+
+    $.ajax({
+        url: base_url + 'get_user_profile',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            user_id: user_id, token_profile_id: token.id,
+        },
+    }).done(function(res) {
+        if (res.status == 'Success') {
+            $(".profile_banner_sec_img").attr("src", image_url+res.response.user_details.profile_image);
+            $(".profile_img_url").attr("src", image_url+res.response.user_details.profile_image);
+            $(".profile_name_holder").html(res.response.user_details.first_name);
+            $(".profile_address_holder").html('<i>'+res.response.user_details.city_name+'</i>, India');
+            $(".profile_followers_count").html(res.followers);
+            $(".profile_followings_count").html(res.followings);
+            $(".profile_posts_count").html(res.post_count);
+
+            if (token.id !== res.response.user_details.id) {
+                if (res.response.follower_status == 'Unfollow') {
+                    $(".follow").show();
+                } else {
+                    $(".unfollow").show();
+                }
+            }
+
+            var feeds_html = '';
+            var save_feeds_html = '';
+
+            var profiles_list = '';
+
+            $.each(res.response.pet_list, function(index, value){
+                if (value.user_type == 'Pet') {
+                    profiles_list += '<div class="change_width-20 text-center" onclick="goto_profile_shopper_pet('+value.id+')">'+
+                                        '<img src="'+image_url+value.profile_image+'">'+
+                                        '<p>'+value.first_name+'</p>'+
+                                    '</div>';
+                } else {
+                    profiles_list += '<div class="change_width-20 text-center" onclick="goto_business_page('+value.id+')">'+
+                                        '<img src="'+image_url+value.profile_image+'">'+
+                                        '<p>'+value.first_name+'</p>'+
+                                    '</div>';
+                }
+            })
+
+            if (res.response.user_details.id == token.id) {
+                profiles_list += '<div class="change_width-20 text-center" onclick="goto_before_add_account();">'+
+                                    '<img src="img/create-group-button.png">'+
+                                    '<p>Add Profile</p>'+
+                                '</div>';
+            }
+
+            $("#pets_and_business_profiles_list").html(profiles_list);
+
+            $(".profile-feed-container, .profile-save-feed-container").html('Loading Feeds...');
+
+            $.each(res.response.feeds, function(index, value){
+                var title = value.description;
+                var share_image_link = image_url+value.image;
+                var share_link = 'http://pettato.com';
+
+                feeds_html += '<div class="card c_ard ks-facebook-card own_feed">'+
+                                '<div class="black_overlay"></div>'+
+                                '<a class="card-content" onclick="load_feed_page('+value.id+')">'+
+                                '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
+                                '</a>'+
+                                '<div class="card-footer no-border like_share pad0" style="width: 20%;">';
+                                if (value.user_id == token.id) {
+                                    if (value.record_type == 'feeds') {
+                                        feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    } else if (value.record_type == 'abuses') {
+                                        feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_abuse('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    }
+                                }
+                feeds_html +='</div>'+
+                        '</div>';
+            })
+
+            feeds_html += '<span style="min-height: 40px; width: 100%;" class="card c_ard ks-facebook-card own_feed"></span>';
+
+            $.each(res.response.saved_feeds, function(index, value){
+                var title = value.feed_desc;
+                var share_image_link = image_url+value.feed_image;
+                var share_link = 'http://pettato.com';
+
+                if (value.feed_type == 'Feed') {
+                    save_feeds_html += '<div class="card c_ard ks-facebook-card own_feed">'+
+                                    '<div class="black_overlay"></div>'+
+                                    '<a class="card-content" onclick="load_feed_page('+value.feed_id+')">'+
+                                    '<img data-src="'+image_url+value.feed_image+'" src="'+image_url+value.feed_image+'" width="100%" class="lazy lazy-fadein">'+
+                                    '</a>'+
+                                    '<div class="card-footer no-border like_share pad0" style="width: 20%;">';
+                                    // '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
+                                    if (value.user_id == token.id) {
+                                        save_feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    }
+                    save_feeds_html += '</div>'+
+                                    '</div>';
+                }
+
+                if (value.feed_type == 'Become Parent') {
+                    save_feeds_html += '<div class="card c_ard ks-facebook-card own_feed">'+
+                                    '<div class="black_overlay"></div>'+
+                                    '<a class="card-content" onclick="goto_becomeParentDetails('+value.feed_id+')">'+
+                                    '<img data-src="'+image_url+value.feed_image+'" src="'+image_url+value.feed_image+'" width="100%" class="lazy lazy-fadein">'+
+                                    '</a>'+
+                                    '<div class="card-footer no-border like_share pad0" style="width: 20%;">';
+                                    // '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
+                                    if (value.user_id == token.id) {
+                                        save_feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    }
+                    save_feeds_html += '</div>'+
+                                    '</div>';
+                }
+
+            })
+
+            save_feeds_html += '<span style="min-height: 40px; width: 100%;" class="card c_ard ks-facebook-card own_feed"></span>';
+
+            if (feeds_html) {
+                feeds_html += '<br><br>';
+                $(".profile-feed-container").html(feeds_html);
+            } else {
+                $(".profile-feed-container").html('There are no feeds created by this account!');
+            }
+
+            if (save_feeds_html) {
+                save_feeds_html += '<br><br>';
+                $(".profile-save-feed-container").html(save_feeds_html);
+            } else {
+                $(".profile-save-feed-container").html('There are no feeds created by this account!');
+            }
+
+        } else {
+            myApp.alert("There is some problem with loading this page, Please try again after sometime!");
+        }
+
+        myApp.hideIndicator();
+    }).fail(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function() {
+    });
+
+    myApp.hideIndicator();
+}
+
+
+function loadProfileBusinessContent(user_id) {
+    myApp.showIndicator();
+    $(".profile_banner_sec_img").attr("src", '');
+    $(".profile_img_url").attr("src", '');
+    $(".profile_name_holder").html('');
+    $(".profile_address_holder").html('');
+    $(".profile_followers_count").html('0');
+    $(".profile_followings_count").html('0');
+    $(".profile_posts_count").html('0');
+    $("#pets_and_business_profiles_list").html('');
+    $(".follow, .unfollow").hide();
+    $(".profile_reviews_count").html('');
+    $(".profile_compnay_name").html('');
+    $(".profile_company_services").html('');
+
+    $.ajax({
+        url: base_url + 'get_user_profile',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            user_id: user_id, token_profile_id: token.id,
+        },
+    }).done(function(res) {
+        if (res.status == 'Success') {
+            $(".profile_banner_sec_img").attr("src", image_url+res.response.user_details.profile_image);
+            $(".profile_img_url").attr("src", image_url+res.response.user_details.profile_image);
+            $(".profile_name_holder").html(res.response.user_details.first_name);
+            $(".profile_address_holder").html('<i>'+res.response.user_details.city_name+'</i>, India');
+            $(".profile_followers_count").html(res.followers);
+            $(".profile_followings_count").html(res.followings);
+            $(".profile_posts_count").html(res.post_count);
+            $(".profile_compnay_name").html(res.response.user_details.company);
+
+            var category_list = '';
+
+            $.each(res.response.business_category, function(index, value){
+                if(index == 0) {
+                    category_list += value.category_name;
+                } else {
+                    category_list += ', '+value.category_name;
+                }
+            })
+
+            $(".profile_company_services").html(category_list);
+
+            $(".profile_reviews_count").html(Math.round(res.response.stars_count)+'/5');
+
+            if (token.id !== res.response.user_details.id) {
+                if (res.response.follower_status == 'Unfollow') {
+                    $(".follow").show();
+                } else {
+                    $(".unfollow").show();
+                }
+            }
+
+            var feeds_html = '';
+            var reviews_html = '';
+
+            var profiles_list = '';
+
+            $.each(res.response.pet_list, function(index, value){
+                if (value.user_type == 'Pet') {
+                    profiles_list += '<div class="change_width-20 text-center" onclick="goto_profile_shopper_pet('+value.id+')">'+
+                                        '<img src="'+image_url+value.profile_image+'">'+
+                                        '<p>'+value.first_name+'</p>'+
+                                    '</div>';
+                } else {
+                    profiles_list += '<div class="change_width-20 text-center" onclick="goto_business_page('+value.id+')">'+
+                                        '<img src="'+image_url+value.profile_image+'">'+
+                                        '<p>'+value.first_name+'</p>'+
+                                    '</div>';
+                }
+            })
+
+            if (res.response.user_details.id == token.id) {
+                profiles_list += '<div class="change_width-20 text-center" onclick="goto_before_add_account();">'+
+                                    '<img src="img/create-group-button.png">'+
+                                    '<p>Add Profile</p>'+
+                                '</div>';
+            }
+
+            $("#pets_and_business_profiles_list").html(profiles_list);
+
+            $(".profile-feed-container, .profile-save-feed-container").html('Loading Feeds...');
+
+            $.each(res.response.feeds, function(index, value){
+                var title = value.description;
+                var share_image_link = image_url+value.image;
+                var share_link = 'http://pettato.com';
+
+                feeds_html += '<div class="card c_ard ks-facebook-card own_feed">'+
+                                '<div class="black_overlay"></div>'+
+                                '<a class="card-content" onclick="load_feed_page('+value.id+')">'+
+                                '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
+                                '</a>'+
+                                '<div class="card-footer no-border like_share pad0" style="width: 20%;">';
+                                if (value.user_id == token.id) {
+                                    if (value.record_type == 'feeds') {
+                                        feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    } else if (value.record_type == 'abuses') {
+                                        feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_abuse('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    }
+                                }
+                feeds_html +='</div>'+
+                        '</div>';
+            })
+
+            feeds_html += '<span style="min-height: 40px; width: 100%;" class="card c_ard ks-facebook-card own_feed"></span>';
+
+            $.each(res.response.saved_feeds, function(index, value){
+                var title = value.feed_desc;
+                var share_image_link = image_url+value.feed_image;
+                var share_link = 'http://pettato.com';
+
+                if (value.feed_type == 'Feed') {
+                    save_feeds_html += '<div class="card c_ard ks-facebook-card own_feed">'+
+                                    '<div class="black_overlay"></div>'+
+                                    '<a class="card-content" onclick="load_feed_page('+value.feed_id+')">'+
+                                    '<img data-src="'+image_url+value.feed_image+'" src="'+image_url+value.feed_image+'" width="100%" class="lazy lazy-fadein">'+
+                                    '</a>'+
+                                    '<div class="card-footer no-border like_share pad0" style="width: 20%;">';
+                                    // '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
+                                    if (value.user_id == token.id) {
+                                        save_feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    }
+                    save_feeds_html += '</div>'+
+                                    '</div>';
+                }
+
+                if (value.feed_type == 'Become Parent') {
+                    save_feeds_html += '<div class="card c_ard ks-facebook-card own_feed">'+
+                                    '<div class="black_overlay"></div>'+
+                                    '<a class="card-content" onclick="goto_becomeParentDetails('+value.feed_id+')">'+
+                                    '<img data-src="'+image_url+value.feed_image+'" src="'+image_url+value.feed_image+'" width="100%" class="lazy lazy-fadein">'+
+                                    '</a>'+
+                                    '<div class="card-footer no-border like_share pad0" style="width: 20%;">';
+                                    // '<a href="javascript:void(0);" data-liked="0" class=""><i onclick="feedShareStatusChng('+value.feed_id+')" data-title="'+title+'" data-image_link="'+share_image_link+'" class="material-icons white_heart share_feeds_'+value.feed_id+'">share</i></a>';
+                                    if (value.user_id == token.id) {
+                                        save_feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_saved('+value.rel_id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    }
+                    save_feeds_html += '</div>'+
+                                    '</div>';
+                }
+
+            })
+
+            save_feeds_html += '<span style="min-height: 40px; width: 100%;" class="card c_ard ks-facebook-card own_feed"></span>';
+
+            if (feeds_html) {
+                feeds_html += '<br><br>';
+                $(".profile-feed-container").html(feeds_html);
+            } else {
+                $(".profile-feed-container").html('There are no feeds created by this account!');
+            }
+
+            if (save_feeds_html) {
+                save_feeds_html += '<br><br>';
+                $(".profile-save-feed-container").html(save_feeds_html);
+            } else {
+                $(".profile-save-feed-container").html('There are no feeds created by this account!');
+            }
+
+        } else {
+            myApp.alert("There is some problem with loading this page, Please try again after sometime!");
+        }
+
+        myApp.hideIndicator();
+    }).fail(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function() {
+    });
+
+    myApp.hideIndicator();
+}
+
+
+function loadProfileBusinessSubContent(user_id) {
+    myApp.showIndicator();
+    $(".profile_banner_sec_img").attr("src", '');
+    $(".profile_img_url").attr("src", '');
+    $(".profile_name_holder").html('');
+    $(".profile_address_holder").html('');
+    $(".profile_followers_count").html('0');
+    $(".profile_followings_count").html('0');
+    $(".profile_posts_count").html('0');
+    $("#pets_and_business_profiles_list").html('');
+    $(".follow, .unfollow").hide();
+    $(".profile_reviews_count").html('0/5');
+    $(".profile_compnay_name").html('');
+    $(".profile_company_services").html('');
+
+    $.ajax({
+        url: base_url + 'get_user_profile',
+        type: 'POST',
+        dataType: 'json',
+        crossDomain: true,
+        data: {
+            user_id: user_id, token_profile_id: token.id,
+        },
+    }).done(function(res) {
+        if (res.status == 'Success') {
+            $(".profile_banner_sec_img").attr("src", image_url+res.response.user_details.profile_image);
+            $(".profile_img_url").attr("src", image_url+res.response.user_details.profile_image);
+            $(".profile_name_holder").html(res.response.user_details.first_name);
+            $(".profile_address_holder").html('<i>'+res.response.user_details.city_name+'</i>, India');
+            $(".profile_followers_count").html(res.followers);
+            $(".profile_followings_count").html(res.followings);
+            $(".profile_posts_count").html(res.post_count);
+            $(".profile_compnay_name").html(res.response.user_details.company);
+
+            var category_list = '';
+
+            $.each(res.response.business_category, function(index, value){
+                if(index == 0) {
+                    category_list += value.category_name;
+                } else {
+                    category_list += ', '+value.category_name;
+                }
+            })
+
+            $(".profile_company_services").html(category_list);
+
+            $(".profile_reviews_count").html(Math.round(res.response.stars_count)+'/5');
+
+            if (token.id !== res.response.user_details.id) {
+                if (res.response.follower_status == 'Unfollow') {
+                    $(".follow").show();
+                } else {
+                    $(".unfollow").show();
+                }
+            }
+
+            var feeds_html = '';
+            var save_feeds_html = '';
+
+            var profiles_list = '';
+
+            $.each(res.response.pet_list, function(index, value){
+                if (value.user_type == 'Pet') {
+                    profiles_list += '<div class="change_width-20 text-center" onclick="goto_profile_shopper_pet('+value.id+')">'+
+                                        '<img src="'+image_url+value.profile_image+'">'+
+                                        '<p>'+value.first_name+'</p>'+
+                                    '</div>';
+                } else {
+                    profiles_list += '<div class="change_width-20 text-center" onclick="goto_business_page('+value.id+')">'+
+                                        '<img src="'+image_url+value.profile_image+'">'+
+                                        '<p>'+value.first_name+'</p>'+
+                                    '</div>';
+                }
+            })
+
+            if (res.response.user_details.id == token.id) {
+                profiles_list += '<div class="change_width-20 text-center" onclick="goto_before_add_account();">'+
+                                    '<img src="img/create-group-button.png">'+
+                                    '<p>Add Profile</p>'+
+                                '</div>';
+            }
+
+            $("#pets_and_business_profiles_list").html(profiles_list);
+
+            $(".profile-feed-container").html('Loading Feeds...');
+            $(".profile-reviews_container").html('Loading Reviews...');
+
+            $.each(res.response.feeds, function(index, value){
+                var title = value.description;
+                var share_image_link = image_url+value.image;
+                var share_link = 'http://pettato.com';
+
+                feeds_html += '<div class="card c_ard ks-facebook-card own_feed">'+
+                                '<div class="black_overlay"></div>'+
+                                '<a class="card-content" onclick="load_feed_page('+value.id+')">'+
+                                '<img data-src="'+image_url+value.image+'" src="'+image_url+value.image+'" width="100%" class="lazy lazy-fadein">'+
+                                '</a>'+
+                                '<div class="card-footer no-border like_share pad0" style="width: 20%;">';
+                                if (value.user_id == token.id) {
+                                    if (value.record_type == 'feeds') {
+                                        feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_feed('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    } else if (value.record_type == 'abuses') {
+                                        feeds_html += '<a href="javascript:void(0);" data-liked="0" onclick="delete_abuse('+value.id+')" class=""><i class="material-icons white_heart">delete</i></a>';
+                                    }
+                                }
+                feeds_html +='</div>'+
+                        '</div>';
+            })
+
+            feeds_html += '<span style="min-height: 40px; width: 100%;" class="card c_ard ks-facebook-card own_feed"></span>';
+
+            if (feeds_html) {
+                feeds_html += '<br><br>';
+                $(".profile-feed-container").html(feeds_html);
+            } else {
+                $(".profile-feed-container").html('There are no feeds created by this account!');
+            }
+
+            $.each(res.response.business_reviews, function(index, value){
+                reviews_html += '<div class="card">'+
+                                    '<div class="card-header">'+value.first_name+'</div>'+
+                                    '<div class="card-content">'+
+                                        '<div class="card-content-inner text-left">'+decodeURI(value.comments)+'</div>'+
+                                    '</div>'+
+                                    '<div class="card-footer">'+
+                                    '<p class="reviews_star">';
+
+                for (var i = 0; i < value.rating; i++) {
+                    reviews_html += '<i class="material-icons">star_rate</i>';
+                }
+
+                reviews_html += '</p>'+
+                                '</div>'+
+                                '</div>';
+            })
+
+            if (reviews_html) {
+                $(".profile-reviews_container").html(reviews_html);
+            } else {
+                $(".profile-reviews_container").html('There are no reviews created by this account!');
+            }
+
+        } else {
+            myApp.alert("There is some problem with loading this page, Please try again after sometime!");
+        }
+
+        myApp.hideIndicator();
+    }).fail(function(err) {
+        myApp.hideIndicator();
+        myApp.alert('Somthing went wrong, Please try again later!');
+    }).always(function() {
+    });
+
+    myApp.hideIndicator();
 }
 
 
