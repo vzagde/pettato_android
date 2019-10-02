@@ -15,14 +15,6 @@
     "is_top_level": true,
     "variables": {}
   },
-  "cordova-plugin-compat": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-compat@^1.1.0"
-    },
-    "is_top_level": false,
-    "variables": {}
-  },
   "cordova-plugin-media-capture": {
     "source": {
       "type": "registry",
@@ -35,6 +27,14 @@
     "source": {
       "type": "registry",
       "id": "cordova-plugin-file@^4.0.0"
+    },
+    "is_top_level": false,
+    "variables": {}
+  },
+  "cordova-plugin-compat": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-compat@^1.0.0"
     },
     "is_top_level": false,
     "variables": {}
@@ -205,14 +205,6 @@
       "id": "cordova-plugin-background-fetch"
     },
     "is_top_level": false,
-    "variables": {}
-  },
-  "com.napolitano.cordova.plugin.intent": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-intent@0.1.2"
-    },
-    "is_top_level": true,
     "variables": {}
   },
   "phonegap-plugin-push": {

@@ -16,7 +16,8 @@
     "fetchSpec": "~1.1.1"
   },
   "_requiredBy": [
-    "#USER"
+    "#USER",
+    "/"
   ],
   "_resolved": "https://registry.npmjs.org/cordova-plugin-battery-status/-/cordova-plugin-battery-status-1.1.2.tgz",
   "_shasum": "41921c74abc0db3e37d62f3c5dc4fde0c61090e4",
